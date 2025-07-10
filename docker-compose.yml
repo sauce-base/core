@@ -1,0 +1,120 @@
+services:
+    laravel.test:
+        build:
+            context: './vendor/laravel/sail/runtimes/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.4/app'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - pgsql
+            - redis
+            - typesense
+            - mailpit
+            - soketi
+
+    pgsql:
+        image: 'postgres:17'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - 'sail-pgsql:/var/lib/postgresql/data'
+            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'sail-redis:/data'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - redis-cli
+                - ping
+            retries: 3
+            timeout: 5s
+    typesense:
+        image: 'typesense/typesense:27.1'
+        ports:
+            - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
+        environment:
+            TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
+            TYPESENSE_API_KEY: '${TYPESENSE_API_KEY:-xyz}'
+            TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
+        volumes:
+            - 'sail-typesense:/typesense-data'
+        networks:
+            - sail
+        healthcheck:
+            test:
+                - CMD
+                - bash
+                - '-c'
+                - 'exec 3<>/dev/tcp/localhost/8108 && printf ''GET /health HTTP/1.1\r\nConnection: close\r\n\r\n'' >&3 && head -n1 <&3 | grep ''200'' && exec 3>&-'
+            retries: 5
+            timeout: 7s
+    mailpit:
+        image: 'axllent/mailpit:latest'
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
+    soketi:
+        image: 'quay.io/soketi/soketi:latest-16-alpine'
+        environment:
+            SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
+            SOKETI_METRICS_SERVER_PORT: '9601'
+            SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
+            SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
+            SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
+        ports:
+            - '${PUSHER_PORT:-6001}:6001'
+            - '${PUSHER_METRICS_PORT:-9601}:9601'
+        networks:
+            - sail
+networks:
+    sail:
+        driver: bridge
+volumes:
+    sail-pgsql:
+        driver: local
+    sail-redis:
+        driver: local
+    sail-typesense:
+        driver: local
