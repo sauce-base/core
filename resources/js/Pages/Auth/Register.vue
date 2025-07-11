@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
@@ -25,6 +25,16 @@ const submit = () => {
 <template>
     <GuestLayout>
         <Head title="Register" />
+
+        <!-- Title and Subtitle -->
+        <div class="mb-6 text-center">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                Create your account
+            </h1>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Sign up for Tadone to start managing your tasks
+            </p>
+        </div>
 
         <form @submit.prevent="submit">
             <div>

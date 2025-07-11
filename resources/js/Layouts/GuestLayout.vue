@@ -1,22 +1,34 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import Footer from '@/Components/Footer.vue';
+import TadoneLogo from '@/Components/TadoneLogo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0 dark:bg-gray-900"
-    >
-        <div>
-            <Link href="/">
-                <ApplicationLogo class="h-20 w-20 fill-current text-gray-500" />
-            </Link>
+    <div class="flex min-h-screen flex-col bg-gray-100 dark:bg-gray-900">
+        <div class="flex flex-1 items-center justify-center px-4 py-8">
+            <div class="w-full max-w-md">
+                <!-- Logo Section -->
+                <div class="mb-8 text-center">
+                    <Link href="/">
+                        <TadoneLogo
+                            size="lg"
+                            :showText="true"
+                            :centered="true"
+                        />
+                    </Link>
+                </div>
+
+                <!-- Form Container -->
+                <div
+                    class="rounded-xl border border-gray-200 bg-white p-8 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                >
+                    <slot />
+                </div>
+            </div>
         </div>
 
-        <div
-            class="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg dark:bg-gray-800"
-        >
-            <slot />
-        </div>
+        <!-- Footer -->
+        <Footer />
     </div>
 </template>
