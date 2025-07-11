@@ -4,7 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps<{
     status?: string;
@@ -62,5 +62,16 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+
+        <template #outside>
+            <div class="mt-6 text-center">
+                <Link
+                    :href="route('login')"
+                    class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                >
+                    ← Back to login
+                </Link>
+            </div>
+        </template>
     </GuestLayout>
 </template>

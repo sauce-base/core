@@ -25,6 +25,9 @@ import { Link } from '@inertiajs/vue3';
                 >
                     <slot />
                 </div>
+
+                <!-- Outside content slot -->
+                <slot name="outside" />
             </div>
         </div>
 

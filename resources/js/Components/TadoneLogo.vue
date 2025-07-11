@@ -36,68 +36,31 @@ const textSizeClasses = {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <!-- Background circle with gradient -->
-                <defs>
-                    <linearGradient
-                        id="tadone-gradient"
-                        x1="0%"
-                        y1="0%"
-                        x2="100%"
-                        y2="100%"
-                    >
-                        <stop offset="0%" stop-color="#3B82F6" />
-                        <stop offset="100%" stop-color="#1D4ED8" />
-                    </linearGradient>
-                </defs>
-
-                <!-- Main circle -->
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="45"
-                    fill="url(#tadone-gradient)"
-                    class="drop-shadow-lg"
+                <!-- Background square -->
+                <rect
+                    x="15"
+                    y="15"
+                    width="70"
+                    height="70"
+                    rx="16"
+                    fill="#6366F1"
                 />
 
-                <!-- Inner circle for depth -->
-                <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.2)"
-                    stroke-width="1"
-                />
-
-                <!-- Checkmark -->
+                <!-- Letter "T" -->
                 <path
-                    d="M30 48 L42 60 L70 32"
+                    d="M35 35 L65 35 M50 35 L50 65"
                     stroke="white"
-                    stroke-width="6"
+                    stroke-width="8"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    fill="none"
                 />
 
-                <!-- Task lines representing productivity -->
-                <g
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    opacity="0.7"
-                >
-                    <line x1="25" y1="25" x2="40" y2="25" />
-                    <line x1="25" y1="30" x2="35" y2="30" />
-                    <line x1="25" y1="35" x2="45" y2="35" />
-                </g>
-
-                <!-- Subtle highlight -->
-                <ellipse
-                    cx="42"
-                    cy="35"
-                    rx="15"
-                    ry="8"
-                    fill="rgba(255,255,255,0.15)"
+                <!-- Completion dot -->
+                <circle
+                    cx="65"
+                    cy="65"
+                    r="6"
+                    fill="#10B981"
                 />
             </svg>
         </div>
