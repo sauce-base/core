@@ -23,6 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Start containers**: `./vendor/bin/sail up -d`
 - **Run artisan commands**: `./vendor/bin/sail artisan [command]`
 - **Run npm commands**: `./vendor/bin/sail npm [command]`
+- Use Laravel Sail for running all development commands in a containerized environment
 
 ## Architecture Overview
 
