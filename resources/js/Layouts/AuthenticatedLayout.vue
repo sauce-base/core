@@ -202,7 +202,7 @@ const showingNavigationDropdown = ref(false);
             </main>
 
             <!-- Footer -->
-            <Footer :showBackground="true" />
+            <Footer />
         </div>
     </div>
 </template>
