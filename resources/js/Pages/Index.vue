@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import IconLogin from '~icons/heroicons/arrow-right-on-rectangle';
+import IconZap from '~icons/heroicons/bolt';
+import IconCheckCircle from '~icons/heroicons/check-circle';
+import IconClipboard from '~icons/heroicons/clipboard-document-list';
+import IconDashboard from '~icons/heroicons/squares-2x2';
+import IconUserPlus from '~icons/heroicons/user-plus';
 import Footer from '../Components/Footer.vue';
 import Header from '../Components/Header.vue';
 import TadoneLogo from '../Components/TadoneLogo.vue';
@@ -41,19 +47,7 @@ defineProps<{
                     :href="route('login')"
                     class="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 sm:w-auto"
                 >
-                    <svg
-                        class="mr-2 h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                        />
-                    </svg>
+                    <IconLogin class="mr-2 h-4 w-4" />
                     Sign In
                 </Link>
 
@@ -63,19 +57,7 @@ defineProps<{
                     :href="route('register')"
                     class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-950 sm:w-auto"
                 >
-                    <svg
-                        class="mr-2 h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                        />
-                    </svg>
+                    <IconUserPlus class="mr-2 h-4 w-4" />
                     Sign Up
                 </Link>
 
@@ -85,19 +67,7 @@ defineProps<{
                     :href="route('dashboard')"
                     class="inline-flex w-full items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 sm:w-auto"
                 >
-                    <svg
-                        class="mr-2 h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                        />
-                    </svg>
+                    <IconDashboard class="mr-2 h-4 w-4" />
                     Dashboard
                 </Link>
             </div>
@@ -114,19 +84,7 @@ defineProps<{
                         <div
                             class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg"
                         >
-                            <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                />
-                            </svg>
+                            <IconClipboard class="h-6 w-6" />
                         </div>
                         <h3
                             class="mb-2 text-xl font-semibold text-gray-900 dark:text-white"
@@ -151,19 +109,7 @@ defineProps<{
                         <div
                             class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-purple-600 text-white shadow-lg"
                         >
-                            <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                                />
-                            </svg>
+                            <IconZap class="h-6 w-6" />
                         </div>
                         <h3
                             class="mb-2 text-xl font-semibold text-gray-900 dark:text-white"
@@ -188,19 +134,7 @@ defineProps<{
                         <div
                             class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-green-600 text-white shadow-lg"
                         >
-                            <svg
-                                class="h-6 w-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
+                            <IconCheckCircle class="h-6 w-6" />
                         </div>
                         <h3
                             class="mb-2 text-xl font-semibold text-gray-900 dark:text-white"
@@ -220,6 +154,6 @@ defineProps<{
         </div>
 
         <!-- Footer -->
-        <Footer :showBackground="true" />
+        <Footer />
     </div>
 </template>
