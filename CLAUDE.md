@@ -76,3 +76,7 @@ This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the T
 ## Git Commit Guidelines
 - All commits must be one line
 - Do not add any author or co-author information to commits
+- Group changes by feature, logic, or component - do not commit all changes in one large commit
+- Separate infrastructure changes (dependencies, config) from feature changes
+- Separate styling changes from functional changes
+- Each commit should represent a single logical unit of work
