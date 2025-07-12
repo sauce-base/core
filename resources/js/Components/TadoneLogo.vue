@@ -56,12 +56,7 @@ const textSizeClasses = {
                 />
 
                 <!-- Completion dot -->
-                <circle
-                    cx="65"
-                    cy="65"
-                    r="6"
-                    fill="#10B981"
-                />
+                <circle cx="65" cy="65" r="6" fill="#10B981" />
             </svg>
         </div>
 
@@ -77,7 +72,7 @@ const textSizeClasses = {
             <h1
                 :class="[
                     textSizeClasses[size || 'md'],
-                    'font-bold leading-none text-gray-900 dark:text-white',
+                    'leading-none font-bold text-gray-900 dark:text-white',
                 ]"
             >
                 tadone
