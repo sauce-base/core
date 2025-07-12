@@ -1,4 +1,4 @@
-export default (ctx) => ({
+export default () => ({
     plugins: {
         '@tailwindcss/postcss': {},
     },
