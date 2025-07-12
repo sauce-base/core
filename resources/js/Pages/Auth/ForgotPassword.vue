@@ -7,7 +7,10 @@ import FormMessage from '@/Components/Form/FormMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Input from '@/Components/ui/Input.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { forgotPasswordSchema, type ForgotPasswordFormData } from '@/validation';
+import {
+    forgotPasswordSchema,
+    type ForgotPasswordFormData,
+} from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';

@@ -36,10 +36,10 @@ const inertiaForm = useInertiaForm<LoginFormData>({
 
 const onSubmit = async () => {
     const { valid } = await form.validate();
-    
+
     if (valid) {
         Object.assign(inertiaForm, form.values);
-        
+
         inertiaForm.post(route('login'), {
             onFinish: () => {
                 inertiaForm.reset('password');
@@ -103,7 +103,13 @@ const onSubmit = async () => {
                             <input
                                 type="checkbox"
                                 :checked="componentField.modelValue === true"
-                                @change="(e) => componentField['onUpdate:modelValue']((e.target as HTMLInputElement).checked)"
+                                @change="
+                                    (e) =>
+                                        componentField['onUpdate:modelValue'](
+                                            (e.target as HTMLInputElement)
+                                                .checked,
+                                        )
+                                "
                                 @blur="componentField.onBlur"
                                 class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-indigo-600"
                             />

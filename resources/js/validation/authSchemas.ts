@@ -3,7 +3,9 @@ import { emailSchema, nameSchema, passwordSchema } from './commonSchemas';
 
 export const loginSchema = z.object({
     email: emailSchema,
-    password: z.string({ required_error: 'Please enter your password' }).min(1, 'Please enter your password'),
+    password: z
+        .string({ required_error: 'Please enter your password' })
+        .min(1, 'Please enter your password'),
     remember: z.boolean().optional(),
 });
 

@@ -33,7 +33,7 @@ const inertiaForm = useInertiaForm<RegisterFormData>({
 
 const onSubmit = form.handleSubmit((values: RegisterFormData) => {
     Object.assign(inertiaForm, values);
-    
+
     inertiaForm.post(route('register'), {
         onFinish: () => {
             inertiaForm.reset('password', 'password_confirmation');
