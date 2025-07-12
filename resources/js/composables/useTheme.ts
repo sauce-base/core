@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -39,17 +39,20 @@ export function useTheme() {
         applyTheme();
     };
 
+    // Initialize theme immediately if possible, otherwise on mount
+    if (typeof window !== 'undefined') {
+        initTheme();
+    }
+
     // Watch for theme changes
     watch(theme, applyTheme);
 
     // Watch for system theme changes
     mediaQuery.addEventListener('change', applyTheme);
 
-    // Initialize on load
-    initTheme();
-
     return {
         theme,
         setTheme,
+        isDark,
     };
 }
