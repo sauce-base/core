@@ -72,3 +72,7 @@ This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the T
 - `routes/web.php`: Main application routes
 - `vite.config.js`: Asset bundling configuration
 - `docker-compose.yml`: Complete development environment setup
+
+## Git Commit Guidelines
+- All commits must be one line
+- Do not add any author or co-author information to commits
