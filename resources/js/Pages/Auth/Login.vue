@@ -1,29 +1,51 @@
 <script setup lang="ts">
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
+import FormControl from '@/Components/Form/FormControl.vue';
+import FormField from '@/Components/Form/FormField.vue';
+import FormItem from '@/Components/Form/FormItem.vue';
+import FormLabel from '@/Components/Form/FormLabel.vue';
+import FormMessage from '@/Components/Form/FormMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import Input from '@/Components/ui/Input.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { loginSchema, type LoginFormData } from '@/validation';
+import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
 
 defineProps<{
     canResetPassword?: boolean;
     status?: string;
 }>();
 
+const formSchema = toTypedSchema(loginSchema);
+
 const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        email: '',
+        password: '',
+        remember: false,
+    },
+});
+
+const inertiaForm = useInertiaForm<LoginFormData>({
     email: '',
     password: '',
     remember: false,
 });
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => {
-            form.reset('password');
-        },
-    });
+const onSubmit = async () => {
+    const { valid } = await form.validate();
+    
+    if (valid) {
+        Object.assign(inertiaForm, form.values);
+        
+        inertiaForm.post(route('login'), {
+            onFinish: () => {
+                inertiaForm.reset('password');
+            },
+        });
+    }
 };
 </script>
 
@@ -45,60 +67,69 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+        <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="email" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="email"
+                            placeholder="Enter your email"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
+            <FormField name="password" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="password"
+                            placeholder="Enter your password"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+            <FormField name="remember" v-slot="{ componentField }">
+                <FormItem>
+                    <FormControl>
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                :checked="componentField.modelValue === true"
+                                @change="(e) => componentField['onUpdate:modelValue']((e.target as HTMLInputElement).checked)"
+                                @blur="componentField.onBlur"
+                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-900 dark:focus:ring-indigo-600"
+                            />
+                            <span
+                                class="text-sm text-gray-600 dark:text-gray-400"
+                            >
+                                Remember me
+                            </span>
+                        </label>
+                    </FormControl>
+                </FormItem>
+            </FormField>
 
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
-                    >
-                </label>
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
+            <div class="flex items-center justify-end space-x-4">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
                     Forgot your password?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                    type="submit"
+                    :class="{ 'opacity-25': inertiaForm.processing }"
+                    :disabled="inertiaForm.processing"
                 >
                     Log in
                 </PrimaryButton>

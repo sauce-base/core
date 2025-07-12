@@ -29,5 +29,7 @@ export default {
     'body-max-line-length': [2, 'always', 100],
     'footer-leading-blank': [1, 'always'],
     'footer-max-line-length': [2, 'always', 100],
+    'body-empty': [2, 'always'], // Enforce no body (single line commits)
+    'footer-empty': [2, 'always'], // Enforce no footer (no co-author info)
   },
 };

@@ -1,25 +1,45 @@
 <script setup lang="ts">
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
+import FormControl from '@/Components/Form/FormControl.vue';
+import FormField from '@/Components/Form/FormField.vue';
+import FormItem from '@/Components/Form/FormItem.vue';
+import FormLabel from '@/Components/Form/FormLabel.vue';
+import FormMessage from '@/Components/Form/FormMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import Input from '@/Components/ui/Input.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { registerSchema, type RegisterFormData } from '@/validation';
+import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+
+const formSchema = toTypedSchema(registerSchema);
 
 const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    },
+});
+
+const inertiaForm = useInertiaForm<RegisterFormData>({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
 });
 
-const submit = () => {
-    form.post(route('register'), {
+const onSubmit = form.handleSubmit((values: RegisterFormData) => {
+    Object.assign(inertiaForm, values);
+    
+    inertiaForm.post(route('register'), {
         onFinish: () => {
-            form.reset('password', 'password_confirmation');
+            inertiaForm.reset('password', 'password_confirmation');
         },
     });
-};
+});
 </script>
 
 <template>
@@ -36,86 +56,75 @@ const submit = () => {
             </p>
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+        <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="name" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="text"
+                            placeholder="Enter your full name"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+            <FormField name="email" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="email"
+                            placeholder="Enter your email address"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+            <FormField name="password" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="password"
+                            placeholder="Create a password"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+            <FormField name="password_confirmation" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="password"
+                            placeholder="Confirm your password"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
+            <div class="flex items-center justify-end space-x-4">
                 <Link
                     :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
                     Already registered?
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                    type="submit"
+                    :class="{ 'opacity-25': inertiaForm.processing }"
+                    :disabled="inertiaForm.processing"
                 >
                     Register
                 </PrimaryButton>
