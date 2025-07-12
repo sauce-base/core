@@ -6,6 +6,7 @@ import FormLabel from '@/Components/Form/FormLabel.vue';
 import FormMessage from '@/Components/Form/FormMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Input from '@/Components/ui/Input.vue';
+import PasswordInput from '@/Components/ui/PasswordInput.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { loginSchema, type LoginFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -86,9 +87,8 @@ const onSubmit = async () => {
                 <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                        <Input
+                        <PasswordInput
                             v-bind="componentField"
-                            type="password"
                             placeholder="Enter your password"
                         />
                     </FormControl>

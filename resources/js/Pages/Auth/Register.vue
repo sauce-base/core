@@ -6,6 +6,7 @@ import FormLabel from '@/Components/Form/FormLabel.vue';
 import FormMessage from '@/Components/Form/FormMessage.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Input from '@/Components/ui/Input.vue';
+import PasswordInput from '@/Components/ui/PasswordInput.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { registerSchema, type RegisterFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -89,9 +90,8 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                 <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                        <Input
+                        <PasswordInput
                             v-bind="componentField"
-                            type="password"
                             placeholder="Create a password"
                         />
                     </FormControl>
@@ -103,9 +103,8 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                 <FormItem>
                     <FormLabel>Confirm Password</FormLabel>
                     <FormControl>
-                        <Input
+                        <PasswordInput
                             v-bind="componentField"
-                            type="password"
                             placeholder="Confirm your password"
                         />
                     </FormControl>
