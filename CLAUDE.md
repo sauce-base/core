@@ -131,3 +131,7 @@ This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the T
   - Bug fixes should be isolated from new features
   - Documentation updates should be separate unless directly related to code changes in the same commit
 - Each commit should represent a single, complete, logical unit of work that could be deployed independently
+
+## Test Guidelines
+- **Test Execution Strategy**:
+  - Run the test using a command which you can get the results, don't run using the ui mode as you can't get any results from it

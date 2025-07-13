@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TadoneLogo from '@/Components/branding/TadoneLogo.vue';
+import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
 import Footer from '@/Components/layout/Footer.vue';
 import { Link } from '@inertiajs/vue3';
 </script>

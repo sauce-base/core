@@ -5,7 +5,7 @@ import IconDashboard from '~icons/heroicons/squares-2x2';
 import IconUserPlus from '~icons/heroicons/user-plus';
 import Footer from '@/Components/layout/Footer.vue';
 import Header from '@/Components/layout/Header.vue';
-import TadoneLogo from '@/Components/branding/TadoneLogo.vue';
+import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
 
 defineProps<{
     canLogin?: boolean;

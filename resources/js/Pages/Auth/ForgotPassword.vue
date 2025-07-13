@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PrimaryButton from '@/Components/ui/button/PrimaryButton.vue';
+import Button from '@/Components/ui/Button.vue';
 import FormControl from '@/Components/ui/form/FormControl.vue';
 import FormField from '@/Components/ui/form/FormField.vue';
 import FormItem from '@/Components/ui/form/FormItem.vue';
@@ -71,13 +71,13 @@ const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
             </FormField>
 
             <div class="flex items-center justify-end">
-                <PrimaryButton
+                <Button
                     type="submit"
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
                     Email Password Reset Link
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
 

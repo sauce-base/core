@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/branding/ApplicationLogo.vue';
-import ThemeToggle from '@/Components/branding/ThemeToggle.vue';
+import ApplicationLogo from '@/Components/ui/ApplicationLogo.vue';
+import ThemeToggle from '@/Components/ui/ThemeToggle.vue';
 import Footer from '@/Components/layout/Footer.vue';
 import NavLink from '@/Components/layout/NavLink.vue';
 import ResponsiveNavLink from '@/Components/layout/ResponsiveNavLink.vue';

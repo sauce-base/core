@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import InputError from '@/Components/legacy/InputError.vue';
-import InputLabel from '@/Components/legacy/InputLabel.vue';
-import TextInput from '@/Components/legacy/TextInput.vue';
-import PrimaryButton from '@/Components/ui/button/PrimaryButton.vue';
+import Button from '@/Components/ui/Button.vue';
+import Input from '@/Components/ui/Input.vue';
+import FormControl from '@/Components/ui/form/FormControl.vue';
+import FormField from '@/Components/ui/form/FormField.vue';
+import FormItem from '@/Components/ui/form/FormItem.vue';
+import FormLabel from '@/Components/ui/form/FormLabel.vue';
+import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps<{
@@ -34,36 +37,38 @@ const form = useForm({
             @submit.prevent="form.patch(route('profile.update'))"
             class="mt-6 space-y-6"
         >
-            <div>
-                <InputLabel for="name" value="Name" />
+            <FormField name="name">
+                <FormItem>
+                    <FormLabel :error="form.errors.name">Name</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-model="form.name"
+                            type="text"
+                            autocomplete="name"
+                            :error="form.errors.name"
+                            required
+                            autofocus
+                        />
+                    </FormControl>
+                    <FormMessage :inertia-error="form.errors.name" />
+                </FormItem>
+            </FormField>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
+            <FormField name="email">
+                <FormItem>
+                    <FormLabel :error="form.errors.email">Email</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-model="form.email"
+                            type="email"
+                            autocomplete="username"
+                            :error="form.errors.email"
+                            required
+                        />
+                    </FormControl>
+                    <FormMessage :inertia-error="form.errors.email" />
+                </FormItem>
+            </FormField>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
                 <p class="mt-2 text-sm text-gray-800 dark:text-gray-200">
@@ -87,7 +92,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <Button variant="default" :disabled="form.processing">Save</Button>
 
                 <Transition
                     enter-active-class="transition ease-in-out"

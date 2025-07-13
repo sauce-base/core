@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputError from '@/Components/legacy/InputError.vue';
-import InputLabel from '@/Components/legacy/InputLabel.vue';
-import TextInput from '@/Components/legacy/TextInput.vue';
-import PrimaryButton from '@/Components/ui/button/PrimaryButton.vue';
+import InputError from '@/Components/ui/form/FormMessage.vue';
+import InputLabel from '@/Components/ui/form/FormLabel.vue';
+import TextInput from '@/Components/ui/Input.vue';
+import Button from '@/Components/ui/Button.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
@@ -44,13 +44,13 @@ const submit = () => {
             </div>
 
             <div class="mt-4 flex justify-end">
-                <PrimaryButton
+                <Button
                     class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Confirm
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
     </GuestLayout>

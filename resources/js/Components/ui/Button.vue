@@ -3,35 +3,58 @@ import { computed } from 'vue';
 
 const props = withDefaults(
     defineProps<{
-        variant?: 'primary' | 'secondary' | 'danger';
+        variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link';
+        size?: 'default' | 'sm' | 'lg' | 'icon';
         type?: 'button' | 'submit' | 'reset';
         disabled?: boolean;
+        asChild?: boolean;
     }>(),
     {
-        variant: 'primary',
+        variant: 'default',
+        size: 'default',
         type: 'button',
         disabled: false,
+        asChild: false,
     },
 );
 
 const buttonClasses = computed(() => {
-    const baseClasses =
-        'inline-flex items-center rounded-lg border px-4 py-2 text-xs font-semibold tracking-widest uppercase transition duration-150 ease-in-out focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:opacity-25';
-
+    const baseClasses = 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
+    
     const variants = {
-        primary:
-            'border-transparent bg-gray-800 text-white hover:bg-gray-700 focus:bg-gray-700 focus:ring-indigo-500 active:bg-gray-900 dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-white dark:focus:bg-white dark:focus:ring-offset-gray-800 dark:active:bg-gray-300',
-        secondary:
-            'border-gray-300 bg-white text-gray-700 shadow-xs hover:bg-gray-50 focus:ring-indigo-500 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800',
-        danger: 'border-transparent bg-red-600 text-white hover:bg-red-500 focus:bg-red-500 focus:ring-red-500 active:bg-red-700 dark:focus:ring-offset-gray-800',
+        default: 'bg-gray-900 text-gray-50 hover:bg-gray-900/90 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90',
+        destructive: 'bg-red-500 text-gray-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90',
+        outline: 'border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50',
+        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-100/80 dark:bg-gray-800 dark:text-gray-50 dark:hover:bg-gray-800/80',
+        ghost: 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50',
+        link: 'text-gray-900 underline-offset-4 hover:underline dark:text-gray-50',
     };
-
-    return `${baseClasses} ${variants[props.variant]}`;
+    
+    const sizes = {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+        icon: 'h-10 w-10',
+    };
+    
+    return `${baseClasses} ${variants[props.variant]} ${sizes[props.size]}`;
 });
 </script>
 
 <template>
-    <button :type="type" :disabled="disabled" :class="buttonClasses">
+    <button
+        v-if="!asChild"
+        :type="type"
+        :disabled="disabled"
+        :class="buttonClasses"
+    >
         <slot />
     </button>
+    <component
+        v-else
+        :is="'div'"
+        :class="buttonClasses"
+    >
+        <slot />
+    </component>
 </template>
