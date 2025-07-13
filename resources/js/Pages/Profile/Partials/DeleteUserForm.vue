@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import InputError from '@/Components/ui/form/FormMessage.vue';
+import { Button } from '@/Components/ui/button';
 import InputLabel from '@/Components/ui/form/FormLabel.vue';
+import InputError from '@/Components/ui/form/FormMessage.vue';
 import TextInput from '@/Components/ui/Input.vue';
 import Modal from '@/Components/ui/Modal.vue';
-import { Button } from '@/Components/ui/button';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
@@ -53,7 +53,9 @@ const closeModal = () => {
             </p>
         </header>
 
-        <Button variant="destructive" @click="confirmUserDeletion">Delete Account</Button>
+        <Button variant="destructive" @click="confirmUserDeletion"
+            >Delete Account</Button
+        >
 
         <Modal :show="confirmingUserDeletion" @close="closeModal">
             <div class="p-6">

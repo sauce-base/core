@@ -17,4 +17,3 @@ export const nameSchema = z
     .min(2, 'Name should be at least 2 characters')
     .max(255, 'Name is too long (maximum 255 characters)')
     .regex(/^[a-zA-Z\s]*$/, 'Name can only contain letters and spaces');
-

@@ -1,137 +1,189 @@
-# CLAUDE.md
+# CLAUDE.md - Development Guidelines
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+**CRITICAL**: This file contains mandatory guidelines that Claude Code MUST follow exactly. No exceptions.
 
-## Development Commands
+## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
 
-### Backend (PHP/Laravel)
-- **Run development server**: `composer dev` - Starts Laravel server, queue worker, logs, and Vite dev server concurrently
-- **Run tests**: `composer test` - Runs PHPUnit tests with Pest framework
-- **Run single test**: `php artisan test --filter=TestName`
-- **Code formatting**: `./vendor/bin/pint` - Laravel Pint for PHP code style
-- **Static analysis**: `./vendor/bin/phpstan` - PHPStan via Larastan
-- **Database migrations**: `php artisan migrate`
-- **Database seeding**: `php artisan db:seed`
-- **Clear caches**: `php artisan optimize:clear`
+### Git Commits - STRICT ENFORCEMENT
+- **FORMAT**: Single line only, no body, no multi-line messages
+- **NO AUTHORS**: Never add Co-Authored-By, Generated with Claude, or any attribution
+- **PATTERN**: `type: description` (e.g., `feat: add user authentication`)
+- **GROUPING**: Logical changes together, infrastructure separate from features
+- **VERIFICATION**: Always run `git status` after commit to verify success
 
-### Frontend (Vue.js/TypeScript)
-- **Development server**: `npm run dev` - Vite dev server
-- **Build production**: `npm run build` - TypeScript compilation + Vite build
-- **Lint JavaScript/Vue**: `npm run lint` - ESLint with auto-fix
+### Pull Requests - MANDATORY FORMAT  
+- **TITLE**: Clear, descriptive summary
+- **BODY**: Must include "## Summary" and "## Test plan" sections
+- **NO ATTRIBUTION**: Never add "Generated with Claude" or similar
+
+### Code Quality - ALWAYS RUN THESE
+- **BEFORE COMMIT**: Always run `./vendor/bin/pint` and `npm run lint`
+- **TESTS**: Run `composer test` after backend changes
+- **BUILD**: Run `npm run build` after frontend changes
+- **VERIFY**: Check all commands pass before committing
+
+## 📋 Development Commands - USE THESE EXACTLY
+
+### Quick Start Commands
+```bash
+# Start development (run this first)
+composer dev  # Starts Laravel + Vite + queue worker + logs
+
+# Quality checks (run before commit)
+./vendor/bin/pint     # PHP formatting
+./vendor/bin/phpstan  # PHP static analysis  
+npm run lint          # JS/Vue linting
+composer test         # PHP tests
+npm run build         # Production build test
+```
+
+### Backend (Laravel/PHP)
+- `composer dev` - **MAIN COMMAND**: Starts everything (Laravel + Vite + workers)
+- `composer test` - Run all PHP tests
+- `php artisan test --filter=TestName` - Run specific test
+- `./vendor/bin/pint` - **REQUIRED**: Format PHP code
+- `./vendor/bin/phpstan` - **REQUIRED**: Static analysis
+- `php artisan migrate` - Database migrations
+- `php artisan db:seed` - Seed database
+- `php artisan optimize:clear` - Clear all caches
+
+### Frontend (Vue/TypeScript)
+- `npm run dev` - Vite dev server (usually run via `composer dev`)
+- `npm run build` - **REQUIRED**: Production build verification
+- `npm run lint` - **REQUIRED**: ESLint with auto-fix
+
+### Testing (E2E with Playwright)
+- `npm run test:e2e` - **USE THIS**: Headless tests with results
+- `npm run test:e2e:headed` - Visual debugging
+- `npm run test:e2e:debug` - Debug mode
+- **NEVER USE**: `npm run test:e2e:ui` (no results output)
+
+## 🏗️ Architecture - FOLLOW THESE PATTERNS
+
+### Stack Overview
+- **Backend**: Laravel 12 + PHP 8.2+ + PostgreSQL + Redis
+- **Frontend**: Vue 3 + TypeScript + Inertia.js + Tailwind CSS
+- **Components**: shadcn/ui with reka-ui implementation
+- **Testing**: Pest PHP + Playwright E2E
+
+### Component Patterns - MANDATORY
+- **Location**: `resources/js/Components/` for reusable components
+- **UI Components**: Use shadcn/ui pattern with reka-ui
+- **Import**: Use `@/Components/ui/button` style imports
+- **Styling**: Tailwind CSS classes, no custom CSS unless required
+
+### File Organization - STRICT STRUCTURE
+```
+resources/js/
+├── Components/
+│   ├── ui/           # shadcn/ui components
+│   ├── layout/       # Layout components  
+│   └── forms/        # Form components
+├── Pages/            # Inertia pages
+├── lib/              # Utilities
+└── validation/       # Zod schemas
+```
+
+## 🧪 Testing Requirements - ALWAYS FOLLOW
 
 ### E2E Testing (Playwright)
-- **Run all e2e tests**: `npm run test:e2e` - Runs tests in headless mode
-- **Run with UI**: `npm run test:e2e:ui` - Opens Playwright UI for interactive testing
-- **Run in headed mode**: `npm run test:e2e:headed` - Runs tests with browser visible
-- **Debug tests**: `npm run test:e2e:debug` - Runs tests in debug mode
-- **View test report**: `npm run test:e2e:report` - Opens HTML test report
+- **LOCATION**: `tests/e2e/` directory only
+- **PATTERN**: Page Object Model mandatory
+- **SELECTORS**: Use `data-testid` attributes (priority #1)
+- **NAMING**: `data-testid="field-name"` for inputs, `data-testid="field-name-error"` for errors
+- **BEFORE TESTS**: Must run `composer dev` first
+- **EXECUTION**: Use `npm run test:e2e` for results
 
-### Docker (Laravel Sail)
-- **Start containers**: `./vendor/bin/sail up -d`
-- **Run artisan commands**: `./vendor/bin/sail artisan [command]`
-- **Run npm commands**: `./vendor/bin/sail npm [command]`
-- Use Laravel Sail for running all development commands in a containerized environment
+### PHP Testing (Pest)
+- **RUN**: `composer test` before every commit
+- **LOCATION**: `tests/Feature/` and `tests/Unit/`
+- **DATABASE**: Use `RefreshDatabase` trait
 
-## Architecture Overview
+## 🔧 Code Standards - NON-NEGOTIABLE
 
-This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the TALL stack pattern with TypeScript.
+### PHP Code
+- **FORMATTING**: Must run `./vendor/bin/pint` before commit
+- **ANALYSIS**: Must run `./vendor/bin/phpstan` and fix issues
+- **IMPORTS**: Use proper namespacing, no unused imports
 
-### Backend Structure
-- **Framework**: Laravel 12 with PHP 8.2+
-- **Authentication**: Laravel Breeze with Inertia.js
-- **Database**: PostgreSQL (configured in docker-compose.yml)
-- **Queue**: Redis for background job processing
-- **Search**: Typesense for full-text search capabilities
-- **Testing**: Pest PHP for feature and unit tests
-- **Mail**: Mailpit for local email testing
+### Vue/TypeScript
+- **LINTING**: Must run `npm run lint` before commit
+- **TYPING**: Use TypeScript properly, no `any` types
+- **COMPOSITION API**: Use `<script setup lang="ts">` pattern
+- **VALIDATION**: Use Zod schemas in `resources/js/validation/`
 
-### Frontend Structure
-- **Framework**: Vue 3 with TypeScript
-- **Build Tool**: Vite with Laravel plugin
-- **Styling**: Tailwind CSS with forms plugin
-- **State Management**: Inertia.js for server-driven SPA
-- **Routing**: Ziggy for Laravel route helpers in Vue
+### CSS/Styling
+- **PRIMARY**: Use Tailwind CSS classes
+- **COMPONENTS**: Follow shadcn/ui patterns with reka-ui
+- **NO CUSTOM CSS**: Unless absolutely necessary
+- **RESPONSIVE**: Mobile-first approach
 
-### Key Patterns
-- **Inertia.js Architecture**: Server-side routing with Vue components as pages
-- **Shared Props**: User authentication state shared globally via `HandleInertiaRequests` middleware
-- **Component Structure**: Reusable Vue components in `resources/js/Components/`
-- **Layouts**: `AuthenticatedLayout` and `GuestLayout` for different user states
-- **Form Handling**: Laravel form requests with Inertia.js form helpers
+## 🚀 Deployment Workflow - EXACT SEQUENCE
 
-### Database & Services
-- **PostgreSQL**: Primary database with testing database auto-creation
-- **Redis**: Caching and queue backend
-- **Typesense**: Search engine service
-- **Soketi**: WebSocket server for real-time features
-- **Mailpit**: Local mail server for development
+### Before Every Commit
+1. `./vendor/bin/pint` - Format PHP
+2. `./vendor/bin/phpstan` - Analyze PHP  
+3. `npm run lint` - Lint JS/Vue
+4. `composer test` - Run PHP tests
+5. `npm run build` - Verify build
+6. `git add .` - Stage changes
+7. `git commit -m "type: description"` - Single line commit
+8. Verify with `git status`
 
-### Testing Architecture
-- **Pest PHP**: Modern testing framework with Laravel plugin
-- **Feature Tests**: Full HTTP request testing in `tests/Feature/`
-- **Unit Tests**: Component testing in `tests/Unit/`
-- **Database**: Uses `RefreshDatabase` trait for clean test state
-- **Authentication Tests**: Comprehensive auth flow testing included
+### Development Workflow
+1. `composer dev` - Start development servers
+2. Make changes following patterns above
+3. Test changes work locally
+4. Run quality checks (see "Before Every Commit")
+5. Commit with proper format
+6. Create PR if needed
 
-## Important Files
-- `app/Http/Middleware/HandleInertiaRequests.php`: Shared props configuration
-- `resources/js/app.ts`: Frontend entry point and Inertia setup
-- `routes/web.php`: Main application routes
-- `vite.config.js`: Asset bundling configuration
-- `docker-compose.yml`: Complete development environment setup
+## 📁 Important Files - KNOW THESE
 
-## E2E Testing Guidelines
+### Configuration
+- `vite.config.js` - Frontend build configuration
+- `docker-compose.yml` - Development environment
+- `components.json` - shadcn/ui configuration
+- `tailwind.config.js` - Tailwind CSS configuration
 
-### Test Structure
-- **Tests location**: `tests/e2e/` directory
-- **Page Object Models**: `tests/e2e/pages/` - Encapsulate page interactions
-- **Test utilities**: `tests/e2e/utils/` - Shared helper functions
-- **Test fixtures**: `tests/e2e/fixtures/` - Test data and mock objects
+### Application Entry Points  
+- `resources/js/app.ts` - Frontend entry point
+- `app/Http/Middleware/HandleInertiaRequests.php` - Shared props
+- `routes/web.php` - Application routes
 
-### Writing Tests
-- Use Page Object Model pattern for maintainable tests
-- Prefer `data-testid` attributes over CSS selectors for element targeting
-- Use descriptive test names that explain the expected behavior
-- Group related tests using `test.describe()` blocks
-- Use `test.beforeEach()` for common setup operations
+### Layouts
+- `resources/js/Layouts/AuthenticatedLayout.vue` - Logged-in users
+- `resources/js/Layouts/GuestLayout.vue` - Anonymous users
 
-### Best Practices
-- **Element Selection Priority**:
-  1. `getByTestId()` - Most reliable for custom elements
-  2. `getByRole()` - Best for semantic elements (buttons, links)
-  3. `getByLabel()` - Good for form controls
-  4. `getByPlaceholder()` - Fallback for inputs
-- **Assertions**: Use web-first assertions that auto-wait (e.g., `toBeVisible()`)
-- **Test Data**: Store test data in fixtures rather than hardcoding in tests
-- **Authentication**: Use helper functions for login flows in `utils/auth.ts`
+## ⚡ Quick Reference
 
-### Data-testid Conventions
-- Form fields: Use field name (e.g., `data-testid="email"`)
-- Error messages: Use `{field-name}-error` (e.g., `data-testid="email-error"`)
-- Interactive elements: Use descriptive names (e.g., `data-testid="password-toggle"`)
+### Most Common Tasks
+```bash
+# Start development
+composer dev
 
-### Running Tests
-- **Start development servers first**: Run `composer dev` in a separate terminal
-- This starts both Laravel (port 8000) and Vite (port 5173) servers concurrently
-- **Run tests**: `npm run test:e2e` (expects servers to be running)
-- **Development workflow**:
-  1. Terminal 1: `composer dev` (keep running)
-  2. Terminal 2: `npm run test:e2e:ui` for interactive testing
-- **Debug tests**: Use headed mode (`npm run test:e2e:headed`) for visual debugging
-- **CI mode**: Tests will automatically start servers if `CI=true` environment variable is set
+# Before commit checklist
+./vendor/bin/pint && ./vendor/bin/phpstan && npm run lint && composer test && npm run build
 
-## Git Commit Guidelines
-- All commits must be one line
-- Do not add any author or co-author information to commits
-- Group changes by scope and logical relationship:
-  - Changes that are part of the same feature/scope should be committed together
-  - Infrastructure changes (dependencies, config files) should be separate from feature implementation
-  - Component creation and its immediate usage should be in the same commit when they form a complete feature
-  - Styling/formatting changes should be separate from functional changes
-  - Bug fixes should be isolated from new features
-  - Documentation updates should be separate unless directly related to code changes in the same commit
-- Each commit should represent a single, complete, logical unit of work that could be deployed independently
+# Single line commit
+git commit -m "feat: add new feature"
 
-## Test Guidelines
-- **Test Execution Strategy**:
-  - Run the test using a command which you can get the results, don't run using the ui mode as you can't get any results from it
+# Run E2E tests  
+npm run test:e2e
+```
+
+### Component Usage
+```vue
+<!-- Use shadcn/ui components -->
+<script setup lang="ts">
+import { Button } from '@/Components/ui/button'
+</script>
+
+<template>
+  <Button variant="default">Click me</Button>
+</template>
+```
+
+---
+
+**REMEMBER**: These are not suggestions - they are requirements. Follow them exactly to maintain code quality and consistency.
