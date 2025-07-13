@@ -10,6 +10,7 @@
 - **PATTERN**: `type: description` (e.g., `feat: add user authentication`)
 - **GROUPING**: Logical changes together, infrastructure separate from features
 - **VERIFICATION**: Always run `git status` after commit to verify success
+- **BRANCH MANAGEMENT**: Always create/switch to a branch when working in a GitHub issue
 
 ### Pull Requests - MANDATORY FORMAT  
 - **TITLE**: Clear, descriptive summary
@@ -187,3 +188,4 @@ import { Button } from '@/Components/ui/button'
 ---
 
 **REMEMBER**: These are not suggestions - they are requirements. Follow them exactly to maintain code quality and consistency.
+```

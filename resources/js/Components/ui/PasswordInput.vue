@@ -15,7 +15,7 @@ const props = withDefaults(
     },
 );
 
-const model = defineModel<string>();
+const model = defineModel<string | unknown>();
 const fieldContext = inject<FieldContext | null>('fieldContext', null);
 const showPassword = ref(false);
 
