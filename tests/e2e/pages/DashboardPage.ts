@@ -19,9 +19,7 @@ export class DashboardPage {
         // Wait for navigation to dashboard first
         await expect(this.page).toHaveURL('/dashboard');
         // Then check for any sign we're on the dashboard page
-        await expect(
-            this.page.getByText("You're logged in!")
-        ).toBeVisible();
+        await expect(this.page.getByText("You're logged in!")).toBeVisible();
     }
 
     async expectWelcomeMessage(userName?: string) {

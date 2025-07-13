@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import Footer from '@/Components/Footer.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import ApplicationLogo from '@/Components/branding/ApplicationLogo.vue';
+import ThemeToggle from '@/Components/branding/ThemeToggle.vue';
+import Footer from '@/Components/layout/Footer.vue';
+import NavLink from '@/Components/layout/NavLink.vue';
+import ResponsiveNavLink from '@/Components/layout/ResponsiveNavLink.vue';
+import Dropdown from '@/Components/ui/Dropdown.vue';
+import DropdownLink from '@/Components/ui/DropdownLink.vue';
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 

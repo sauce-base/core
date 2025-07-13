@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import FormControl from '@/Components/Form/FormControl.vue';
-import FormField from '@/Components/Form/FormField.vue';
-import FormItem from '@/Components/Form/FormItem.vue';
-import FormLabel from '@/Components/Form/FormLabel.vue';
-import FormMessage from '@/Components/Form/FormMessage.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Components/ui/button/PrimaryButton.vue';
+import FormControl from '@/Components/ui/form/FormControl.vue';
+import FormField from '@/Components/ui/form/FormField.vue';
+import FormItem from '@/Components/ui/form/FormItem.vue';
+import FormLabel from '@/Components/ui/form/FormLabel.vue';
+import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import Input from '@/Components/ui/Input.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import {

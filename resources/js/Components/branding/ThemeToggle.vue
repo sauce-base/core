@@ -2,7 +2,7 @@
 import IconMonitor from '~icons/heroicons/computer-desktop';
 import IconMoon from '~icons/heroicons/moon';
 import IconSun from '~icons/heroicons/sun';
-import { useTheme } from '../Composables/useTheme';
+import { useTheme } from '@/Composables/useTheme';
 
 const { theme, setTheme } = useTheme();
 
