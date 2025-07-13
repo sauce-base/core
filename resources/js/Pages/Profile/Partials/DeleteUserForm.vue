@@ -3,7 +3,7 @@ import InputError from '@/Components/ui/form/FormMessage.vue';
 import InputLabel from '@/Components/ui/form/FormLabel.vue';
 import TextInput from '@/Components/ui/Input.vue';
 import Modal from '@/Components/ui/Modal.vue';
-import Button from '@/Components/ui/Button.vue';
+import { Button } from '@/Components/ui/button';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 

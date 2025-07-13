@@ -2,7 +2,7 @@
 import InputError from '@/Components/ui/form/FormMessage.vue';
 import InputLabel from '@/Components/ui/form/FormLabel.vue';
 import TextInput from '@/Components/ui/Input.vue';
-import Button from '@/Components/ui/Button.vue';
+import { Button } from '@/Components/ui/button';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Button from '@/Components/ui/Button.vue';
+import { Button } from '@/Components/ui/button';
 import Input from '@/Components/ui/Input.vue';
 import FormControl from '@/Components/ui/form/FormControl.vue';
 import FormField from '@/Components/ui/form/FormField.vue';

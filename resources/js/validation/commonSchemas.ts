@@ -18,6 +18,3 @@ export const nameSchema = z
     .max(255, 'Name is too long (maximum 255 characters)')
     .regex(/^[a-zA-Z\s]*$/, 'Name can only contain letters and spaces');
 
-export const confirmPasswordSchema = z
-    .string()
-    .min(1, 'Please confirm your password');
