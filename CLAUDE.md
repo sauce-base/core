@@ -19,6 +19,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Build production**: `npm run build` - TypeScript compilation + Vite build
 - **Lint JavaScript/Vue**: `npm run lint` - ESLint with auto-fix
 
+### E2E Testing (Playwright)
+- **Run all e2e tests**: `npm run test:e2e` - Runs tests in headless mode
+- **Run with UI**: `npm run test:e2e:ui` - Opens Playwright UI for interactive testing
+- **Run in headed mode**: `npm run test:e2e:headed` - Runs tests with browser visible
+- **Debug tests**: `npm run test:e2e:debug` - Runs tests in debug mode
+- **View test report**: `npm run test:e2e:report` - Opens HTML test report
+
 ### Docker (Laravel Sail)
 - **Start containers**: `./vendor/bin/sail up -d`
 - **Run artisan commands**: `./vendor/bin/sail artisan [command]`
@@ -72,6 +79,46 @@ This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the T
 - `routes/web.php`: Main application routes
 - `vite.config.js`: Asset bundling configuration
 - `docker-compose.yml`: Complete development environment setup
+
+## E2E Testing Guidelines
+
+### Test Structure
+- **Tests location**: `tests/e2e/` directory
+- **Page Object Models**: `tests/e2e/pages/` - Encapsulate page interactions
+- **Test utilities**: `tests/e2e/utils/` - Shared helper functions
+- **Test fixtures**: `tests/e2e/fixtures/` - Test data and mock objects
+
+### Writing Tests
+- Use Page Object Model pattern for maintainable tests
+- Prefer `data-testid` attributes over CSS selectors for element targeting
+- Use descriptive test names that explain the expected behavior
+- Group related tests using `test.describe()` blocks
+- Use `test.beforeEach()` for common setup operations
+
+### Best Practices
+- **Element Selection Priority**:
+  1. `getByTestId()` - Most reliable for custom elements
+  2. `getByRole()` - Best for semantic elements (buttons, links)
+  3. `getByLabel()` - Good for form controls
+  4. `getByPlaceholder()` - Fallback for inputs
+- **Assertions**: Use web-first assertions that auto-wait (e.g., `toBeVisible()`)
+- **Test Data**: Store test data in fixtures rather than hardcoding in tests
+- **Authentication**: Use helper functions for login flows in `utils/auth.ts`
+
+### Data-testid Conventions
+- Form fields: Use field name (e.g., `data-testid="email"`)
+- Error messages: Use `{field-name}-error` (e.g., `data-testid="email-error"`)
+- Interactive elements: Use descriptive names (e.g., `data-testid="password-toggle"`)
+
+### Running Tests
+- **Start development servers first**: Run `composer dev` in a separate terminal
+- This starts both Laravel (port 8000) and Vite (port 5173) servers concurrently
+- **Run tests**: `npm run test:e2e` (expects servers to be running)
+- **Development workflow**:
+  1. Terminal 1: `composer dev` (keep running)
+  2. Terminal 2: `npm run test:e2e:ui` for interactive testing
+- **Debug tests**: Use headed mode (`npm run test:e2e:headed`) for visual debugging
+- **CI mode**: Tests will automatically start servers if `CI=true` environment variable is set
 
 ## Git Commit Guidelines
 - All commits must be one line

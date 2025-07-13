@@ -19,6 +19,11 @@ const fieldContext = inject('fieldContext', null);
                 ? `${fieldContext.id.value}-message`
                 : undefined
         "
+        :data-testid="
+            fieldContext?.id.value
+                ? `${fieldContext.id.value}-error`
+                : 'form-error'
+        "
         class="text-sm font-medium text-red-600 dark:text-red-400"
     >
         {{ message || fieldContext?.errorMessage.value }}

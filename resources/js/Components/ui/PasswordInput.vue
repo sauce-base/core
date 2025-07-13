@@ -29,6 +29,7 @@ const togglePasswordVisibility = () => {
             :type="showPassword ? 'text' : 'password'"
             :placeholder="placeholder"
             :disabled="disabled"
+            :data-testid="fieldContext?.id.value || 'password-input'"
             :class="[
                 'w-full rounded-md border bg-white px-3 py-2 pr-10 text-sm placeholder:text-gray-500 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400',
                 fieldContext?.errorMessage.value
@@ -40,7 +41,8 @@ const togglePasswordVisibility = () => {
             type="button"
             @click="togglePasswordVisibility"
             :disabled="disabled"
-            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-300"
+            :data-testid="`${fieldContext?.id.value || 'password'}-toggle`"
+            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 focus:text-gray-700 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-300"
             :title="showPassword ? 'Hide password' : 'Show password'"
         >
             <IconEye v-if="!showPassword" class="h-4 w-4" />

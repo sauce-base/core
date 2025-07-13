@@ -5,8 +5,13 @@
   "scripts": {
     "build": "vue-tsc && vite build",
     "dev": "vite",
-    "lint": "eslint resources/js --ext .js,.ts,.vue --ignore-path .gitignore --fix",
+    "lint": "eslint resources/js tests/e2e --ext .js,.ts,.vue --ignore-path .gitignore --fix",
     "test": "echo 'No tests yet' && exit 0",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
     "prepare": "husky",
     "commitlint": "commitlint --edit --last",
     "commit": "git-cz"
@@ -16,6 +21,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@iconify/json": "^2.2.357",
     "@inertiajs/vue3": "^2.0.0",
+    "@playwright/test": "^1.54.1",
     "@rushstack/eslint-patch": "^1.8.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/postcss": "^4.1.11",
@@ -36,7 +42,7 @@
     "prettier-plugin-organize-imports": "^4.0.0",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.11",
-    "typescript": "^5.6.3",
+    "typescript": "^5.8.3",
     "unplugin-icons": "^22.1.0",
     "vite": "^6.2.4",
     "vue": "^3.4.0",
@@ -46,7 +52,7 @@
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^13.5.0",
     "vee-validate": "^4.15.1",
-    "zod": "^4.0.5"
+    "zod": "^3.25.76"
   },
   "config": {
     "commitizen": {
