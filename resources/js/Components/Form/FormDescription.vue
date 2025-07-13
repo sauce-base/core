@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FieldContext } from '@/types/form';
 import { inject } from 'vue';
 
 withDefaults(
@@ -8,7 +9,7 @@ withDefaults(
     {},
 );
 
-const fieldContext = inject('fieldContext', null);
+const fieldContext = inject<FieldContext | null>('fieldContext', null);
 </script>
 
 <template>

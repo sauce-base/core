@@ -1,24 +1,30 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import type { FieldContext } from '@/types/form';
+import { computed, inject } from 'vue';
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         required?: boolean;
+        error?: string;
     }>(),
     {
         required: false,
     },
 );
 
-const fieldContext = inject('fieldContext', null);
+const fieldContext = inject<FieldContext | null>('fieldContext', null);
+
+const hasError = computed(() => {
+    return !!(props.error || fieldContext?.errorMessage.value);
+});
 </script>
 
 <template>
     <label
-        :for="fieldContext?.id.value"
+        :for="fieldContext?.id?.value"
         :class="[
             'text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-            fieldContext?.errorMessage.value
+            hasError
                 ? 'text-red-600 dark:text-red-400'
                 : 'text-gray-900 dark:text-gray-100',
         ]"

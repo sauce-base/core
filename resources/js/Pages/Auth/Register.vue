@@ -60,55 +60,69 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="name" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel :error="inertiaForm.errors.name">Name</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="text"
                             placeholder="Enter your full name"
+                            :error="inertiaForm.errors.name"
                         />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage :inertia-error="inertiaForm.errors.name" />
                 </FormItem>
             </FormField>
 
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel :error="inertiaForm.errors.email"
+                        >Email</FormLabel
+                    >
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="email"
                             placeholder="Enter your email address"
+                            :error="inertiaForm.errors.email"
                         />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage :inertia-error="inertiaForm.errors.email" />
                 </FormItem>
             </FormField>
 
             <FormField name="password" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel :error="inertiaForm.errors.password"
+                        >Password</FormLabel
+                    >
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
                             placeholder="Create a password"
+                            :error="inertiaForm.errors.password"
                         />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage :inertia-error="inertiaForm.errors.password" />
                 </FormItem>
             </FormField>
 
             <FormField name="password_confirmation" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel :error="inertiaForm.errors.password_confirmation"
+                        >Confirm Password</FormLabel
+                    >
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
                             placeholder="Confirm your password"
+                            :error="inertiaForm.errors.password_confirmation"
                         />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage
+                        :inertia-error="
+                            inertiaForm.errors.password_confirmation
+                        "
+                    />
                 </FormItem>
             </FormField>
 
