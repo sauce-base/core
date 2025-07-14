@@ -2,6 +2,7 @@
 import Footer from '@/Components/layout/Footer.vue';
 import NavLink from '@/Components/layout/NavLink.vue';
 import ResponsiveNavLink from '@/Components/layout/ResponsiveNavLink.vue';
+import PageTransition from '@/Components/PageTransition.vue';
 import ApplicationLogo from '@/Components/ui/ApplicationLogo.vue';
 import Dropdown from '@/Components/ui/Dropdown.vue';
 import DropdownLink from '@/Components/ui/DropdownLink.vue';
@@ -198,7 +199,9 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
-                <slot />
+                <PageTransition>
+                    <slot />
+                </PageTransition>
             </main>
 
             <!-- Footer -->
