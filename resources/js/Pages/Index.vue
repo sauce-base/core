@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import Footer from '@/Components/layout/Footer.vue';
+import Header from '@/Components/layout/Header.vue';
+import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import IconLogin from '~icons/heroicons/arrow-right-on-rectangle';
 import IconDashboard from '~icons/heroicons/squares-2x2';
 import IconUserPlus from '~icons/heroicons/user-plus';
-import Footer from '@/Components/layout/Footer.vue';
-import Header from '@/Components/layout/Header.vue';
-import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
 
 defineProps<{
     canLogin?: boolean;

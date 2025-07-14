@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Button } from '@/Components/ui/button';
-import Input from '@/Components/ui/Input.vue';
 import FormControl from '@/Components/ui/form/FormControl.vue';
 import FormField from '@/Components/ui/form/FormField.vue';
 import FormItem from '@/Components/ui/form/FormItem.vue';
 import FormLabel from '@/Components/ui/form/FormLabel.vue';
 import FormMessage from '@/Components/ui/form/FormMessage.vue';
+import Input from '@/Components/ui/Input.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps<{
@@ -92,7 +92,9 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <Button variant="default" :disabled="form.processing">Save</Button>
+                <Button variant="default" :disabled="form.processing"
+                    >Save</Button
+                >
 
                 <Transition
                     enter-active-class="transition ease-in-out"

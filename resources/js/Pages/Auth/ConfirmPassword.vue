@@ -1,53 +1,81 @@
 <script setup lang="ts">
-import InputError from '@/Components/ui/form/FormMessage.vue';
-import InputLabel from '@/Components/ui/form/FormLabel.vue';
-import TextInput from '@/Components/ui/Input.vue';
 import { Button } from '@/Components/ui/button';
+import FormControl from '@/Components/ui/form/FormControl.vue';
+import FormField from '@/Components/ui/form/FormField.vue';
+import FormItem from '@/Components/ui/form/FormItem.vue';
+import FormLabel from '@/Components/ui/form/FormLabel.vue';
+import FormMessage from '@/Components/ui/form/FormMessage.vue';
+import PasswordInput from '@/Components/ui/PasswordInput.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import {
+    confirmPasswordSchema,
+    type ConfirmPasswordFormData,
+} from '@/validation';
+import { Head, useForm as useInertiaForm } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+
+const formSchema = toTypedSchema(confirmPasswordSchema);
 
 const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        password: '',
+    },
+});
+
+const inertiaForm = useInertiaForm<ConfirmPasswordFormData>({
     password: '',
 });
 
-const submit = () => {
-    form.post(route('password.confirm'), {
+const onSubmit = form.handleSubmit((values: ConfirmPasswordFormData) => {
+    Object.assign(inertiaForm, values);
+
+    inertiaForm.post(route('password.confirm'), {
         onFinish: () => {
-            form.reset();
+            inertiaForm.reset();
         },
     });
-};
+});
 </script>
 
 <template>
     <GuestLayout>
         <Head title="Confirm Password" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            This is a secure area of the application. Please confirm your
-            password before continuing.
+        <!-- Title and Subtitle -->
+        <div class="mb-6 text-center">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                Confirm Password
+            </h1>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                This is a secure area of the application. Please confirm your
+                password before continuing.
+            </p>
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                    autofocus
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
+        <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="password" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel :error="inertiaForm.errors.password"
+                        >Password</FormLabel
+                    >
+                    <FormControl>
+                        <PasswordInput
+                            v-bind="componentField"
+                            placeholder="Enter your password"
+                            :error="inertiaForm.errors.password"
+                        />
+                    </FormControl>
+                    <FormMessage :inertia-error="inertiaForm.errors.password" />
+                </FormItem>
+            </FormField>
 
-            <div class="mt-4 flex justify-end">
+            <div class="mt-6 flex justify-end">
                 <Button
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                    type="submit"
+                    :class="{ 'opacity-25': inertiaForm.processing }"
+                    :disabled="inertiaForm.processing"
                 >
                     Confirm
                 </Button>
