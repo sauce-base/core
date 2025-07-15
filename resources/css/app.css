@@ -260,3 +260,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Page Transition Styles */
+@layer components {
+  .page-transition {
+    @apply transition-opacity duration-300 ease-in-out;
+  }
+  
+  .page-enter-from,
+  .page-leave-to {
+    @apply opacity-0;
+  }
+  
+  .page-enter-active,
+  .page-leave-active {
+    @apply transition-opacity duration-300 ease-in-out;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .page-enter-active,
+  .page-leave-active,
+  .page-transition {
+    @apply transition-none;
+  }
+}
