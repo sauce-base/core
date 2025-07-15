@@ -7,6 +7,7 @@ import FormLabel from '@/Components/ui/form/FormLabel.vue';
 import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import Input from '@/Components/ui/Input.vue';
 import PasswordInput from '@/Components/ui/PasswordInput.vue';
+import SocialLoginButton from '@/Components/ui/social-login-button.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { loginSchema, type LoginFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -66,6 +67,28 @@ const onSubmit = async () => {
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
+        </div>
+
+        <!-- Social Login Section -->
+        <div class="mb-6 space-y-3">
+            <SocialLoginButton provider="google" />
+            <SocialLoginButton provider="github" />
+            <SocialLoginButton provider="facebook" />
+        </div>
+
+        <!-- Divider -->
+        <div class="relative mb-6">
+            <div class="absolute inset-0 flex items-center">
+                <div
+                    class="w-full border-t border-gray-300 dark:border-gray-600"
+                ></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span
+                    class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                    >Or continue with email</span
+                >
+            </div>
         </div>
 
         <form @submit.prevent="onSubmit" class="space-y-4">
