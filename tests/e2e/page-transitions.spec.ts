@@ -9,7 +9,9 @@ test.describe('Page Transitions', () => {
     test('should display login page without errors', async ({ page }) => {
         // Check that the page loads
         await expect(page).toHaveTitle(/Log in/);
-        await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { name: 'Welcome back' }),
+        ).toBeVisible();
     });
 
     test('should have smooth transitions between auth pages', async ({
