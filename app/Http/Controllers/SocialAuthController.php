@@ -13,7 +13,7 @@ class SocialAuthController extends Controller
     public function redirect(string $provider): RedirectResponse
     {
         $this->validateProvider($provider);
-        
+
         return Socialite::driver($provider)->redirect();
     }
 
@@ -23,7 +23,7 @@ class SocialAuthController extends Controller
 
         try {
             $socialUser = Socialite::driver($provider)->user();
-            
+
             // Find existing social account
             $socialAccount = SocialAccount::where('provider', $provider)
                 ->where('provider_id', $socialUser->getId())
@@ -37,13 +37,14 @@ class SocialAuthController extends Controller
                 ]);
 
                 Auth::login($socialAccount->user);
+
                 return redirect()->intended('/dashboard');
             }
 
             // Check if user exists with same email
             $user = User::where('email', $socialUser->getEmail())->first();
 
-            if (!$user) {
+            if (! $user) {
                 // Create new user
                 $user = User::create([
                     'name' => $socialUser->getName(),
@@ -62,6 +63,7 @@ class SocialAuthController extends Controller
             ]);
 
             Auth::login($user);
+
             return redirect()->intended('/dashboard');
 
         } catch (\Exception $e) {
@@ -74,8 +76,8 @@ class SocialAuthController extends Controller
     private function validateProvider(string $provider): void
     {
         $allowedProviders = ['google', 'github', 'facebook'];
-        
-        if (!in_array($provider, $allowedProviders)) {
+
+        if (! in_array($provider, $allowedProviders)) {
             abort(404);
         }
     }

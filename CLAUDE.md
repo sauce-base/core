@@ -2,6 +2,18 @@
 
 **CRITICAL**: This file contains mandatory guidelines that Claude Code MUST follow exactly. No exceptions.
 
+## 🚀 Project Overview
+
+**Tadone** is a modern Laravel SaaS starter kit designed for rapid development of scalable SaaS applications. Built with the VILT stack (Vue, Inertia, Laravel, Tailwind), it provides a solid foundation for building and launching SaaS products quickly.
+
+### Key Features
+- **Modern Stack**: Laravel 12 + Vue 3 + TypeScript + Inertia.js + Tailwind CSS
+- **Authentication**: Multi-provider social login (Google, GitHub, Facebook)
+- **Components**: shadcn/ui with reka-ui implementation
+- **Testing**: Comprehensive PHP (Pest) and E2E (Playwright) testing
+- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer
+- **Production Ready**: Docker, Redis, PostgreSQL, optimized build pipeline
+
 ## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
 
 ### Git Commits - STRICT ENFORCEMENT
