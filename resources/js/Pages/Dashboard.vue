@@ -6,25 +6,16 @@ import { Head } from '@inertiajs/vue3';
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
-        <template #header>
-            <h2
-                class="text-xl leading-tight font-semibold text-gray-800 dark:text-gray-200"
-            >
-                Dashboard
-            </h2>
-        </template>
-
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-xs sm:rounded-lg dark:bg-gray-800"
-                >
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        You're logged in!
-                    </div>
-                </div>
+    <AuthenticatedLayout title="Dashboard">
+        <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div class="bg-muted/50 aspect-video rounded-xl" />
+                <div class="bg-muted/50 aspect-video rounded-xl" />
+                <div class="bg-muted/50 aspect-video rounded-xl" />
             </div>
+            <div
+                class="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min"
+            />
         </div>
     </AuthenticatedLayout>
 </template>
