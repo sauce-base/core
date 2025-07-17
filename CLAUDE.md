@@ -2,6 +2,18 @@
 
 **CRITICAL**: This file contains mandatory guidelines that Claude Code MUST follow exactly. No exceptions.
 
+## 🚀 Project Overview
+
+**Tadone** is a modern Laravel SaaS starter kit designed for rapid development of scalable SaaS applications. Built with the VILT stack (Vue, Inertia, Laravel, Tailwind), it provides a solid foundation for building and launching SaaS products quickly.
+
+### Key Features
+- **Modern Stack**: Laravel 12 + Vue 3 + TypeScript + Inertia.js + Tailwind CSS
+- **Authentication**: Multi-provider social login (Google, GitHub, Facebook)
+- **Components**: shadcn/ui with reka-ui implementation
+- **Testing**: Comprehensive PHP (Pest) and E2E (Playwright) testing
+- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer
+- **Production Ready**: Docker, Redis, PostgreSQL, optimized build pipeline
+
 ## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
 
 ### Git Commits - STRICT ENFORCEMENT
@@ -28,7 +40,7 @@
 ### Quick Start Commands
 ```bash
 # Start development (run this first)
-composer dev  # Starts Laravel + Vite + queue worker + logs
+sail up  # Starts Laravel + Vite + queue worker + logs
 
 # Quality checks (run before commit)
 ./vendor/bin/pint     # PHP formatting
@@ -39,7 +51,7 @@ npm run build         # Production build test
 ```
 
 ### Backend (Laravel/PHP)
-- `composer dev` - **MAIN COMMAND**: Starts everything (Laravel + Vite + workers)
+- `sail up` - **MAIN COMMAND**: Starts everything (Laravel + Vite + workers)
 - `composer test` - Run all PHP tests
 - `php artisan test --filter=TestName` - Run specific test
 - `./vendor/bin/pint` - **REQUIRED**: Format PHP code
@@ -49,7 +61,7 @@ npm run build         # Production build test
 - `php artisan optimize:clear` - Clear all caches
 
 ### Frontend (Vue/TypeScript)
-- `npm run dev` - Vite dev server (usually run via `composer dev`)
+- `npm run dev` - Vite dev server (usually run via `sail up`)
 - `npm run build` - **REQUIRED**: Production build verification
 - `npm run lint` - **REQUIRED**: ESLint with auto-fix
 
@@ -92,7 +104,7 @@ resources/js/
 - **PATTERN**: Page Object Model mandatory
 - **SELECTORS**: Use `data-testid` attributes (priority #1)
 - **NAMING**: `data-testid="field-name"` for inputs, `data-testid="field-name-error"` for errors
-- **BEFORE TESTS**: Must run `composer dev` first
+- **BEFORE TESTS**: Must run `sail up` first
 - **EXECUTION**: Use `npm run test:e2e` for results
 
 ### PHP Testing (Pest)
@@ -132,7 +144,7 @@ resources/js/
 8. Verify with `git status`
 
 ### Development Workflow
-1. `composer dev` - Start development servers
+1. `sail up` - Start development servers
 2. Make changes following patterns above
 3. Test changes work locally
 4. Run quality checks (see "Before Every Commit")
@@ -161,7 +173,7 @@ resources/js/
 ### Most Common Tasks
 ```bash
 # Start development
-composer dev
+sail up
 
 # Before commit checklist
 ./vendor/bin/pint && ./vendor/bin/phpstan && npm run lint && composer test && npm run build
@@ -185,7 +197,9 @@ import { Button } from '@/Components/ui/button'
 </template>
 ```
 
+## Development Notes
+- Don't use `composer dev`, the project uses `sail` to run.
+
 ---
 
 **REMEMBER**: These are not suggestions - they are requirements. Follow them exactly to maintain code quality and consistency.
-```

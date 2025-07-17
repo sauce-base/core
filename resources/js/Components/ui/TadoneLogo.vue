@@ -55,8 +55,8 @@ const textSizeClasses = {
                     stroke-linejoin="round"
                 />
 
-                <!-- Completion dot -->
-                <circle cx="65" cy="65" r="6" fill="#10B981" />
+                <!-- Modern accent dot -->
+                <circle cx="65" cy="65" r="6" fill="#3B82F6" />
             </svg>
         </div>
 
@@ -78,7 +78,7 @@ const textSizeClasses = {
                 tadone
             </h1>
             <p class="text-xs leading-tight text-gray-600 dark:text-gray-400">
-                task done
+                saas starter
             </p>
         </div>
     </div>
