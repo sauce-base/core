@@ -28,3 +28,6 @@ Thumbs.db
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# SSL Certificates (generated locally, not tracked)
+/docker/development/ssl/
