@@ -11,7 +11,7 @@
 - **Authentication**: Multi-provider social login (Google, GitHub, Facebook)
 - **Components**: shadcn/ui with reka-ui implementation
 - **Testing**: Comprehensive PHP (Pest) and E2E (Playwright) testing
-- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer
+- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer, SSL-enabled local development
 - **Production Ready**: Docker, Redis, PostgreSQL, optimized build pipeline
 
 ## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
@@ -49,6 +49,33 @@ docker compose exec workspace npm run lint          # JS/Vue linting
 docker compose exec workspace composer test         # PHP tests
 docker compose exec workspace npm run build         # Production build test
 ```
+
+### SSL Setup for Local Development
+The project is configured to use HTTPS with the domain `app.tadone.test` using mkcert for trusted certificates. **One-time setup required:**
+
+```bash
+# 1. Install mkcert (if not already installed)
+# macOS: brew install mkcert
+# Windows: choco install mkcert or scoop install mkcert
+# Linux: https://github.com/FiloSottile/mkcert#installation
+
+# 2. Install mkcert CA in system trust store
+mkcert -install
+
+# 3. Generate SSL certificates (first time only)
+cd docker/development/ssl
+mkcert app.tadone.test localhost 127.0.0.1 ::1
+
+# 4. Add domain to your hosts file
+echo "127.0.0.1 app.tadone.test" | sudo tee -a /etc/hosts
+
+# 5. Start the application
+docker compose up -d
+
+# 6. Access your app at: https://app.tadone.test
+```
+
+**Note**: With mkcert, your browser will trust the SSL certificates without any security warnings!
 
 ### Backend (Laravel/PHP)
 - `docker compose up -d` - **MAIN COMMAND**: Starts all services
