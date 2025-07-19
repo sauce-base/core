@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,5 +22,42 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
+        // URL::forceHttps(true);
+        // $this->configureSecureUrls();
     }
+
+    // protected function configureSecureUrls()
+    // {
+    //     // Determine if HTTPS should be enforced
+    //     $enforceHttps = $this->app->environment(['production', 'staging'])
+    //         && !$this->app->runningUnitTests();
+
+    //     // For local development with Octane HTTPS
+    //     $localHttps = $this->app->environment('local')
+    //         && config('octane.https', false)
+    //         && !$this->app->runningUnitTests();
+
+    //     $useHttps = $enforceHttps || $localHttps;
+
+    //     // Force HTTPS for all generated URLs
+    //     URL::forceHttps($useHttps);
+
+    //     // Ensure proper server variable is set
+    //     if ($useHttps) {
+    //         $this->app['request']->server->set('HTTPS', 'on');
+    //     }
+
+    //     // Set up global middleware for security headers
+    //     if ($enforceHttps) {
+    //         $this->app['router']->pushMiddlewareToGroup('web', function ($request, $next) {
+    //             $response = $next($request);
+
+    //             return $response->withHeaders([
+    //                 'Strict-Transport-Security' => 'max-age=31536000; includeSubDomains',
+    //                 'Content-Security-Policy' => "upgrade-insecure-requests",
+    //                 'X-Content-Type-Options' => 'nosniff'
+    //             ]);
+    //         });
+    //     }
+    // }
 }
