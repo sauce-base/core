@@ -11,7 +11,7 @@
 - **Authentication**: Multi-provider social login (Google, GitHub, Facebook)
 - **Components**: shadcn/ui with reka-ui implementation
 - **Testing**: Comprehensive PHP (Pest) and E2E (Playwright) testing
-- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer
+- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer, SSL-enabled local development
 - **Production Ready**: Docker, Redis, PostgreSQL, optimized build pipeline
 
 ## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
@@ -40,35 +40,62 @@
 ### Quick Start Commands
 ```bash
 # Start development (run this first)
-sail up  # Starts Laravel + Vite + queue worker + logs
+docker compose up -d  # Starts all services (Nginx + PHP-FPM + PostgreSQL + Redis + etc.)
 
 # Quality checks (run before commit)
-./vendor/bin/pint     # PHP formatting
-./vendor/bin/phpstan  # PHP static analysis  
-npm run lint          # JS/Vue linting
-composer test         # PHP tests
-npm run build         # Production build test
+docker compose exec workspace ./vendor/bin/pint     # PHP formatting
+docker compose exec workspace ./vendor/bin/phpstan  # PHP static analysis  
+docker compose exec workspace npm run lint          # JS/Vue linting
+docker compose exec workspace composer test         # PHP tests
+docker compose exec workspace npm run build         # Production build test
 ```
 
+### SSL Setup for Local Development
+The project is configured to use HTTPS with the domain `app.tadone.test` using mkcert for trusted certificates. **One-time setup required:**
+
+```bash
+# 1. Install mkcert (if not already installed)
+# macOS: brew install mkcert
+# Windows: choco install mkcert or scoop install mkcert
+# Linux: https://github.com/FiloSottile/mkcert#installation
+
+# 2. Install mkcert CA in system trust store
+mkcert -install
+
+# 3. Generate SSL certificates (first time only)
+cd docker/development/ssl
+mkcert app.tadone.test localhost 127.0.0.1 ::1
+
+# 4. Add domain to your hosts file
+echo "127.0.0.1 app.tadone.test" | sudo tee -a /etc/hosts
+
+# 5. Start the application
+docker compose up -d
+
+# 6. Access your app at: https://app.tadone.test
+```
+
+**Note**: With mkcert, your browser will trust the SSL certificates without any security warnings!
+
 ### Backend (Laravel/PHP)
-- `sail up` - **MAIN COMMAND**: Starts everything (Laravel + Vite + workers)
-- `composer test` - Run all PHP tests
-- `php artisan test --filter=TestName` - Run specific test
-- `./vendor/bin/pint` - **REQUIRED**: Format PHP code
-- `./vendor/bin/phpstan` - **REQUIRED**: Static analysis
-- `php artisan migrate` - Database migrations
-- `php artisan db:seed` - Seed database
-- `php artisan optimize:clear` - Clear all caches
+- `docker compose up -d` - **MAIN COMMAND**: Starts all services
+- `docker compose exec workspace composer test` - Run all PHP tests
+- `docker compose exec workspace php artisan test --filter=TestName` - Run specific test
+- `docker compose exec workspace ./vendor/bin/pint` - **REQUIRED**: Format PHP code
+- `docker compose exec workspace ./vendor/bin/phpstan` - **REQUIRED**: Static analysis
+- `docker compose exec workspace php artisan migrate` - Database migrations
+- `docker compose exec workspace php artisan db:seed` - Seed database
+- `docker compose exec workspace php artisan optimize:clear` - Clear all caches
 
 ### Frontend (Vue/TypeScript)
-- `npm run dev` - Vite dev server (usually run via `sail up`)
-- `npm run build` - **REQUIRED**: Production build verification
-- `npm run lint` - **REQUIRED**: ESLint with auto-fix
+- `docker compose exec workspace npm run dev` - Vite dev server (accessible on port 5173)
+- `docker compose exec workspace npm run build` - **REQUIRED**: Production build verification
+- `docker compose exec workspace npm run lint` - **REQUIRED**: ESLint with auto-fix
 
 ### Testing (E2E with Playwright)
-- `npm run test:e2e` - **USE THIS**: Headless tests with results
-- `npm run test:e2e:headed` - Visual debugging
-- `npm run test:e2e:debug` - Debug mode
+- `docker compose exec workspace npm run test:e2e` - **USE THIS**: Headless tests with results
+- `docker compose exec workspace npm run test:e2e:headed` - Visual debugging
+- `docker compose exec workspace npm run test:e2e:debug` - Debug mode
 - **NEVER USE**: `npm run test:e2e:ui` (no results output)
 
 ## 🏗️ Architecture - FOLLOW THESE PATTERNS
@@ -594,16 +621,16 @@ const userInitials = computed(() => {
 ### Most Common Tasks
 ```bash
 # Start development
-sail up
+docker compose up -d
 
 # Before commit checklist
-./vendor/bin/pint && ./vendor/bin/phpstan && npm run lint && composer test && npm run build
+docker compose exec workspace ./vendor/bin/pint && docker compose exec workspace ./vendor/bin/phpstan && docker compose exec workspace npm run lint && docker compose exec workspace composer test && docker compose exec workspace npm run build
 
 # Single line commit
 git commit -m "feat: add new feature"
 
 # Run E2E tests  
-npm run test:e2e
+docker compose exec workspace npm run test:e2e
 ```
 
 ### Component Usage
