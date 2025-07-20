@@ -16,6 +16,13 @@
 
 ## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
 
+### Security - CRITICAL REQUIREMENTS
+- **NEVER COMMIT SECRETS**: No API keys, passwords, tokens, or sensitive data in git
+- **NEVER EXPOSE SECRETS**: No secrets in logs, error messages, or client-side code
+- **USE .env FILES**: All sensitive config goes in .env (never committed)
+- **VERIFY .gitignore**: Ensure .env, keys, certificates are properly ignored
+- **AUDIT COMMITS**: Review all commits for accidental secret exposure
+
 ### Git Commits - STRICT ENFORCEMENT
 - **FORMAT**: Single line only, no body, no multi-line messages
 - **NO AUTHORS**: Never add Co-Authored-By, Generated with Claude, or any attribution
@@ -581,6 +588,22 @@ const userInitials = computed(() => {
 
 ## 🚀 Deployment Workflow - EXACT SEQUENCE
 
+### Asset Building Strategy
+**IMPORTANT**: Frontend assets are built locally for development, in CI/CD for production.
+
+**Development**: 
+- Docker workspace container has Node.js/npm for local development
+- `bin/setup-env` script runs `npm run build` during local environment setup
+- Run `npm run dev` for hot reload during development
+- Run `npm run build` locally to test production builds
+
+**Production**:
+- **NEVER run setup-env in production** (development tool only)
+- Build assets in CI/CD pipeline or build server with `npm run build`
+- Production Nginx Dockerfile expects pre-built `./public` directory
+- NO Node.js/npm in production containers
+- Built assets should be deployed as artifacts, not committed to repository
+
 ### Before Every Commit
 1. `./vendor/bin/pint` - Format PHP
 2. `./vendor/bin/phpstan` - Analyze PHP  
@@ -592,12 +615,34 @@ const userInitials = computed(() => {
 8. Verify with `git status`
 
 ### Development Workflow
-1. `sail up` - Start development servers
+1. `docker compose up -d` - Start development servers
 2. Make changes following patterns above
 3. Test changes work locally
 4. Run quality checks (see "Before Every Commit")
 5. Commit with proper format
 6. Create PR if needed
+
+### Production Deployment Workflow
+**IMPORTANT**: Never use development tools in production.
+
+**Recommended CI/CD Approach:**
+1. CI/CD builds assets: `npm ci && npm run build`
+2. CI/CD builds production Docker images with pre-built assets
+3. Deploy lean containers (no build tools)
+4. Assets are deployment artifacts, not committed code
+
+**Alternative Build Server Approach:**
+1. Build server runs: `npm ci && npm run build`
+2. Copy built `./public` directory to deployment package
+3. Deploy to production servers
+4. Production containers serve pre-built assets
+
+**What NOT to do:**
+- ❌ Don't run `bin/setup-env` in production (development only)
+- ❌ Don't install Node.js/npm in production containers
+- ❌ Don't build assets on production servers during deployment
+- ❌ Don't commit built assets to git repository
+- ❌ **NEVER commit sensitive data or expose secrets in any circumstance**
 
 ## 📁 Important Files - KNOW THESE
 

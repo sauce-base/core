@@ -103,23 +103,6 @@ services:
       retries: 3
       timeout: 5s
 
-  typesense:
-    image: 'typesense/typesense:27.1'
-    restart: unless-stopped
-    ports:
-      - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
-    environment:
-      TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
-      TYPESENSE_API_KEY: '${TYPESENSE_API_KEY}'
-      TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
-    volumes:
-      - 'laravel-typesense-dev:/typesense-data'
-    networks:
-      - laravel-dev
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8108/health"]
-      retries: 5
-      timeout: 7s
 
   mailpit:
     image: 'axllent/mailpit:latest'
@@ -153,6 +136,4 @@ volumes:
   laravel-pgsql-dev:
     driver: local
   laravel-redis-dev:
-    driver: local
-  laravel-typesense-dev:
     driver: local
