@@ -6,18 +6,18 @@
 set -e  # Exit on any error
 
 # Parse command line arguments
-SKIP_BUILD=false
+FORCE_BUILD=false
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --no-build)
-            SKIP_BUILD=true
+        --force-build)
+            FORCE_BUILD=true
             shift
             ;;
         -h|--help)
             echo "Usage: $0 [options]"
             echo ""
             echo "Options:"
-            echo "  --no-build    Skip Docker image building (faster for testing)"
+            echo "  --force-build Force Docker image rebuilding (slower but ensures latest)"
             echo "  -h, --help    Show this help message"
             echo ""
             exit 0
@@ -258,6 +258,11 @@ case "${HOST_CHOICE:-1}" in
             else
                 USE_SSL=true
                 echo "✅ SSL enabled for $APP_HOST"
+                echo ""
+                echo "⚠️  Custom Domain SSL Notice:"
+                echo "If your browser shows a security warning, click 'Advanced'"
+                echo "then 'Proceed to $APP_HOST' to access the application."
+                echo ""
             fi
         fi
         ;;
@@ -295,15 +300,15 @@ docker compose down --remove-orphans
 echo "🗑️  Removing volumes for clean reset..."
 docker compose down -v
 
-# Pull latest images and build containers (if not skipped)
-if [ "$SKIP_BUILD" = false ]; then
+# Pull latest images and build containers (if forced)
+if [ "$FORCE_BUILD" = true ]; then
     echo "📥 Pulling latest Docker images..."
     docker compose pull
 
     echo "🏗️  Building containers..."
     docker compose build --no-cache
 else
-    echo "⚡ Skipping Docker image building (--no-build flag used)"
+    echo "⚡ Using existing Docker images (use --force-build to rebuild)"
 fi
 
 # Start services
@@ -318,14 +323,23 @@ sleep 10
 echo "📦 Installing PHP dependencies..."
 docker compose exec -T workspace composer install
 
-# Install Node dependencies
-echo "📦 Installing Node.js dependencies..."
-docker compose exec -T workspace npm ci
-
 # Generate app key if not exists
 echo "🔑 Generating application key..."
-if ! grep -q "APP_KEY=" .env 2>/dev/null || [ -z "$(grep "APP_KEY=" .env | cut -d'=' -f2)" ]; then
+APP_KEY_VALUE=$(grep "^APP_KEY=" .env 2>/dev/null | cut -d'=' -f2 | tr -d ' ')
+if [ -z "$APP_KEY_VALUE" ] || [ "$APP_KEY_VALUE" = "" ]; then
+    echo "📝 Generating new application key..."
     docker compose exec -T workspace php artisan key:generate
+    
+    # Restart containers to reload environment variables with new APP_KEY
+    echo "🔄 Restarting containers to reload environment variables..."
+    docker compose down
+    docker compose up -d
+    
+    # Wait for services to be ready again
+    echo "⏳ Waiting for services to be ready..."
+    sleep 10
+else
+    echo "✅ Application key already exists"
 fi
 
 # Run database migrations and seed
@@ -343,12 +357,13 @@ docker compose exec -T workspace npm run lint
 
 # Build frontend assets
 echo "🎨 Building frontend assets..."
-docker compose exec -T workspace npm run build
+npm install & npm run build
 
 # Setup SSL certificates (only if SSL is enabled)
 if [ "$USE_SSL" = true ]; then
     echo "🔒 Setting up SSL certificates..."
-    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ]; then
+    # Always regenerate certificates for custom domains, or if certificates don't exist
+    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ] || [ "$APP_HOST" != "localhost" ]; then
         echo "🔧 Generating SSL certificates..."
         
         # Check if mkcert is installed
@@ -368,12 +383,16 @@ if [ "$USE_SSL" = true ]; then
         # Ensure SSL directory exists
         mkdir -p docker/development/ssl
         
+        # Install mkcert CA to system trust store (reduces browser warnings)
+        echo "🔧 Installing mkcert CA in system trust store..."
+        mkcert -install
+        
         # Generate SSL certificates
         cd docker/development/ssl
         mkcert -key-file app.key.pem -cert-file app.pem $APP_HOST *.$APP_HOST localhost 127.0.0.1 ::1
         cd ../../..
         
-        echo "✅ SSL certificates generated successfully!"
+        echo "✅ SSL certificates generated successfully for $APP_HOST!"
     else
         echo "✅ SSL certificates already exist!"
     fi
