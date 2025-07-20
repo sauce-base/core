@@ -1,0 +1,437 @@
+#!/bin/bash
+
+# Tadone Development Environment Setup Script
+# This script resets and initializes the development environment
+
+set -e  # Exit on any error
+
+# Parse command line arguments
+FORCE_BUILD=false
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --force-build)
+            FORCE_BUILD=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: $0 [options]"
+            echo ""
+            echo "Options:"
+            echo "  --force-build Force Docker image rebuilding (slower but ensures latest)"
+            echo "  -h, --help    Show this help message"
+            echo ""
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+echo "🚀 Tadone Development Environment Setup"
+echo "======================================"
+echo ""
+
+# Function to check command availability
+check_command() {
+    if ! command -v "$1" > /dev/null 2>&1; then
+        echo "❌ $1 is not installed or not in PATH"
+        return 1
+    fi
+    return 0
+}
+
+# Function to check version requirements
+check_version() {
+    local cmd="$1"
+    local min_version="$2"
+    local current_version="$3"
+    
+    if ! printf '%s\n%s\n' "$min_version" "$current_version" | sort -V -C > /dev/null 2>&1; then
+        echo "❌ $cmd version $current_version is below minimum required version $min_version"
+        return 1
+    fi
+    return 0
+}
+
+echo "🔍 Checking system requirements..."
+echo ""
+
+# Check required commands
+REQUIREMENTS_MET=true
+
+# Check Node.js
+if check_command "node"; then
+    NODE_VERSION=$(node --version | sed 's/v//')
+    MIN_NODE_VERSION="18.0.0"
+    if check_version "Node.js" "$MIN_NODE_VERSION" "$NODE_VERSION"; then
+        echo "✅ Node.js $NODE_VERSION (>= $MIN_NODE_VERSION required)"
+    else
+        REQUIREMENTS_MET=false
+    fi
+else
+    echo "❌ Node.js is not installed"
+    REQUIREMENTS_MET=false
+fi
+
+# Check npm
+if check_command "npm"; then
+    NPM_VERSION=$(npm --version)
+    MIN_NPM_VERSION="8.0.0"
+    if check_version "npm" "$MIN_NPM_VERSION" "$NPM_VERSION"; then
+        echo "✅ npm $NPM_VERSION (>= $MIN_NPM_VERSION required)"
+    else
+        REQUIREMENTS_MET=false
+    fi
+else
+    echo "❌ npm is not installed"
+    REQUIREMENTS_MET=false
+fi
+
+# Check Docker
+if check_command "docker"; then
+    DOCKER_VERSION=$(docker --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+    MIN_DOCKER_VERSION="20.0.0"
+    if check_version "Docker" "$MIN_DOCKER_VERSION" "$DOCKER_VERSION"; then
+        echo "✅ Docker $DOCKER_VERSION (>= $MIN_DOCKER_VERSION required)"
+    else
+        REQUIREMENTS_MET=false
+    fi
+else
+    echo "❌ Docker is not installed"
+    REQUIREMENTS_MET=false
+fi
+
+# Check Docker Compose
+if check_command "docker"; then
+    if docker compose version > /dev/null 2>&1; then
+        COMPOSE_VERSION=$(docker compose version --short 2>/dev/null || docker compose version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+        echo "✅ Docker Compose $COMPOSE_VERSION"
+    else
+        echo "❌ Docker Compose is not available"
+        REQUIREMENTS_MET=false
+    fi
+fi
+
+# Check if Docker is running
+if check_command "docker"; then
+    if docker info > /dev/null 2>&1; then
+        echo "✅ Docker daemon is running"
+    else
+        echo "❌ Docker daemon is not running"
+        REQUIREMENTS_MET=false
+    fi
+fi
+
+# Check for required files
+if [ -f "composer.json" ]; then
+    echo "✅ composer.json found"
+else
+    echo "❌ composer.json not found"
+    REQUIREMENTS_MET=false
+fi
+
+if [ -f "package.json" ]; then
+    echo "✅ package.json found"
+else
+    echo "❌ package.json not found"
+    REQUIREMENTS_MET=false
+fi
+
+if [ -f "docker-compose.yml" ]; then
+    echo "✅ docker-compose.yml found"
+else
+    echo "❌ docker-compose.yml not found"
+    REQUIREMENTS_MET=false
+fi
+
+# Check for .env file
+if [ -f ".env" ]; then
+    echo "✅ .env file found"
+else
+    if [ -f ".env.example" ]; then
+        echo "⚠️  .env file not found, but .env.example exists (will be created)"
+    else
+        echo "❌ .env file and .env.example not found"
+        REQUIREMENTS_MET=false
+    fi
+fi
+
+# Check mkcert (optional but recommended)
+if check_command "mkcert"; then
+    echo "✅ mkcert is available for SSL certificates"
+else
+    echo "⚠️  mkcert not found - SSL certificates will be skipped"
+    echo "   Install with: brew install mkcert (macOS) or choco install mkcert (Windows)"
+fi
+
+echo ""
+
+# Exit if requirements not met
+if [ "$REQUIREMENTS_MET" = false ]; then
+    echo "❌ System requirements not met!"
+    echo ""
+    echo "Please install missing dependencies:"
+    echo "• Node.js: https://nodejs.org/"
+    echo "• Docker: https://docs.docker.com/get-docker/"
+    echo "• Ensure Docker is running"
+    echo ""
+    exit 1
+fi
+
+echo "✅ All system requirements met!"
+echo ""
+echo "⚠️  WARNING: This script will perform destructive actions!"
+echo ""
+echo "The following will be REMOVED/RESET:"
+echo "• All Docker containers and volumes"
+echo "• Database data (will be recreated with fresh migrations and seeds)"
+echo "• Application caches and compiled assets"
+echo "• Frontend node_modules (will be reinstalled)"
+echo ""
+echo "The following will be CREATED/UPDATED:"
+echo "• SSL certificates (if not present)"
+echo "• Fresh database with seed data"
+echo ""
+read -p "Do you want to continue? (y/N): " -n 1 -r
+echo ""
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "❌ Setup cancelled by user."
+    exit 1
+fi
+echo ""
+
+# Create .env file if it doesn't exist, backup existing one
+if [ -f ".env" ]; then
+    echo "📝 Backing up existing .env file..."
+    cp .env .env.backup
+    echo "✅ Existing .env backed up!"
+    echo ""
+fi
+
+if [ -f ".env.example" ]; then
+    echo "📝 Creating .env file from .env.example..."
+    cp .env.example .env
+    echo "✅ .env file created successfully!"
+    echo ""
+fi
+
+# Configure application host
+echo "🌐 Application Host Configuration"
+echo "================================="
+echo ""
+echo "Choose your application host:"
+echo "1. localhost (default - with SSL)"
+echo "2. Custom domain"
+echo ""
+read -p "Enter your choice (1-2) [1]: " -r HOST_CHOICE
+
+case "${HOST_CHOICE:-1}" in
+    1)
+        APP_HOST="localhost"
+        read -p "Enable SSL for localhost? (Y/n): " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            USE_SSL=false
+            echo "✅ Using localhost (HTTP only - http://localhost)"
+        else
+            USE_SSL=true
+            echo "✅ Using localhost with SSL (https://localhost)"
+        fi
+        ;;
+    2)
+        read -p "Enter custom domain: " -r CUSTOM_HOST
+        if [ -z "$CUSTOM_HOST" ]; then
+            echo "❌ No domain entered, using localhost as fallback"
+            APP_HOST="localhost"
+            USE_SSL=true
+            echo "✅ Using localhost with SSL (fallback)"
+        else
+            APP_HOST="$CUSTOM_HOST"
+            read -p "Enable SSL for $CUSTOM_HOST? (Y/n): " -n 1 -r
+            echo ""
+            if [[ $REPLY =~ ^[Nn]$ ]]; then
+                USE_SSL=false
+                echo "✅ SSL disabled for $APP_HOST"
+            else
+                USE_SSL=true
+                echo "✅ SSL enabled for $APP_HOST"
+                echo ""
+                echo "⚠️  Custom Domain SSL Notice:"
+                echo "If your browser shows a security warning, click 'Advanced'"
+                echo "then 'Proceed to $APP_HOST' to access the application."
+                echo ""
+            fi
+        fi
+        ;;
+    *)
+        echo "❌ Invalid choice, using localhost with SSL as default"
+        APP_HOST="localhost"
+        USE_SSL=true
+        ;;
+esac
+
+# Update .env file with chosen host
+echo ""
+echo "📝 Updating .env configuration..."
+if [ "$USE_SSL" = true ]; then
+    APP_URL="https://$APP_HOST"
+else
+    APP_URL="http://$APP_HOST"
+fi
+
+# Update APP_HOST and APP_URL in .env file
+sed -i.bak "s|^APP_HOST=.*|APP_HOST=$APP_HOST|" .env
+sed -i.bak "s|^APP_URL=.*|APP_URL=$APP_URL|" .env
+rm -f .env.bak
+
+echo "✅ Configuration updated:"
+echo "   APP_HOST=$APP_HOST"
+echo "   APP_URL=$APP_URL"
+echo ""
+
+# Stop any running containers
+echo "🛑 Stopping existing containers..."
+docker compose down --remove-orphans
+
+# Remove volumes to ensure clean state
+echo "🗑️  Removing volumes for clean reset..."
+docker compose down -v
+
+# Pull latest images and build containers (if forced)
+if [ "$FORCE_BUILD" = true ]; then
+    echo "📥 Pulling latest Docker images..."
+    docker compose pull
+
+    echo "🏗️  Building containers..."
+    docker compose build --no-cache
+else
+    echo "⚡ Using existing Docker images (use --force-build to rebuild)"
+fi
+
+# Start services
+echo "🚀 Starting services..."
+docker compose up -d
+
+# Wait for services to be ready
+echo "⏳ Waiting for services to be ready..."
+sleep 10
+
+# Install PHP dependencies
+echo "📦 Installing PHP dependencies..."
+docker compose exec -T workspace composer install
+
+# Generate app key if not exists
+echo "🔑 Generating application key..."
+APP_KEY_VALUE=$(grep "^APP_KEY=" .env 2>/dev/null | cut -d'=' -f2 | tr -d ' ')
+if [ -z "$APP_KEY_VALUE" ] || [ "$APP_KEY_VALUE" = "" ]; then
+    echo "📝 Generating new application key..."
+    docker compose exec -T workspace php artisan key:generate
+    
+    # Restart containers to reload environment variables with new APP_KEY
+    echo "🔄 Restarting containers to reload environment variables..."
+    docker compose down
+    docker compose up -d
+    
+    # Wait for services to be ready again
+    echo "⏳ Waiting for services to be ready..."
+    sleep 10
+else
+    echo "✅ Application key already exists"
+fi
+
+# Run database migrations and seed
+echo "🗄️  Setting up database..."
+docker compose exec -T workspace php artisan migrate:fresh --seed
+
+# Clear all caches
+echo "🧹 Clearing caches..."
+docker compose exec -T workspace php artisan optimize:clear
+
+# Run quality checks
+echo "🔍 Running code quality checks..."
+docker compose exec -T workspace ./vendor/bin/pint
+docker compose exec -T workspace npm run lint
+
+# Build frontend assets
+echo "🎨 Building frontend assets..."
+npm install & npm run build
+
+# Setup SSL certificates (only if SSL is enabled)
+if [ "$USE_SSL" = true ]; then
+    echo "🔒 Setting up SSL certificates..."
+    # Always regenerate certificates for custom domains, or if certificates don't exist
+    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ] || [ "$APP_HOST" != "localhost" ]; then
+        echo "🔧 Generating SSL certificates..."
+        
+        # Check if mkcert is installed
+        if ! command -v mkcert > /dev/null 2>&1; then
+            echo "❌ mkcert is not installed!"
+            echo ""
+            echo "Please install mkcert first:"
+            echo "• macOS: brew install mkcert"
+            echo "• Windows: choco install mkcert"
+            echo "• Linux: see https://github.com/FiloSottile/mkcert#installation"
+            echo ""
+            echo "Then run: mkcert -install"
+            echo "And re-run this setup script."
+            exit 1
+        fi
+        
+        # Ensure SSL directory exists
+        mkdir -p docker/development/ssl
+        
+        # Install mkcert CA to system trust store (reduces browser warnings)
+        echo "🔧 Installing mkcert CA in system trust store..."
+        mkcert -install
+        
+        # Generate SSL certificates
+        cd docker/development/ssl
+        mkcert -key-file app.key.pem -cert-file app.pem $APP_HOST *.$APP_HOST localhost 127.0.0.1 ::1
+        cd ../../..
+        
+        echo "✅ SSL certificates generated successfully for $APP_HOST!"
+    else
+        echo "✅ SSL certificates already exist!"
+    fi
+else
+    echo "⏭️  Skipping SSL setup (HTTP mode selected)"
+fi
+
+# Setup hosts file (only for custom domains, not localhost)
+if [ "$APP_HOST" != "localhost" ]; then
+    echo "🌐 Setting up hosts file..."
+    if ! grep -q "$APP_HOST" /etc/hosts 2>/dev/null; then
+        echo "🔧 Adding domain to hosts file..."
+        echo "127.0.0.1 $APP_HOST" | sudo tee -a /etc/hosts > /dev/null
+        if [ $? -eq 0 ]; then
+            echo "✅ Domain added to hosts file successfully!"
+        else
+            echo "⚠️  Failed to add domain to hosts file. Please add manually:"
+            echo "127.0.0.1 $APP_HOST"
+        fi
+    else
+        echo "✅ Domain already configured in hosts file!"
+    fi
+else
+    echo "⏭️  Skipping hosts file setup (using localhost)"
+fi
+
+# Final status check
+echo ""
+echo "🎉 Setup complete!"
+echo ""
+echo "📋 Next steps:"
+echo "1. Access your app at: $APP_URL"
+echo "2. Start development with: docker compose exec workspace npm run dev"
+echo "3. Monitor queues with: docker compose exec workspace php artisan horizon"
+echo ""
+echo "🔧 Useful commands:"
+echo "• Run tests: docker compose exec workspace composer test"
+echo "• Run E2E tests: docker compose exec workspace npm run test:e2e"
+echo "• Format code: docker compose exec workspace ./vendor/bin/pint"
+echo "• Lint frontend: docker compose exec workspace npm run lint"
+echo ""
+echo "✅ Development environment is ready!"

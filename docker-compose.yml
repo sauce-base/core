@@ -6,8 +6,11 @@ services:
       - '${APP_HTTPS_PORT:-443}:443'
     volumes:
       - './:/var/www'
-      - './docker/development/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+      - './docker/development/nginx/default.conf:/etc/nginx/conf.d/default.conf.template'
       - './docker/development/ssl:/etc/nginx/ssl:ro'
+    environment:
+      - APP_HOST=${APP_HOST:-localhost}
+    command: /bin/sh -c "envsubst '$$APP_HOST' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     depends_on:
       - php-fpm
     networks:
@@ -103,23 +106,6 @@ services:
       retries: 3
       timeout: 5s
 
-  typesense:
-    image: 'typesense/typesense:27.1'
-    restart: unless-stopped
-    ports:
-      - '${FORWARD_TYPESENSE_PORT:-8108}:8108'
-    environment:
-      TYPESENSE_DATA_DIR: '${TYPESENSE_DATA_DIR:-/typesense-data}'
-      TYPESENSE_API_KEY: '${TYPESENSE_API_KEY}'
-      TYPESENSE_ENABLE_CORS: '${TYPESENSE_ENABLE_CORS:-true}'
-    volumes:
-      - 'laravel-typesense-dev:/typesense-data'
-    networks:
-      - laravel-dev
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8108/health"]
-      retries: 5
-      timeout: 7s
 
   mailpit:
     image: 'axllent/mailpit:latest'
@@ -153,6 +139,4 @@ volumes:
   laravel-pgsql-dev:
     driver: local
   laravel-redis-dev:
-    driver: local
-  laravel-typesense-dev:
     driver: local
