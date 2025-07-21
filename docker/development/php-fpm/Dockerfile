@@ -13,12 +13,15 @@ RUN docker-php-ext-install \
     zip \
     pcntl
 
-# Install Redis extension via PECL
+# Install Redis and Xdebug extensions via PECL
 RUN apk add --no-cache --virtual .build-deps \
     $PHPIZE_DEPS \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
+    linux-headers \
+    && pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug \
     && apk del .build-deps
+
+# PHP configuration files will be mounted as volumes in docker-compose.yml
 
 # Set working directory
 WORKDIR /var/www
