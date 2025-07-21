@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('provider_token')->nullable(); // access token
             $table->string('provider_refresh_token')->nullable(); // refresh token
             $table->timestamp('provider_token_expires_at')->nullable();
+            $table->string('provider_avatar_url')->nullable(); // avatar URL from provider
+            $table->timestamp('last_login_at')->nullable(); // track when provider was last used
             $table->timestamps();
 
             $table->unique(['provider', 'provider_id']);
