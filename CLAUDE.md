@@ -58,7 +58,7 @@ docker compose exec workspace npm run build         # Production build test
 ```
 
 ### SSL Setup for Local Development
-The project is configured to use HTTPS with the domain `app.tadone.test` using mkcert for trusted certificates. **One-time setup required:**
+The project is configured to use HTTPS with `localhost` using mkcert for trusted certificates. **One-time setup required:**
 
 ```bash
 # 1. Install mkcert (if not already installed)
@@ -71,15 +71,12 @@ mkcert -install
 
 # 3. Generate SSL certificates (first time only)
 cd docker/development/ssl
-mkcert app.tadone.test localhost 127.0.0.1 ::1
+mkcert localhost 127.0.0.1 ::1
 
-# 4. Add domain to your hosts file
-echo "127.0.0.1 app.tadone.test" | sudo tee -a /etc/hosts
-
-# 5. Start the application
+# 4. Start the application
 docker compose up -d
 
-# 6. Access your app at: https://app.tadone.test
+# 5. Access your app at: https://localhost
 ```
 
 **Note**: With mkcert, your browser will trust the SSL certificates without any security warnings!

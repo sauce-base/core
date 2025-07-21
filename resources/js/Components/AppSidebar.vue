@@ -27,7 +27,7 @@ const data = {
     user: {
         name: page.props.auth.user.name,
         email: page.props.auth.user.email,
-        avatar: '/avatars/default.jpg',
+        avatar: page.props.auth.user.avatar,
     },
     teams: [
         {

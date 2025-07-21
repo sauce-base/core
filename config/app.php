@@ -123,4 +123,29 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Social Login Providers
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for social authentication providers. Each provider can be
+    | enabled/disabled and configured with display information for the frontend.
+    |
+    */
+
+    'social_providers' => [
+        'google' => [
+            'enabled' => env('GOOGLE_LOGIN_ENABLED', true),
+            'name' => 'Google',
+        ],
+        'github' => [
+            'enabled' => env('GITHUB_LOGIN_ENABLED', false),
+            'name' => 'GitHub',
+        ],
+        'facebook' => [
+            'enabled' => env('FACEBOOK_LOGIN_ENABLED', false),
+            'name' => 'Facebook',
+        ],
+    ],
+
 ];

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ConnectedAccounts from '@/Components/ConnectedAccounts.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
@@ -38,6 +39,12 @@ defineProps<{
                         :status="status"
                         class="max-w-xl"
                     />
+                </div>
+
+                <div
+                    class="bg-white p-4 shadow-sm sm:rounded-lg sm:p-8 dark:bg-gray-800"
+                >
+                    <ConnectedAccounts class="max-w-xl" />
                 </div>
 
                 <div

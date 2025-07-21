@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SocialAccount;
+use App\Actions\DisconnectSocialAccountAction;
+use App\Actions\LinkSocialAccountAction;
+use App\Exceptions\SocialAuthException;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -17,55 +21,23 @@ class SocialAuthController extends Controller
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback(string $provider): RedirectResponse
+    public function callback(string $provider, LinkSocialAccountAction $linkAction): RedirectResponse
     {
         $this->validateProvider($provider);
 
         try {
             $socialUser = Socialite::driver($provider)->user();
 
-            // Find existing social account
-            $socialAccount = SocialAccount::where('provider', $provider)
-                ->where('provider_id', $socialUser->getId())
-                ->first();
-
-            if ($socialAccount) {
-                // Update token and login
-                $socialAccount->update([
-                    'provider_token' => $socialUser->token,
-                    'provider_refresh_token' => $socialUser->refreshToken,
-                ]);
-
-                Auth::login($socialAccount->user);
-
-                return redirect()->intended('/dashboard');
-            }
-
-            // Check if user exists with same email
-            $user = User::where('email', $socialUser->getEmail())->first();
-
-            if (! $user) {
-                // Create new user
-                $user = User::create([
-                    'name' => $socialUser->getName(),
-                    'email' => $socialUser->getEmail(),
-                    'email_verified_at' => now(),
-                    'password' => bcrypt(str()->random(32)), // Random password
-                ]);
-            }
-
-            // Create social account
-            $user->socialAccounts()->create([
-                'provider' => $provider,
-                'provider_id' => $socialUser->getId(),
-                'provider_token' => $socialUser->token,
-                'provider_refresh_token' => $socialUser->refreshToken,
-            ]);
+            $user = $linkAction->execute($provider, $socialUser);
 
             Auth::login($user);
 
             return redirect()->intended('/dashboard');
 
+        } catch (SocialAuthException $e) {
+            return redirect('/login')->withErrors([
+                'social' => $e->getMessage(),
+            ]);
         } catch (\Exception $e) {
             return redirect('/login')->withErrors([
                 'social' => 'Authentication failed. Please try again.',
@@ -73,12 +45,48 @@ class SocialAuthController extends Controller
         }
     }
 
+    public function providers(): JsonResponse
+    {
+        $enabledProviders = $this->getEnabledProviders();
+
+        return response()->json([
+            'providers' => $enabledProviders,
+        ]);
+    }
+
+    /**
+     * Disconnect a social provider from user account
+     */
+    public function disconnect(Request $request, string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
+    {
+        $user = $request->user();
+
+        try {
+            $disconnectAction->execute($user, $provider);
+
+            return back()->with('success', ucfirst($provider).' account disconnected successfully.');
+
+        } catch (SocialAuthException $e) {
+            return back()->withErrors([
+                'social' => $e->getMessage(),
+            ]);
+        }
+    }
+
     private function validateProvider(string $provider): void
     {
-        $allowedProviders = ['google', 'github', 'facebook'];
+        $enabledProviders = array_keys($this->getEnabledProviders());
 
-        if (! in_array($provider, $allowedProviders)) {
+        if (! in_array($provider, $enabledProviders)) {
             abort(404);
         }
+    }
+
+    private function getEnabledProviders(): array
+    {
+        return collect(config('app.social_providers', []))
+            ->filter(fn ($config) => $config['enabled'] ?? false)
+            ->map(fn ($config) => ['name' => $config['name']])
+            ->toArray();
     }
 }

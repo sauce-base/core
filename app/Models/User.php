@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_url',
     ];
 
     /**
@@ -50,5 +51,24 @@ class User extends Authenticatable
     public function socialAccounts(): HasMany
     {
         return $this->hasMany(SocialAccount::class);
+    }
+
+    /**
+     * Get avatar with fallback to default
+     */
+    public function getAvatarAttribute(): string
+    {
+        return $this->avatar_url ?: '/images/default-avatar.jpg';
+    }
+
+    /**
+     * Get connected providers for profile display
+     */
+    public function getConnectedProvidersAttribute(): array
+    {
+        return $this->socialAccounts()
+            ->orderBy('last_login_at', 'desc')
+            ->get(['provider', 'last_login_at', 'provider_avatar_url'])
+            ->toArray();
     }
 }

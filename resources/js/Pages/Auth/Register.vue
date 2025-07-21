@@ -7,7 +7,8 @@ import FormLabel from '@/Components/ui/form/FormLabel.vue';
 import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import Input from '@/Components/ui/Input.vue';
 import PasswordInput from '@/Components/ui/PasswordInput.vue';
-import SocialLoginButton from '@/Components/ui/social-login-button.vue';
+import SocialLoginButton from '@/Components/ui/SocialLoginButton.vue';
+import { useSocialLogin } from '@/Composables/useSocialLogin';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { registerSchema, type RegisterFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -32,6 +33,12 @@ const inertiaForm = useInertiaForm<RegisterFormData>({
     password: '',
     password_confirmation: '',
 });
+
+const {
+    providers,
+    isLoading: providersLoading,
+    getEnabledProviders,
+} = useSocialLogin();
 
 const onSubmit = form.handleSubmit((values: RegisterFormData) => {
     Object.assign(inertiaForm, values);
@@ -59,10 +66,16 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         </div>
 
         <!-- Social Login Section -->
-        <div class="mb-6 space-y-3">
-            <SocialLoginButton provider="google" />
-            <SocialLoginButton provider="github" />
-            <SocialLoginButton provider="facebook" />
+        <div
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="mb-6 space-y-3"
+        >
+            <SocialLoginButton
+                v-for="providerKey in getEnabledProviders()"
+                :key="providerKey"
+                :provider-key="providerKey"
+                :provider-config="providers[providerKey]"
+            />
         </div>
 
         <!-- Divider -->

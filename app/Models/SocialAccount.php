@@ -14,12 +14,15 @@ class SocialAccount extends Model
         'provider_token',
         'provider_refresh_token',
         'provider_token_expires_at',
+        'provider_avatar_url',
+        'last_login_at',
     ];
 
     protected function casts(): array
     {
         return [
             'provider_token_expires_at' => 'datetime',
+            'last_login_at' => 'datetime',
         ];
     }
 
