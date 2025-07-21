@@ -3,6 +3,7 @@ import IconGithub from '~icons/mdi/github';
 import IconGoogle from '~icons/mdi/google';
 
 export interface ProviderUIConfig {
+    name: string;
     icon: any;
     colors: {
         text: string;
@@ -14,6 +15,7 @@ export interface ProviderUIConfig {
 
 export const SOCIAL_PROVIDER_UI_MAP: Record<string, ProviderUIConfig> = {
     google: {
+        name: 'Google',
         icon: IconGoogle,
         colors: {
             text: 'text-white dark:text-gray-900',
@@ -23,6 +25,7 @@ export const SOCIAL_PROVIDER_UI_MAP: Record<string, ProviderUIConfig> = {
         brandColor: '#4285f4',
     },
     github: {
+        name: 'GitHub',
         icon: IconGithub,
         colors: {
             text: 'text-white',
@@ -32,6 +35,7 @@ export const SOCIAL_PROVIDER_UI_MAP: Record<string, ProviderUIConfig> = {
         brandColor: '#333333',
     },
     facebook: {
+        name: 'Facebook',
         icon: IconFacebook,
         colors: {
             text: 'text-white',
