@@ -232,7 +232,7 @@ elif [ -f ".env.backup" ] && [ -f ".env" ]; then
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "📝 Backing up current .env file..."
-        cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
+        cp .env .env.backup
         echo "📝 Restoring .env from backup..."
         cp .env.backup .env
         echo "✅ .env restored from backup!"
@@ -240,8 +240,8 @@ elif [ -f ".env.backup" ] && [ -f ".env" ]; then
     else
         echo "📝 Keeping current .env file..."
         echo "📝 Backing up existing .env file..."
-        cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
-        echo "✅ Existing .env backed up with timestamp!"
+        cp .env .env.backup
+        echo "✅ Existing .env backed up!"
         echo ""
     fi
 else
