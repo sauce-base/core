@@ -8,6 +8,7 @@ import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import Input from '@/Components/ui/Input.vue';
 import PasswordInput from '@/Components/ui/PasswordInput.vue';
 import SocialLoginButton from '@/Components/ui/SocialLoginButton.vue';
+import { useSocialLogin } from '@/Composables/useSocialLogin';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { loginSchema, type LoginFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -35,6 +36,12 @@ const inertiaForm = useInertiaForm<LoginFormData>({
     password: '',
     remember: false,
 });
+
+const {
+    providers,
+    isLoading: providersLoading,
+    getEnabledProviders,
+} = useSocialLogin();
 
 const onSubmit = async () => {
     const { valid } = await form.validate();
@@ -70,8 +77,16 @@ const onSubmit = async () => {
         </div>
 
         <!-- Social Login Section -->
-        <div class="mb-6">
-            <SocialLoginButton provider="google" />
+        <div
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="mb-6 space-y-3"
+        >
+            <SocialLoginButton
+                v-for="providerKey in getEnabledProviders()"
+                :key="providerKey"
+                :provider-key="providerKey"
+                :provider-config="providers[providerKey]"
+            />
         </div>
 
         <!-- Divider -->
