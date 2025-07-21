@@ -7,7 +7,7 @@ import FormLabel from '@/Components/ui/form/FormLabel.vue';
 import FormMessage from '@/Components/ui/form/FormMessage.vue';
 import Input from '@/Components/ui/Input.vue';
 import PasswordInput from '@/Components/ui/PasswordInput.vue';
-import SocialLoginButton from '@/Components/ui/social-login-button.vue';
+import SocialLoginButton from '@/Components/ui/SocialLoginButton.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { registerSchema, type RegisterFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
@@ -59,10 +59,8 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         </div>
 
         <!-- Social Login Section -->
-        <div class="mb-6 space-y-3">
+        <div class="mb-6">
             <SocialLoginButton provider="google" />
-            <SocialLoginButton provider="github" />
-            <SocialLoginButton provider="facebook" />
         </div>
 
         <!-- Divider -->
