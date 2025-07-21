@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SocialAccount;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -73,12 +74,29 @@ class SocialAuthController extends Controller
         }
     }
 
+    public function providers(): JsonResponse
+    {
+        $enabledProviders = $this->getEnabledProviders();
+
+        return response()->json([
+            'providers' => $enabledProviders,
+        ]);
+    }
+
     private function validateProvider(string $provider): void
     {
-        $allowedProviders = ['google'];
+        $enabledProviders = array_keys($this->getEnabledProviders());
 
-        if (! in_array($provider, $allowedProviders)) {
+        if (! in_array($provider, $enabledProviders)) {
             abort(404);
         }
+    }
+
+    private function getEnabledProviders(): array
+    {
+        return collect(config('app.social_providers', []))
+            ->filter(fn ($config) => $config['enabled'] ?? false)
+            ->map(fn ($config) => ['name' => $config['name']])
+            ->toArray();
     }
 }
