@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/Components/ui/button';
+import { useSocialLogin } from '@/Composables/useSocialLogin';
 import { getProviderUIConfig } from '@/lib/socialProviders';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -13,14 +14,15 @@ interface ConnectedAccount {
 const page = usePage();
 const user = computed(() => page.props.auth.user as any);
 const connectedAccounts = computed(() => user.value?.connected_providers || []);
+const { getEnabledProviders } = useSocialLogin();
 
 // Get available providers that aren't connected yet
 const availableProviders = computed(() => {
     const connected = connectedAccounts.value.map(
         (account: ConnectedAccount) => account.provider,
     );
-    const allProviders = ['google', 'github', 'facebook']; // Could be dynamic from config
-    return allProviders.filter((provider) => !connected.includes(provider));
+    const enabledProviders = getEnabledProviders();
+    return enabledProviders.filter((provider) => !connected.includes(provider));
 });
 
 const formatDate = (dateString: string | null) => {
@@ -88,15 +90,6 @@ const connectProvider = (provider: string) => {
                         <p class="text-sm text-gray-500 dark:text-gray-400">
                             Last used: {{ formatDate(account.last_login_at) }}
                         </p>
-                    </div>
-
-                    <!-- Avatar Preview -->
-                    <div v-if="account.provider_avatar_url" class="ml-4">
-                        <img
-                            :src="account.provider_avatar_url"
-                            :alt="`${account.provider} avatar`"
-                            class="h-8 w-8 rounded-full"
-                        />
                     </div>
                 </div>
 
