@@ -75,7 +75,7 @@ class SocialAuthController extends Controller
 
     private function validateProvider(string $provider): void
     {
-        $allowedProviders = ['google', 'github', 'facebook'];
+        $allowedProviders = ['google'];
 
         if (! in_array($provider, $allowedProviders)) {
             abort(404);
