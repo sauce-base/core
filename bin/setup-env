@@ -203,19 +203,62 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 echo ""
 
-# Create .env file if it doesn't exist, backup existing one
-if [ -f ".env" ]; then
-    echo "📝 Backing up existing .env file..."
-    cp .env .env.backup
-    echo "✅ Existing .env backed up!"
+# Check for .env.backup and offer restoration
+if [ -f ".env.backup" ] && [ ! -f ".env" ]; then
+    echo "🔍 Found existing .env.backup file!"
     echo ""
-fi
+    read -p "Do you want to restore .env from backup instead of using .env.example? (Y/n): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        echo "📝 Restoring .env from backup..."
+        cp .env.backup .env
+        echo "✅ .env restored from backup!"
+        echo ""
+    else
+        echo "📝 Using .env.example instead..."
+        if [ -f ".env.example" ]; then
+            cp .env.example .env
+            echo "✅ .env file created from .env.example!"
+            echo ""
+        else
+            echo "❌ .env.example not found!"
+            exit 1
+        fi
+    fi
+elif [ -f ".env.backup" ] && [ -f ".env" ]; then
+    echo "🔍 Found both .env and .env.backup files!"
+    echo ""
+    read -p "Do you want to replace current .env with .env.backup? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "📝 Backing up current .env file..."
+        cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
+        echo "📝 Restoring .env from backup..."
+        cp .env.backup .env
+        echo "✅ .env restored from backup!"
+        echo ""
+    else
+        echo "📝 Keeping current .env file..."
+        echo "📝 Backing up existing .env file..."
+        cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
+        echo "✅ Existing .env backed up with timestamp!"
+        echo ""
+    fi
+else
+    # Create .env file if it doesn't exist, backup existing one
+    if [ -f ".env" ]; then
+        echo "📝 Backing up existing .env file..."
+        cp .env .env.backup
+        echo "✅ Existing .env backed up!"
+        echo ""
+    fi
 
-if [ -f ".env.example" ]; then
-    echo "📝 Creating .env file from .env.example..."
-    cp .env.example .env
-    echo "✅ .env file created successfully!"
-    echo ""
+    if [ -f ".env.example" ]; then
+        echo "📝 Creating .env file from .env.example..."
+        cp .env.example .env
+        echo "✅ .env file created successfully!"
+        echo ""
+    fi
 fi
 
 # Configure application host
