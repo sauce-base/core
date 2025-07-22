@@ -6,8 +6,8 @@
 
 A modern foundation for building scalable SaaS applications with Laravel and Vue.js, designed for rapid development and prototyping.
 
-[![Build Status](https://github.com/roble/tadone/workflows/tests/badge.svg)](https://github.com/roble/tadone/actions)
-[![License](https://img.shields.io/github/license/roble/tadone)](LICENSE)
+[![CI](https://github.com/roble/tadone/actions/workflows/ci.yml/badge.svg)](https://github.com/roble/tadone/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Features
 
