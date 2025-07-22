@@ -22,7 +22,9 @@ const availableProviders = computed(() => {
         (account: ConnectedAccount) => account.provider,
     );
     const enabledProviders = getEnabledProviders();
-    return enabledProviders.filter((provider) => !connected.includes(provider));
+    return enabledProviders.filter(
+        (provider: string) => !connected.includes(provider),
+    );
 });
 
 const formatDate = (dateString: string | null) => {

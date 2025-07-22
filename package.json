@@ -60,6 +60,10 @@
     "vee-validate": "^4.15.1",
     "zod": "^3.25.76"
   },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.5.1"
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

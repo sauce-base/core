@@ -55,8 +55,6 @@ services:
       - './:/var/www'
       - './docker/development/php-fpm/php.ini:/usr/local/etc/php/php.ini'
       - './docker/development/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
-    ports:
-      - '${VITE_PORT:-5173}:5173'
     networks:
       - laravel-dev
     environment:
