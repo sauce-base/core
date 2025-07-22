@@ -41,7 +41,7 @@
 
 ### Pull Requests - MANDATORY FORMAT  
 - **TITLE**: Clear, descriptive summary
-- **BODY**: Must include "## Summary" and "## Test plan" sections
+- **BODY**: Must include "## Summary" section
 - **NO ATTRIBUTION**: Never add "Generated with Claude" or similar
 
 ### Code Quality - ALWAYS RUN THESE
