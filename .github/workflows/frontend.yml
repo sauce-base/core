@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [24.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "Node.js version: $(node --version)"
           echo "npm version: $(npm --version)"
-          node --version | grep -E "v22\."
+          node --version | grep -E "v24\."
           npm --version | grep -E "10\."
           
       - name: Install dependencies
