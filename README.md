@@ -58,7 +58,7 @@ A modern foundation for building scalable SaaS applications with Laravel and Vue
 ### Prerequisites
 - **[Docker](https://docs.docker.com/get-docker/)** - Required for containerized development
 - **[mkcert](https://github.com/FiloSottile/mkcert)** - Optional, for trusted SSL certificates
-- **Node.js 18+** and **npm** - For local asset building
+- **Node.js 22+** (LTS) and **npm** - For local asset building
 
 ### Automated Setup (Recommended)
 
