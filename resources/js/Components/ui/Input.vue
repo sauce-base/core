@@ -8,6 +8,9 @@ const props = withDefaults(
         placeholder?: string;
         disabled?: boolean;
         error?: string;
+        id?: string;
+        name?: string;
+        autocomplete?: string;
     }>(),
     {
         type: 'text',
@@ -28,6 +31,9 @@ const hasError = computed(() => {
         :type="type"
         :placeholder="placeholder"
         :disabled="disabled"
+        :id="id || fieldContext?.id?.value"
+        :name="name || fieldContext?.name?.value"
+        :autocomplete="autocomplete"
         :data-testid="fieldContext?.id?.value || 'input'"
         :class="[
             'w-full rounded-md border bg-white px-3 py-2 text-sm placeholder:text-gray-500 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-400',
