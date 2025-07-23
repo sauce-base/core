@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
+import Logo from '@/Components/ui/Logo.vue';
 import ThemeToggle from '@/Components/ui/ThemeToggle.vue';
 import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -74,7 +74,7 @@ defineProps<{
                     href="/"
                     class="flex items-center transition-opacity hover:opacity-80"
                 >
-                    <TadoneLogo size="md" :showText="true" />
+                    <Logo size="md" :showText="true" />
                 </Link>
 
                 <!-- Desktop Navigation - Better spacing and active states -->
@@ -135,7 +135,7 @@ defineProps<{
                         Docs
                     </a>
                     <a
-                        href="https://github.com/roble/tadone"
+                        href="https://github.com/roble/saucebase"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="flex items-center gap-2 px-2 py-1 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
@@ -251,7 +251,7 @@ defineProps<{
                             Docs
                         </a>
                         <a
-                            href="https://github.com/roble/tadone"
+                            href="https://github.com/roble/saucebase"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="flex items-center gap-3 rounded-lg px-4 py-3 text-left text-base font-medium text-gray-900 transition-colors duration-200 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-100 dark:hover:bg-gray-800/50 dark:hover:text-blue-400"

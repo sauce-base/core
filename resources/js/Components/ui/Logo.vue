@@ -36,27 +36,37 @@ const textSizeClasses = {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <!-- Background square -->
-                <rect
-                    x="15"
-                    y="15"
-                    width="70"
-                    height="70"
-                    rx="16"
-                    fill="#6366F1"
-                />
+                <!-- Background circle with gradient -->
+                <defs>
+                    <radialGradient
+                        id="sauceGradient"
+                        cx="0.3"
+                        cy="0.3"
+                        r="0.8"
+                    >
+                        <stop offset="0%" stop-color="#F97316" />
+                        <stop offset="100%" stop-color="#DC2626" />
+                    </radialGradient>
+                </defs>
 
-                <!-- Letter "T" -->
+                <!-- Main sauce drop shape -->
                 <path
-                    d="M35 35 L65 35 M50 35 L50 65"
-                    stroke="white"
-                    stroke-width="8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    d="M50 15 C60 15, 70 25, 70 35 C70 45, 65 50, 60 55 L55 65 C53 70, 52 75, 50 80 C48 75, 47 70, 45 65 L40 55 C35 50, 30 45, 30 35 C30 25, 40 15, 50 15 Z"
+                    fill="url(#sauceGradient)"
                 />
 
-                <!-- Modern accent dot -->
-                <circle cx="65" cy="65" r="6" fill="#3B82F6" />
+                <!-- Sauce highlight -->
+                <ellipse
+                    cx="45"
+                    cy="30"
+                    rx="8"
+                    ry="12"
+                    fill="#FED7AA"
+                    opacity="0.6"
+                />
+
+                <!-- Subtle sauce droplet -->
+                <circle cx="65" cy="70" r="3" fill="#DC2626" opacity="0.8" />
             </svg>
         </div>
 
@@ -75,10 +85,10 @@ const textSizeClasses = {
                     'leading-none font-bold text-gray-900 dark:text-white',
                 ]"
             >
-                tadone
+                sauce base
             </h1>
             <p class="text-xs leading-tight text-gray-600 dark:text-gray-400">
-                saas starter
+                your saas foundation
             </p>
         </div>
     </div>

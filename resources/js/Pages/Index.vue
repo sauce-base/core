@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Footer from '@/Components/layout/Footer.vue';
 import Header from '@/Components/layout/Header.vue';
-import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
+import Logo from '@/Components/ui/Logo.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import IconCheck from '~icons/heroicons/check';
 import IconGitHub from '~icons/heroicons/code-bracket';
@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="Tadone - Modern Laravel SaaS Starter Kit" />
+    <Head title="Sauce Base - Modern Laravel SaaS Starter Kit" />
     <div class="flex min-h-screen flex-col bg-white dark:bg-gray-950">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />
@@ -41,7 +41,7 @@ defineProps<{
 
                 <!-- Logo -->
                 <div class="mb-8 flex justify-center">
-                    <TadoneLogo size="xl" :showText="true" />
+                    <Logo size="xl" :showText="true" />
                 </div>
 
                 <!-- Main Headline -->
@@ -87,7 +87,7 @@ defineProps<{
 
                     <!-- GitHub Button -->
                     <a
-                        href="https://github.com/roble/tadone"
+                        href="https://github.com/roble/saucebase"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-950"
@@ -401,7 +401,7 @@ defineProps<{
                                 <div class="mb-2"># Clone the repository</div>
                                 <div class="text-gray-300">
                                     git clone
-                                    https://github.com/roble/tadone.git
+                                    https://github.com/roble/saucebase.git
                                 </div>
                                 <div class="mt-3 mb-2">
                                     # Install dependencies
@@ -521,13 +521,13 @@ defineProps<{
                         <h3
                             class="mb-3 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            What technologies does Tadone use?
+                            What technologies does Sauce Base use?
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Tadone is built with Laravel 12, Vue 3, TypeScript,
-                            Inertia.js, and Tailwind CSS. It also includes
-                            PostgreSQL, Redis, and Docker for a complete
-                            development environment.
+                            Sauce Base is built with Laravel 12, Vue 3,
+                            TypeScript, Inertia.js, and Tailwind CSS. It also
+                            includes PostgreSQL, Redis, and Docker for a
+                            complete development environment.
                         </p>
                     </div>
 
@@ -538,11 +538,11 @@ defineProps<{
                         <h3
                             class="mb-3 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Is Tadone really free?
+                            Is Sauce Base really free?
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Yes, Tadone is completely free and open source. You
-                            can use it for personal projects, commercial
+                            Yes, Sauce Base is completely free and open source.
+                            You can use it for personal projects, commercial
                             applications, or modify it as needed. No hidden
                             costs, no premium features locked away.
                         </p>
@@ -558,10 +558,10 @@ defineProps<{
                             What authentication methods are supported?
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Tadone includes email/password authentication plus
-                            social login with Google, GitHub, and Facebook. All
-                            authentication is handled securely with Laravel's
-                            built-in features.
+                            Sauce Base includes email/password authentication
+                            plus social login with Google, GitHub, and Facebook.
+                            All authentication is handled securely with
+                            Laravel's built-in features.
                         </p>
                     </div>
 
@@ -572,11 +572,11 @@ defineProps<{
                         <h3
                             class="mb-3 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Can I deploy Tadone to production?
+                            Can I deploy Sauce Base to production?
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Absolutely! Tadone is production-ready with Docker
-                            configuration, optimized build processes,
+                            Absolutely! Sauce Base is production-ready with
+                            Docker configuration, optimized build processes,
                             comprehensive testing, and performance
                             optimizations. Deploy to any cloud provider or your
                             own servers.
@@ -610,7 +610,7 @@ defineProps<{
                             How do I customize the UI components?
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Tadone uses shadcn/ui components with reka-ui
+                            Sauce Base uses shadcn/ui components with reka-ui
                             implementation. All components are fully
                             customizable and located in the
                             `resources/js/Components/ui/` directory. Modify
@@ -653,7 +653,7 @@ defineProps<{
                     </Link>
 
                     <a
-                        href="https://github.com/roble/tadone"
+                        href="https://github.com/roble/saucebase"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-blue-600 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"

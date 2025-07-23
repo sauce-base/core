@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Footer from '@/Components/layout/Footer.vue';
 import PageTransition from '@/Components/PageTransition.vue';
-import TadoneLogo from '@/Components/ui/TadoneLogo.vue';
+import Logo from '@/Components/ui/Logo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -14,11 +14,7 @@ import { Link } from '@inertiajs/vue3';
                 <!-- Logo Section -->
                 <div class="mb-8 text-center">
                     <Link href="/">
-                        <TadoneLogo
-                            size="lg"
-                            :showText="true"
-                            :centered="true"
-                        />
+                        <Logo size="lg" :showText="true" :centered="true" />
                     </Link>
                 </div>
 

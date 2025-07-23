@@ -1,12 +1,12 @@
-# 🚀 Tadone
+# 🍯 Sauce Base
 
 **Modern Laravel SaaS Starter Kit**
 
 > ⚠️ **Development Status**: This project is currently in active development and is **NOT production-ready**. APIs, features, and architecture may change significantly. Use at your own risk.
 
-A modern foundation for building scalable SaaS applications with Laravel and Vue.js, designed for rapid development and prototyping.
+The essential foundation - your "SaaS Base" - for building scalable SaaS applications with Laravel and Vue.js, designed for rapid development and prototyping.
 
-[![CI](https://github.com/roble/tadone/actions/workflows/ci.yml/badge.svg)](https://github.com/roble/tadone/actions/workflows/ci.yml)
+[![CI](https://github.com/roble/saucebase/actions/workflows/ci.yml/badge.svg)](https://github.com/roble/saucebase/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Features
@@ -64,8 +64,8 @@ A modern foundation for building scalable SaaS applications with Laravel and Vue
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/roble/tadone.git
-   cd tadone
+   git clone https://github.com/roble/saucebase.git
+   cd saucebase
    ```
 
 2. **Run automated setup**
@@ -97,8 +97,8 @@ If you prefer manual setup or the automated script fails:
 
 1. **Clone and prepare environment**
    ```bash
-   git clone https://github.com/roble/tadone.git
-   cd tadone
+   git clone https://github.com/roble/saucebase.git
+   cd saucebase
    cp .env.example .env
    ```
 
@@ -200,7 +200,7 @@ docker compose exec workspace php artisan pail
 ## Project Structure
 
 ```
-tadone/
+saucebase/
 ├── app/                          # Laravel Backend
 │   ├── Actions/                  # Business logic actions
 │   ├── Http/Controllers/         # Controllers
@@ -261,7 +261,7 @@ Copy `.env.example` to `.env` and configure your environment:
 
 ```env
 # Application
-APP_NAME=Tadone
+APP_NAME="Sauce Base"
 APP_ENV=local
 APP_KEY=                    # Generated automatically
 APP_DEBUG=true
@@ -272,8 +272,8 @@ APP_HOST=localhost
 DB_CONNECTION=pgsql
 DB_HOST=postgresql
 DB_PORT=5432
-DB_DATABASE=tadone
-DB_USERNAME=tadone
+DB_DATABASE=saucebase
+DB_USERNAME=saucebase
 DB_PASSWORD=password
 
 # Redis
@@ -382,8 +382,8 @@ docker compose exec workspace npm run test:e2e:report
 ### Test Data
 
 Default seeded users for testing:
-- **Admin**: `admin@tadone.dev` / `password`
-- **User**: `user@tadone.dev` / `password`
+- **Admin**: `admin@saucebase.dev` / `password`
+- **User**: `user@saucebase.dev` / `password`
 
 ## Contributing
 
@@ -451,7 +451,7 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ### Support
 
-- **Issues**: [GitHub Issues](https://github.com/roble/tadone/issues)
+- **Issues**: [GitHub Issues](https://github.com/roble/saucebase/issues)
 - **Development Guidelines**: Read `CLAUDE.md` (mandatory for contributors)
 - **Docker Issues**: Ensure Docker daemon is running and try `--force-build`
 
