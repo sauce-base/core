@@ -79,7 +79,10 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         </div>
 
         <!-- Divider -->
-        <div class="relative mb-6">
+        <div 
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="relative mb-6"
+        >
             <div class="absolute inset-0 flex items-center">
                 <div
                     class="w-full border-t border-gray-300 dark:border-gray-600"
@@ -102,6 +105,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                             v-bind="componentField"
                             type="text"
                             placeholder="Enter your full name"
+                            autocomplete="name"
                             :error="inertiaForm.errors.name"
                         />
                     </FormControl>
@@ -119,6 +123,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                             v-bind="componentField"
                             type="email"
                             placeholder="Enter your email address"
+                            autocomplete="email"
                             :error="inertiaForm.errors.email"
                         />
                     </FormControl>
@@ -135,6 +140,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                         <PasswordInput
                             v-bind="componentField"
                             placeholder="Create a password"
+                            autocomplete="new-password"
                             :error="inertiaForm.errors.password"
                         />
                     </FormControl>
@@ -151,6 +157,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                         <PasswordInput
                             v-bind="componentField"
                             placeholder="Confirm your password"
+                            autocomplete="new-password"
                             :error="inertiaForm.errors.password_confirmation"
                         />
                     </FormControl>

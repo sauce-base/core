@@ -90,7 +90,10 @@ const onSubmit = async () => {
         </div>
 
         <!-- Divider -->
-        <div class="relative mb-6">
+        <div 
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="relative mb-6"
+        >
             <div class="absolute inset-0 flex items-center">
                 <div
                     class="w-full border-t border-gray-300 dark:border-gray-600"
@@ -115,6 +118,7 @@ const onSubmit = async () => {
                             v-bind="componentField"
                             type="email"
                             placeholder="Enter your email"
+                            autocomplete="email"
                             :error="inertiaForm.errors.email"
                         />
                     </FormControl>
@@ -131,6 +135,7 @@ const onSubmit = async () => {
                         <PasswordInput
                             v-bind="componentField"
                             placeholder="Enter your password"
+                            autocomplete="current-password"
                             :error="inertiaForm.errors.password"
                         />
                     </FormControl>
