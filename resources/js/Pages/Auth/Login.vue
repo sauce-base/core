@@ -152,12 +152,14 @@ const onSubmit = async () => {
                                 id="remember"
                                 name="remember"
                                 :checked="componentField.modelValue"
-                                @update:checked="componentField['onUpdate:modelValue']"
+                                @update:checked="
+                                    componentField['onUpdate:modelValue']
+                                "
                                 @blur="componentField.onBlur"
                             />
                             <label
                                 for="remember"
-                                class="text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                                class="cursor-pointer text-sm text-gray-600 dark:text-gray-400"
                             >
                                 Remember me
                             </label>
