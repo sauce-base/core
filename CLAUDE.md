@@ -4,7 +4,7 @@
 
 ## 🚀 Project Overview
 
-**Tadone** is a modern Laravel SaaS starter kit designed for rapid development of scalable SaaS applications. Built with the VILT stack (Vue, Inertia, Laravel, Tailwind), it provides a solid foundation for building and launching SaaS products quickly.
+**Sauce Base** is a modern Laravel SaaS starter kit designed for rapid development of scalable SaaS applications. Built with the VILT stack (Vue, Inertia, Laravel, Tailwind), it provides the essential foundation - your "SaaS Base" - for building and launching SaaS products quickly.
 
 ### Key Features
 - **Modern Stack**: Laravel 12 + Vue 3 + TypeScript + Inertia.js + Tailwind CSS
