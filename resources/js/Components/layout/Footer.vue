@@ -11,9 +11,9 @@ import IconHeart from '~icons/heroicons/heart';
                 class="flex flex-col items-center justify-between gap-4 text-sm text-gray-600 md:flex-row dark:text-gray-400"
             >
                 <div class="flex items-center gap-6">
-                    <span>© 2025 Tadone</span>
+                    <span>© 2025 Sauce Base</span>
                     <a
-                        href="https://github.com/roble/tadone"
+                        href="https://github.com/roble/saucebase"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="hover:text-gray-900 dark:hover:text-white"

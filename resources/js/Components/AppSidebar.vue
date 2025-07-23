@@ -31,7 +31,7 @@ const data = {
     },
     teams: [
         {
-            name: 'Tadone',
+            name: 'Sauce Base',
             logo: GalleryVerticalEnd,
             plan: 'SaaS',
         },

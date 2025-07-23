@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Tadone Development Environment Setup Script
+# Sauce Base Development Environment Setup Script
 # This script resets and initializes the development environment
 
 set -e  # Exit on any error
@@ -30,7 +30,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo "🚀 Tadone Development Environment Setup"
+echo "🍯 Sauce Base Development Environment Setup"
 echo "======================================"
 echo ""
 

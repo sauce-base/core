@@ -61,7 +61,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                 Create your account
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Sign up for Tadone to start managing your tasks
+                Sign up for Sauce Base to start building your SaaS
             </p>
         </div>
 
@@ -79,7 +79,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         </div>
 
         <!-- Divider -->
-        <div 
+        <div
             v-if="!providersLoading && getEnabledProviders().length > 0"
             class="relative mb-6"
         >

@@ -26,13 +26,13 @@ export function useTheme() {
 
     const setTheme = (newTheme: Theme) => {
         theme.value = newTheme;
-        localStorage.setItem('tadone-theme', newTheme);
+        localStorage.setItem('saucebase-theme', newTheme);
         applyTheme();
     };
 
     // Initialize theme from localStorage or default to system
     const initTheme = () => {
-        const stored = localStorage.getItem('tadone-theme') as Theme;
+        const stored = localStorage.getItem('saucebase-theme') as Theme;
         if (stored && ['light', 'dark', 'system'].includes(stored)) {
             theme.value = stored;
         }
