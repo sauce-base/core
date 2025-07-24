@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@/Components/ui/button';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import { Button } from '@/components/ui/button';
+import GuestLayout from '@/layouts/GuestLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppSidebar from '@/Components/AppSidebar.vue';
-import PageTransition from '@/Components/PageTransition.vue';
-import ThemeToggle from '@/Components/ui/ThemeToggle.vue';
+import AppSidebar from '@/components/AppSidebar.vue';
+import PageTransition from '@/components/PageTransition.vue';
+import ThemeToggle from '@/components/ui/ThemeToggle.vue';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,13 +9,13 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/Components/ui/breadcrumb';
-import { Separator } from '@/Components/ui/separator';
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
-} from '@/Components/ui/sidebar';
+} from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/vue3';
 
 const props = defineProps<{

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@/Components/ui/button';
-import { useSocialLogin } from '@/Composables/useSocialLogin';
+import { Button } from '@/components/ui/button';
+import { useSocialLogin } from '@/composables/useSocialLogin';
 import { getProviderUIConfig } from '@/lib/socialProviders';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';

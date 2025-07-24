@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Button } from '@/Components/ui/button';
-import InputLabel from '@/Components/ui/form/FormLabel.vue';
-import InputError from '@/Components/ui/form/FormMessage.vue';
-import TextInput from '@/Components/ui/Input.vue';
-import Modal from '@/Components/ui/Modal.vue';
+import { Button } from '@/components/ui/button';
+import InputLabel from '@/components/ui/form/FormLabel.vue';
+import InputError from '@/components/ui/form/FormMessage.vue';
+import TextInput from '@/components/ui/Input.vue';
+import Modal from '@/components/ui/Modal.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 
