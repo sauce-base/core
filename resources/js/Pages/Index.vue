@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Footer from '@/Components/layout/Footer.vue';
-import Header from '@/Components/layout/Header.vue';
-import Logo from '@/Components/ui/Logo.vue';
+import Footer from '@/components/layout/Footer.vue';
+import Header from '@/components/layout/Header.vue';
+import Logo from '@/components/ui/Logo.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import IconCheck from '~icons/heroicons/check';
 import IconGitHub from '~icons/heroicons/code-bracket';

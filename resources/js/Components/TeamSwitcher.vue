@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuTrigger,
-} from '@/Components/ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
 import { type Component, ref } from 'vue';
 
 import {
@@ -17,7 +17,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@/Components/ui/sidebar';
+} from '@/components/ui/sidebar';
 
 const props = defineProps<{
     teams: {

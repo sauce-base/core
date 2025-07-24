@@ -216,12 +216,12 @@ saucebase/
 │   └── Providers/                # Service providers
 ├── resources/                    # Frontend & Views
 │   ├── js/                       # Vue.js application
-│   │   ├── Components/           # Reusable Vue components
+│   │   ├── components/           # Reusable Vue components
 │   │   │   ├── ui/              # shadcn/ui components
 │   │   │   └── layout/          # Layout components
-│   │   ├── Pages/               # Inertia.js pages
-│   │   ├── Layouts/             # Vue layouts
-│   │   ├── Composables/         # Vue composition functions
+│   │   ├── pages/               # Inertia.js pages
+│   │   ├── layouts/             # Vue layouts
+│   │   ├── composables/         # Vue composition functions
 │   │   ├── lib/                 # Utilities and helpers
 │   │   └── validation/          # Zod validation schemas
 │   ├── css/                     # Stylesheets

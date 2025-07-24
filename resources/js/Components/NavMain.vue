@@ -3,7 +3,7 @@ import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from '@/Components/ui/collapsible';
+} from '@/components/ui/collapsible';
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -13,7 +13,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-} from '@/Components/ui/sidebar';
+} from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/vue3';
 import { ChevronRight, type LucideIcon } from 'lucide-vue-next';
 

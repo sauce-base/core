@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ConnectedAccounts from '@/Components/ConnectedAccounts.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import ConnectedAccounts from '@/components/ConnectedAccounts.vue';
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';

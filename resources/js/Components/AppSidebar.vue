@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { SidebarProps } from '@/Components/ui/sidebar';
+import type { SidebarProps } from '@/components/ui/sidebar';
 
-import NavMain from '@/Components/NavMain.vue';
-import NavUser from '@/Components/NavUser.vue';
-import TeamSwitcher from '@/Components/TeamSwitcher.vue';
+import NavMain from '@/components/NavMain.vue';
+import NavUser from '@/components/NavUser.vue';
+import TeamSwitcher from '@/components/TeamSwitcher.vue';
 import { GalleryVerticalEnd, SquareTerminal } from 'lucide-vue-next';
 
 import {
@@ -12,7 +12,7 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarRail,
-} from '@/Components/ui/sidebar';
+} from '@/components/ui/sidebar';
 
 import { usePage } from '@inertiajs/vue3';
 

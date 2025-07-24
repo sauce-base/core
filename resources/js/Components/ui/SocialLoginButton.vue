@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SocialProvider } from '@/Composables/useSocialLogin';
+import type { SocialProvider } from '@/composables/useSocialLogin';
 
 interface Props {
     providerKey: string;

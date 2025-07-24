@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Separator } from '@/Components/ui/separator';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { HTMLAttributes } from 'vue';
 

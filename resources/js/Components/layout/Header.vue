@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Logo from '@/Components/ui/Logo.vue';
-import ThemeToggle from '@/Components/ui/ThemeToggle.vue';
+import Logo from '@/components/ui/Logo.vue';
+import ThemeToggle from '@/components/ui/ThemeToggle.vue';
 import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 import IconExternalLink from '~icons/heroicons/arrow-top-right-on-square';

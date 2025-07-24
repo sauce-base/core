@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Button } from '@/Components/ui/button';
-import FormControl from '@/Components/ui/form/FormControl.vue';
-import FormField from '@/Components/ui/form/FormField.vue';
-import FormItem from '@/Components/ui/form/FormItem.vue';
-import FormLabel from '@/Components/ui/form/FormLabel.vue';
-import FormMessage from '@/Components/ui/form/FormMessage.vue';
-import Input from '@/Components/ui/Input.vue';
+import { Button } from '@/components/ui/button';
+import FormControl from '@/components/ui/form/FormControl.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import FormItem from '@/components/ui/form/FormItem.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
+import FormMessage from '@/components/ui/form/FormMessage.vue';
+import Input from '@/components/ui/Input.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps<{
