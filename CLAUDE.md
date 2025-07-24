@@ -50,7 +50,24 @@
 - **BUILD**: Run `npm run build` after frontend changes
 - **VERIFY**: Check all commands pass before committing
 
-[... rest of the existing content remains the same ...]
+## 📁 Directory Structure Guidelines
+
+### Frontend Architecture
+- **LOWERCASE DIRECTORIES**: All frontend directories use lowercase naming (`components`, `composables`, `pages`, `layouts`)
+- **SHADCN COMPATIBILITY**: Lowercase structure ensures compatibility with shadcn/ui component library
+- **CROSS-PLATFORM**: Avoids case sensitivity issues across different operating systems
+- **MODERN CONVENTIONS**: Follows contemporary JavaScript/Vue.js project standards
+
+### Required Directory Structure
+```
+resources/js/
+├── components/          # Vue components (lowercase)
+├── composables/         # Vue composition functions (lowercase)  
+├── pages/              # Inertia.js pages (lowercase)
+├── layouts/            # Vue layouts (lowercase)
+├── lib/                # Utilities and helpers
+└── validation/         # Zod validation schemas
+```
 
 ## 📝 Development Memories
 
