@@ -73,3 +73,6 @@ resources/js/
 
 ### Git Workflow
 - **Group commits by concern**: When making multiple related changes, group them into a single commit to maintain a clean and logical commit history
+
+### Testing
+- To run tests we should docker compose and the workspace container
