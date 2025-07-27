@@ -613,7 +613,7 @@ defineProps<{
                             Sauce Base uses shadcn/ui components with reka-ui
                             implementation. All components are fully
                             customizable and located in the
-                            `resources/js/Components/ui/` directory. Modify
+                            `resources/js/components/ui/` directory. Modify
                             styling with Tailwind CSS classes.
                         </p>
                     </div>

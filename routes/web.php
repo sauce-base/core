@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
 // Test routes for role-based access control
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/test', function () {
-        return Inertia::render('Test/AdminTest', [
+        return Inertia::render('test/AdminTest', [
             'user' => auth()->user()->load('roles'),
             'message' => 'Welcome to the Admin Test Area, Chef Saucier! 🍯👨‍🍳',
         ]);
@@ -35,7 +35,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:editor|admin'])->group(function () {
     Route::get('/editor/test', function () {
-        return Inertia::render('Test/EditorTest', [
+        return Inertia::render('test/EditorTest', [
             'user' => auth()->user()->load('roles'),
             'message' => 'Welcome to the Editor Test Area! ✍️',
         ]);
@@ -62,7 +62,7 @@ Route::middleware('auth')->group(function () {
             ]);
         }
 
-        return Inertia::render('Test/UserTest', [
+        return Inertia::render('test/UserTest', [
             'user' => $user->load('roles'),
             'message' => 'Welcome to the User Test Area! 👤',
             'role' => [
