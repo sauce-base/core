@@ -4,7 +4,7 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import TeamSwitcher from '@/components/TeamSwitcher.vue';
-import { GalleryVerticalEnd, SquareTerminal } from 'lucide-vue-next';
+import { GalleryVerticalEnd, SquareTerminal, Users } from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -14,6 +14,7 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 
+import type { User } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
@@ -43,6 +44,19 @@ const data = {
             icon: SquareTerminal,
             isActive: route().current('dashboard'),
         },
+        // Only show User Management for admins
+        ...((page.props.auth.user as User).roles?.some(
+            (role) => role.name === 'admin',
+        )
+            ? [
+                  {
+                      title: 'User Management',
+                      url: '/admin/users',
+                      icon: Users,
+                      isActive: route().current('admin.users'),
+                  },
+              ]
+            : []),
     ],
 };
 </script>
