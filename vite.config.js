@@ -1,7 +1,8 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import laravel from 'laravel-vite-plugin';
+import path from 'path';
 import Icons from 'unplugin-icons/vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [
@@ -22,4 +23,9 @@ export default defineConfig({
             autoInstall: true,
         }),
     ],
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js'),
+        },
+    },
 });

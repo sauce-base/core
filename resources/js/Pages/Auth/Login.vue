@@ -1,29 +1,61 @@
 <script setup lang="ts">
-import Checkbox from '@/Components/Checkbox.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import FormControl from '@/components/ui/form/FormControl.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import FormItem from '@/components/ui/form/FormItem.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
+import FormMessage from '@/components/ui/form/FormMessage.vue';
+import Input from '@/components/ui/Input.vue';
+import PasswordInput from '@/components/ui/PasswordInput.vue';
+import SocialLoginButton from '@/components/ui/SocialLoginButton.vue';
+import { useSocialLogin } from '@/composables/useSocialLogin';
+import GuestLayout from '@/layouts/GuestLayout.vue';
+import { loginSchema, type LoginFormData } from '@/validation';
+import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
 
 defineProps<{
     canResetPassword?: boolean;
     status?: string;
 }>();
 
+const formSchema = toTypedSchema(loginSchema);
+
 const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        email: '',
+        password: '',
+        remember: false,
+    },
+});
+
+const inertiaForm = useInertiaForm<LoginFormData>({
     email: '',
     password: '',
     remember: false,
 });
 
-const submit = () => {
-    form.post(route('login'), {
-        onFinish: () => {
-            form.reset('password');
-        },
-    });
+const {
+    providers,
+    isLoading: providersLoading,
+    getEnabledProviders,
+} = useSocialLogin();
+
+const onSubmit = async () => {
+    const { valid } = await form.validate();
+
+    if (valid) {
+        Object.assign(inertiaForm, form.values);
+
+        inertiaForm.post(route('login'), {
+            onFinish: () => {
+                inertiaForm.reset('password');
+            },
+        });
+    }
 };
 </script>
 
@@ -37,7 +69,7 @@ const submit = () => {
                 Welcome back
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Login to your Tadone account to continue
+                Login to your Sauce Base account to continue
             </p>
         </div>
 
@@ -45,63 +77,113 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+        <!-- Social Login Section -->
+        <div
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="mb-6 space-y-3"
+        >
+            <SocialLoginButton
+                v-for="providerKey in getEnabledProviders()"
+                :key="providerKey"
+                :provider-key="providerKey"
+                :provider-config="providers[providerKey]"
+            />
+        </div>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
+        <!-- Divider -->
+        <div
+            v-if="!providersLoading && getEnabledProviders().length > 0"
+            class="relative mb-6"
+        >
+            <div class="absolute inset-0 flex items-center">
+                <div
+                    class="w-full border-t border-gray-300 dark:border-gray-600"
+                ></div>
             </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="current-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
+            <div class="relative flex justify-center text-sm">
+                <span
+                    class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                    >Or continue with email</span
+                >
             </div>
+        </div>
 
-            <div class="mt-4 block">
-                <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
+        <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="email" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel :error="inertiaForm.errors.email"
+                        >Email</FormLabel
                     >
-                </label>
-            </div>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            :error="inertiaForm.errors.email"
+                        />
+                    </FormControl>
+                    <FormMessage :inertia-error="inertiaForm.errors.email" />
+                </FormItem>
+            </FormField>
 
-            <div class="mt-4 flex items-center justify-end">
+            <FormField name="password" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel :error="inertiaForm.errors.password"
+                        >Password</FormLabel
+                    >
+                    <FormControl>
+                        <PasswordInput
+                            v-bind="componentField"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            :error="inertiaForm.errors.password"
+                        />
+                    </FormControl>
+                    <FormMessage :inertia-error="inertiaForm.errors.password" />
+                </FormItem>
+            </FormField>
+
+            <FormField name="remember" v-slot="{ componentField }">
+                <FormItem>
+                    <FormControl>
+                        <div class="flex items-center space-x-2">
+                            <Checkbox
+                                id="remember"
+                                name="remember"
+                                :checked="componentField.modelValue"
+                                @update:checked="
+                                    componentField['onUpdate:modelValue']
+                                "
+                                @blur="componentField.onBlur"
+                            />
+                            <label
+                                for="remember"
+                                class="cursor-pointer text-sm text-gray-600 dark:text-gray-400"
+                            >
+                                Remember me
+                            </label>
+                        </div>
+                    </FormControl>
+                </FormItem>
+            </FormField>
+
+            <div class="flex items-center justify-end space-x-4">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
                     Forgot your password?
                 </Link>
 
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+                <Button
+                    type="submit"
+                    :class="{ 'opacity-25': inertiaForm.processing }"
+                    :disabled="inertiaForm.processing"
                 >
                     Log in
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
 

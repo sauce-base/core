@@ -1,22 +1,41 @@
 <script setup lang="ts">
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Button } from '@/components/ui/button';
+import FormControl from '@/components/ui/form/FormControl.vue';
+import FormField from '@/components/ui/form/FormField.vue';
+import FormItem from '@/components/ui/form/FormItem.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
+import FormMessage from '@/components/ui/form/FormMessage.vue';
+import Input from '@/components/ui/Input.vue';
+import GuestLayout from '@/layouts/GuestLayout.vue';
+import {
+    forgotPasswordSchema,
+    type ForgotPasswordFormData,
+} from '@/validation';
+import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
 
 defineProps<{
     status?: string;
 }>();
 
+const formSchema = toTypedSchema(forgotPasswordSchema);
+
 const form = useForm({
+    validationSchema: formSchema,
+    initialValues: {
+        email: '',
+    },
+});
+
+const inertiaForm = useInertiaForm<ForgotPasswordFormData>({
     email: '',
 });
 
-const submit = () => {
-    form.post(route('password.email'));
-};
+const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
+    Object.assign(inertiaForm, values);
+    inertiaForm.post(route('password.email'));
+});
 </script>
 
 <template>
@@ -36,30 +55,29 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
+        <form @submit.prevent="onSubmit" class="space-y-4">
+            <FormField name="email" v-slot="{ componentField }">
+                <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                        <Input
+                            v-bind="componentField"
+                            type="email"
+                            placeholder="Enter your email address"
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <PrimaryButton
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
+            <div class="flex items-center justify-end">
+                <Button
+                    type="submit"
+                    :class="{ 'opacity-25': inertiaForm.processing }"
+                    :disabled="inertiaForm.processing"
                 >
                     Email Password Reset Link
-                </PrimaryButton>
+                </Button>
             </div>
         </form>
 

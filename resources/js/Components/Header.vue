@@ -1,9 +1,0 @@
-<script setup lang="ts">
-import ThemeToggle from './ThemeToggle.vue';
-</script>
-
-<template>
-    <header class="flex items-center justify-end p-4">
-        <ThemeToggle />
-    </header>
-</template>

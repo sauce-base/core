@@ -1,0 +1,151 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/production/nginx/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-production:/var/www/storage:ro
+    networks:
+      - laravel-production
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./docker/production/php-fpm/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-production:/var/www/storage
+    networks:
+      - laravel-production
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - DB_CONNECTION=${DB_CONNECTION:-pgsql}
+      - DB_HOST=pgsql
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+    depends_on:
+      - pgsql
+      - redis
+
+  queue:
+    build:
+      context: .
+      dockerfile: ./docker/production/php-fpm/Dockerfile
+    restart: unless-stopped
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+    volumes:
+      - laravel-storage-production:/var/www/storage
+    networks:
+      - laravel-production
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - DB_CONNECTION=${DB_CONNECTION:-pgsql}
+      - DB_HOST=pgsql
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+    depends_on:
+      - pgsql
+      - redis
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: ./docker/production/php-fpm/Dockerfile
+    restart: unless-stopped
+    command: |
+      sh -c '
+        while true; do
+          php artisan schedule:run --verbose --no-interaction
+          sleep 60
+        done
+      '
+    volumes:
+      - laravel-storage-production:/var/www/storage
+    networks:
+      - laravel-production
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - DB_CONNECTION=${DB_CONNECTION:-pgsql}
+      - DB_HOST=pgsql
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+    depends_on:
+      - pgsql
+      - redis
+
+  pgsql:
+    image: 'postgres:17'
+    restart: unless-stopped
+    ports:
+      - '${FORWARD_DB_PORT:-5432}:5432'
+    environment:
+      PGPASSWORD: '${DB_PASSWORD}'
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - 'laravel-pgsql-production:/var/lib/postgresql/data'
+    networks:
+      - laravel-production
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
+      retries: 3
+      timeout: 5s
+
+  redis:
+    image: 'redis:alpine'
+    restart: unless-stopped
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'laravel-redis-production:/data'
+    networks:
+      - laravel-production
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      retries: 3
+      timeout: 5s
+
+networks:
+  laravel-production:
+    driver: bridge
+
+volumes:
+  laravel-pgsql-production:
+    driver: local
+  laravel-redis-production:
+    driver: local
+  laravel-storage-production:
+    driver: local

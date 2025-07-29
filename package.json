@@ -5,8 +5,13 @@
   "scripts": {
     "build": "vue-tsc && vite build",
     "dev": "vite",
-    "lint": "eslint resources/js --ext .js,.ts,.vue --ignore-path .gitignore --fix",
+    "lint": "eslint resources/js tests/e2e --ext .js,.ts,.vue --ignore-path .gitignore --fix",
     "test": "echo 'No tests yet' && exit 0",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
     "prepare": "husky",
     "commitlint": "commitlint --edit --last",
     "commit": "git-cz"
@@ -16,13 +21,14 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@iconify/json": "^2.2.357",
     "@inertiajs/vue3": "^2.0.0",
+    "@playwright/test": "^1.54.1",
     "@rushstack/eslint-patch": "^1.8.0",
     "@tailwindcss/forms": "^0.5.3",
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@tailwindcss/vite": "^4.1.11",
     "@vitejs/plugin-vue": "^5.0.0",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
-    "autoprefixer": "^10.4.12",
     "axios": "^1.8.2",
     "commitizen": "^4.3.1",
     "concurrently": "^9.0.1",
@@ -34,16 +40,29 @@
     "postcss": "^8.4.31",
     "prettier": "^3.3.0",
     "prettier-plugin-organize-imports": "^4.0.0",
-    "prettier-plugin-tailwindcss": "^0.6.5",
-    "tailwindcss": "^3.2.1",
-    "typescript": "^5.6.3",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.8.3",
     "unplugin-icons": "^22.1.0",
     "vite": "^6.2.4",
     "vue": "^3.4.0",
     "vue-tsc": "^2.0.24"
   },
   "dependencies": {
-    "@vueuse/core": "^13.5.0"
+    "@vee-validate/zod": "^4.15.1",
+    "@vueuse/core": "^13.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.525.0",
+    "reka-ui": "^2.3.2",
+    "tailwind-merge": "^3.3.1",
+    "tw-animate-css": "^1.3.5",
+    "vee-validate": "^4.15.1",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.5.1"
   },
   "config": {
     "commitizen": {

@@ -1,78 +1,81 @@
-# CLAUDE.md
+# CLAUDE.md - Development Guidelines
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+**CRITICAL**: This file contains mandatory guidelines that Claude Code MUST follow exactly. No exceptions.
 
-## Development Commands
+## 🚀 Project Overview
 
-### Backend (PHP/Laravel)
-- **Run development server**: `composer dev` - Starts Laravel server, queue worker, logs, and Vite dev server concurrently
-- **Run tests**: `composer test` - Runs PHPUnit tests with Pest framework
-- **Run single test**: `php artisan test --filter=TestName`
-- **Code formatting**: `./vendor/bin/pint` - Laravel Pint for PHP code style
-- **Static analysis**: `./vendor/bin/phpstan` - PHPStan via Larastan
-- **Database migrations**: `php artisan migrate`
-- **Database seeding**: `php artisan db:seed`
-- **Clear caches**: `php artisan optimize:clear`
+**Sauce Base** is a modern Laravel SaaS starter kit designed for rapid development of scalable SaaS applications. Built with the VILT stack (Vue, Inertia, Laravel, Tailwind), it provides the essential foundation - your "SaaS Base" - for building and launching SaaS products quickly.
 
-### Frontend (Vue.js/TypeScript)
-- **Development server**: `npm run dev` - Vite dev server
-- **Build production**: `npm run build` - TypeScript compilation + Vite build
-- **Lint JavaScript/Vue**: `npm run lint` - ESLint with auto-fix
+### Key Features
+- **Modern Stack**: Laravel 12 + Vue 3 + TypeScript + Inertia.js + Tailwind CSS
+- **Authentication**: Multi-provider social login (Google, GitHub, Facebook)
+- **Components**: shadcn/ui with reka-ui implementation
+- **Testing**: Comprehensive PHP (Pest) and E2E (Playwright) testing
+- **Developer Experience**: Hot reload, TypeScript, ESLint, PHP CS Fixer, SSL-enabled local development
+- **Production Ready**: Docker, Redis, PostgreSQL, optimized build pipeline
 
-### Docker (Laravel Sail)
-- **Start containers**: `./vendor/bin/sail up -d`
-- **Run artisan commands**: `./vendor/bin/sail artisan [command]`
-- **Run npm commands**: `./vendor/bin/sail npm [command]`
-- Use Laravel Sail for running all development commands in a containerized environment
+### Development Requirements
+- **Node.js**: v22.0.0+ (LTS, supported until April 2027)
+- **npm**: v10.5.1+ (bundled with Node.js v22)
+- **PHP**: 8.2+ (Laravel 12 requirement)
+- **Docker**: Required for development environment
 
-## Architecture Overview
+## 🚨 MANDATORY RULES - NEVER VIOLATE THESE
 
-This is a Laravel 12 application with Inertia.js and Vue 3 frontend, using the TALL stack pattern with TypeScript.
+### Security - CRITICAL REQUIREMENTS
+- **NEVER COMMIT SECRETS**: No API keys, passwords, tokens, or sensitive data in git
+- **NEVER EXPOSE SECRETS**: No secrets in logs, error messages, or client-side code
+- **USE .env FILES**: All sensitive config goes in .env (never committed)
+- **VERIFY .gitignore**: Ensure .env, keys, certificates are properly ignored
+- **AUDIT COMMITS**: Review all commits for accidental secret exposure
 
-### Backend Structure
-- **Framework**: Laravel 12 with PHP 8.2+
-- **Authentication**: Laravel Breeze with Inertia.js
-- **Database**: PostgreSQL (configured in docker-compose.yml)
-- **Queue**: Redis for background job processing
-- **Search**: Typesense for full-text search capabilities
-- **Testing**: Pest PHP for feature and unit tests
-- **Mail**: Mailpit for local email testing
+### Git Commits - STRICT ENFORCEMENT
+- **FORMAT**: Single line only, no body, no multi-line messages
+- **NO AUTHORS**: Never add Co-Authored-By, Generated with Claude, or any attribution
+- **PATTERN**: `type: description` (e.g., `feat: add user authentication`)
+- **GROUPING**: Logical changes together, infrastructure separate from features
+- **VERIFICATION**: Always run `git status` after commit to verify success
+- **BRANCH MANAGEMENT**: Always create/switch to a branch when working in a GitHub issue
+- **NO CO-AUTHORS**: Never add co-author to PR or issues ever.
+- **COMMIT MESSAGE LENGTH**: Commits messages has to have less than 72 characters.
 
-### Frontend Structure
-- **Framework**: Vue 3 with TypeScript
-- **Build Tool**: Vite with Laravel plugin
-- **Styling**: Tailwind CSS with forms plugin
-- **State Management**: Inertia.js for server-driven SPA
-- **Routing**: Ziggy for Laravel route helpers in Vue
+### Pull Requests - MANDATORY FORMAT  
+- **TITLE**: Clear, descriptive summary
+- **BODY**: Must include "## Summary" section
+- **NO ATTRIBUTION**: Never add "Generated with Claude" or similar
 
-### Key Patterns
-- **Inertia.js Architecture**: Server-side routing with Vue components as pages
-- **Shared Props**: User authentication state shared globally via `HandleInertiaRequests` middleware
-- **Component Structure**: Reusable Vue components in `resources/js/Components/`
-- **Layouts**: `AuthenticatedLayout` and `GuestLayout` for different user states
-- **Form Handling**: Laravel form requests with Inertia.js form helpers
+### Code Quality - ALWAYS RUN THESE
+- **BEFORE COMMIT**: Always run `./vendor/bin/pint` and `npm run lint`
+- **TESTS**: Run `composer test` after backend changes
+- **BUILD**: Run `npm run build` after frontend changes
+- **VERIFY**: Check all commands pass before committing
 
-### Database & Services
-- **PostgreSQL**: Primary database with testing database auto-creation
-- **Redis**: Caching and queue backend
-- **Typesense**: Search engine service
-- **Soketi**: WebSocket server for real-time features
-- **Mailpit**: Local mail server for development
+## 📁 Directory Structure Guidelines
 
-### Testing Architecture
-- **Pest PHP**: Modern testing framework with Laravel plugin
-- **Feature Tests**: Full HTTP request testing in `tests/Feature/`
-- **Unit Tests**: Component testing in `tests/Unit/`
-- **Database**: Uses `RefreshDatabase` trait for clean test state
-- **Authentication Tests**: Comprehensive auth flow testing included
+### Frontend Architecture
+- **LOWERCASE DIRECTORIES**: All frontend directories use lowercase naming (`components`, `composables`, `pages`, `layouts`)
+- **SHADCN COMPATIBILITY**: Lowercase structure ensures compatibility with shadcn/ui component library
+- **CROSS-PLATFORM**: Avoids case sensitivity issues across different operating systems
+- **MODERN CONVENTIONS**: Follows contemporary JavaScript/Vue.js project standards
 
-## Important Files
-- `app/Http/Middleware/HandleInertiaRequests.php`: Shared props configuration
-- `resources/js/app.ts`: Frontend entry point and Inertia setup
-- `routes/web.php`: Main application routes
-- `vite.config.js`: Asset bundling configuration
-- `docker-compose.yml`: Complete development environment setup
+### Required Directory Structure
+```
+resources/js/
+├── components/          # Vue components (lowercase)
+├── composables/         # Vue composition functions (lowercase)  
+├── pages/              # Inertia.js pages (lowercase)
+├── layouts/            # Vue layouts (lowercase)
+├── lib/                # Utilities and helpers
+└── validation/         # Zod validation schemas
+```
 
-## Git Commit Guidelines
-- All commits must be one line
-- Do not add any author or co-author information to commits
+## 📝 Development Memories
+
+### Git Workflow
+- **Group commits by concern**: When making multiple related changes, group them into a single commit to maintain a clean and logical commit history
+
+### GitHub Issues
+- When creating a gh issue, add the relevant labels.
+
+### Testing
+- To run tests we should docker compose and the workspace container
