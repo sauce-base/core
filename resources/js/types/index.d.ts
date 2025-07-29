@@ -1,3 +1,19 @@
+export type RoleValue = 'admin' | 'editor' | 'author' | 'user';
+
+export interface Role {
+    value: RoleValue;
+    label: string;
+}
+
+// Extended User for admin contexts with flattened role
+export interface UserWithRole extends User {
+    role: {
+        name: RoleValue;
+        label: string;
+    };
+    created_at: string;
+}
+
 export interface User {
     id: number;
     name: string;
@@ -9,6 +25,11 @@ export interface User {
         provider: string;
         last_login_at: string | null;
         provider_avatar_url: string | null;
+    }>;
+    roles?: Array<{
+        id: number;
+        name: string;
+        guard_name: string;
     }>;
     password?: string; // For checking if user has password
 }
