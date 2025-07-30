@@ -79,3 +79,6 @@ resources/js/
 
 ### Testing
 - To run tests we should docker compose and the workspace container
+
+### Branch Management
+- Never commit on main branch, it's protected. So create a feature branch and a PR for changes.
