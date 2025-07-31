@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
         Vite::prefetch(concurrency: 3);
         $this->configureSecureUrls();
         $this->configureSocialLogin();
+
+        // Model unguard for mass assignment as required by fillament
+        Model::unguard();
     }
 
     protected function configureSocialLogin()
