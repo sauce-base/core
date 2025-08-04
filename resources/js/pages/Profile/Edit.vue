@@ -2,9 +2,9 @@
 import ConnectedAccounts from '@/components/ConnectedAccounts.vue';
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+import DeleteUserForm from './partials/DeleteUserForm.vue';
+import UpdatePasswordForm from './partials/UpdatePasswordForm.vue';
+import UpdateProfileInformationForm from './partials/UpdateProfileInformationForm.vue';
 
 defineProps<{
     mustVerifyEmail?: boolean;

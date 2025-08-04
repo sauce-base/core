@@ -137,14 +137,12 @@ return [
         'google' => [
             'enabled' => env('GOOGLE_LOGIN_ENABLED', true),
             'name' => 'Google',
+            'provider' => \SocialiteProviders\Google\Provider::class,
         ],
         'github' => [
             'enabled' => env('GITHUB_LOGIN_ENABLED', false),
             'name' => 'GitHub',
-        ],
-        'facebook' => [
-            'enabled' => env('FACEBOOK_LOGIN_ENABLED', false),
-            'name' => 'Facebook',
+            'provider' => \SocialiteProviders\GitHub\Provider::class,
         ],
     ],
 
