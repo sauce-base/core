@@ -33,7 +33,6 @@ class SocialAuthController extends Controller
             Auth::login($user);
 
             return redirect()->intended('/dashboard');
-
         } catch (SocialAuthException $e) {
             return redirect('/login')->withErrors([
                 'social' => $e->getMessage(),
@@ -65,7 +64,6 @@ class SocialAuthController extends Controller
             $disconnectAction->execute($user, $provider);
 
             return back()->with('success', ucfirst($provider).' account disconnected successfully.');
-
         } catch (SocialAuthException $e) {
             return back()->withErrors([
                 'social' => $e->getMessage(),
@@ -85,7 +83,7 @@ class SocialAuthController extends Controller
     private function getEnabledProviders(): array
     {
         return collect(config('app.social_providers', []))
-            ->filter(fn ($config) => $config['enabled'] ?? false)
+            ->filter(fn ($config) => $config['enabled'] == true ?? false)
             ->map(fn ($config) => ['name' => $config['name']])
             ->toArray();
     }

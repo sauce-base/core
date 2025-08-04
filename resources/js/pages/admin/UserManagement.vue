@@ -126,7 +126,7 @@ const getInitials = (name: string) => {
                                     <div class="flex items-center">
                                         <Avatar class="h-10 w-10">
                                             <AvatarImage
-                                                :src="user.avatar_url"
+                                                :src="user.avatar_url || ''"
                                                 :alt="user.name"
                                             />
                                             <AvatarFallback>

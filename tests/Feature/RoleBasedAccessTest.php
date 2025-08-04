@@ -16,7 +16,7 @@ class RoleBasedAccessTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
-            ->component('Test/AdminTest')
+            ->component('test/AdminTest')
             ->has('user')
             ->where('message', 'Welcome to the Admin Test Area, Chef Saucier! 🍯👨‍🍳')
         );
@@ -48,12 +48,12 @@ class RoleBasedAccessTest extends TestCase
         // Test admin access
         $response = $this->actingAs($admin)->get('/editor/test');
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('Test/EditorTest'));
+        $response->assertInertia(fn ($page) => $page->component('test/EditorTest'));
 
         // Test editor access
         $response = $this->actingAs($editor)->get('/editor/test');
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('Test/EditorTest'));
+        $response->assertInertia(fn ($page) => $page->component('test/EditorTest'));
     }
 
     public function test_regular_user_cannot_access_editor_area()
@@ -77,7 +77,7 @@ class RoleBasedAccessTest extends TestCase
             $response = $this->actingAs($testUser)->get('/user/test');
             $response->assertStatus(200);
             $response->assertInertia(fn ($page) => $page
-                ->component('Test/UserTest')
+                ->component('test/UserTest')
                 ->has('user')
                 ->has('role')
                 ->where('message', 'Welcome to the User Test Area! 👤')
