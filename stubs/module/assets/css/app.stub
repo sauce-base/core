@@ -1,0 +1,10 @@
+/* Alternative approach using Tailwind CSS classes (commented for reference) */
+/*
+You can also use utility classes directly in your components:
+- Use @apply directive to compose utilities into reusable CSS
+- Or apply classes directly in your Vue components
+Example:
+.$KEBAB_NAME$-module__indicator {
+    @apply fixed top-2.5 right-2.5 bg-blue-500 text-white px-3 py-2 rounded text-xs z-50;
+}
+*/

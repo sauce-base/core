@@ -1,0 +1,102 @@
+<script setup lang="ts">
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import FormField from '@/components/ui/form/FormField.vue';
+import FormItem from '@/components/ui/form/FormItem.vue';
+import FormLabel from '@/components/ui/form/FormLabel.vue';
+import FormMessage from '@/components/ui/form/FormMessage.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+
+interface Props {
+    message: string;
+}
+
+const props = defineProps<Props>();
+
+const form = useForm({
+    name: '',
+    description: '',
+});
+
+const submit = () => {
+    form.post(route('$LOWER_NAME$.store'));
+};
+</script>
+
+<template>
+    <Head title="Create - $STUDLY_NAME$ Module" />
+    
+    <AuthenticatedLayout 
+        title="Create $STUDLY_NAME$ Resource" 
+        :breadcrumbs="[
+            { label: 'Dashboard', url: '/dashboard' },
+            { label: '$STUDLY_NAME$ Module', url: route('$LOWER_NAME$.index') },
+            { label: 'Create' }
+        ]"
+    >
+        <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <!-- Header -->
+            <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    ➕ {{ message }}
+                </h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    Fill out the form below to create a new $LOWER_NAME$ resource.
+                </p>
+            </div>
+
+            <!-- Form -->
+            <div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+                <form @submit.prevent="submit" class="space-y-6">
+                    <FormField v-slot="{ componentField }" name="name">
+                        <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <Input
+                                v-bind="componentField"
+                                v-model="form.name"
+                                placeholder="Enter name"
+                                :class="{ 'border-red-500': form.errors.name }"
+                            />
+                            <FormMessage v-if="form.errors.name">
+                                {{ form.errors.name }}
+                            </FormMessage>
+                        </FormItem>
+                    </FormField>
+
+                    <FormField v-slot="{ componentField }" name="description">
+                        <FormItem>
+                            <FormLabel>Description</FormLabel>
+                            <Input
+                                v-bind="componentField"
+                                v-model="form.description"
+                                placeholder="Enter description"
+                                :class="{ 'border-red-500': form.errors.description }"
+                            />
+                            <FormMessage v-if="form.errors.description">
+                                {{ form.errors.description }}
+                            </FormMessage>
+                        </FormItem>
+                    </FormField>
+
+                    <div class="flex gap-3">
+                        <Button 
+                            type="submit" 
+                            :disabled="form.processing"
+                            :class="{ 'opacity-50': form.processing }"
+                        >
+                            <span v-if="form.processing">Creating...</span>
+                            <span v-else>Create Resource</span>
+                        </Button>
+
+                        <Link :href="route('$LOWER_NAME$.index')">
+                            <Button variant="outline">
+                                Cancel
+                            </Button>
+                        </Link>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </AuthenticatedLayout>
+</template>

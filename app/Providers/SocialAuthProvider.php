@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class SocialAuthProvider extends ServiceProvider
 {
@@ -20,7 +21,7 @@ class SocialAuthProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
+        Event::listen(function (SocialiteWasCalled $event) {
             $providers = config('app.social_providers', []);
 
             foreach ($providers as $key => $provider) {

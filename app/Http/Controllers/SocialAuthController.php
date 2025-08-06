@@ -6,6 +6,7 @@ use App\Actions\DisconnectSocialAccountAction;
 use App\Actions\LinkSocialAccountAction;
 use App\Exceptions\SocialAuthException;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class SocialAuthController extends Controller
             return redirect('/login')->withErrors([
                 'social' => $e->getMessage(),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return redirect('/login')->withErrors([
                 'social' => 'Authentication failed. Please try again.',
             ]);

@@ -4,7 +4,12 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import TeamSwitcher from '@/components/TeamSwitcher.vue';
-import { GalleryVerticalEnd, SquareTerminal, Users } from 'lucide-vue-next';
+import {
+    GalleryVerticalEnd,
+    ShieldAlert,
+    SquareTerminal,
+    Users,
+} from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -43,6 +48,12 @@ const data = {
             url: '/dashboard',
             icon: SquareTerminal,
             isActive: route().current('dashboard'),
+        },
+        {
+            title: 'Auth',
+            url: '/auth',
+            icon: ShieldAlert,
+            isActive: route().current('auth'),
         },
         // Only show User Management for admins
         ...((page.props.auth.user as User).roles?.some(

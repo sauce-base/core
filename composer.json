@@ -1,9 +1,42 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "roble/saucebase",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "A Laravel skeleton project with Filament, InertiaJS, and more",
+    "keywords": [
+        "saucebase",
+        "laravel skeleton",
+        "laravel",
+        "laravel project",
+        "laravel application",
+        "laravel starter kit",
+        "laravel boilerplate",
+        "laravel base",
+        "laravel foundation",
+        "laravel base project",
+        "laravel base application",
+        "laravel base skeleton",
+        "laravel base starter kit",
+        "laravel base boilerplate",
+        "laravel base foundation",
+        "laravel base framework",
+        "laravel base codebase",
+        "laravel base code",
+        "laravel base setup",
+        "laravel base environment",
+        "laravel base configuration",
+        "laravel base development",
+        "sass base",
+        "sass starter kit",
+        "sass boilerplate",
+        "sass foundation",
+        "sass framework",
+        "sass codebase",
+        "sass code",
+        "sass setup",
+        "sass environment",
+        "sass configuration"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.4",
@@ -20,6 +53,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^2.10.1",
+        "nwidart/laravel-modules": "^12.0",
         "spatie/laravel-permission": "^6.21",
         "tightenco/ziggy": "^2.0"
     },
@@ -78,6 +112,11 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "merge-plugin": {
+            "include": [
+                "modules/*/composer.json"
+            ]
         }
     },
     "config": {
@@ -86,7 +125,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",
