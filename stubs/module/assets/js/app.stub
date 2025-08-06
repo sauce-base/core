@@ -1,0 +1,18 @@
+// $STUDLY_NAME$ Module TypeScript
+console.log('$STUDLY_NAME$ Module assets loaded successfully!');
+
+// Define types for better TypeScript support
+interface Window {
+    test$STUDLY_NAME$Module?: () => string;
+}
+
+// Export a test function to global scope for browser testing
+window.test$STUDLY_NAME$Module = function (): string {
+    console.log('$STUDLY_NAME$ Module is working!');
+    return '$STUDLY_NAME$ module integration successful';
+};
+
+// Add module-specific initialization
+document.addEventListener('DOMContentLoaded', function (): void {
+    console.log('$STUDLY_NAME$ Module DOM ready');
+});
