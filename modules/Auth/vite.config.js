@@ -1,32 +1,15 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Export paths for the main Vite config to use
-export const paths = [
-    'modules/Auth/resources/assets/css/app.css',
-    'modules/Auth/resources/assets/js/app.ts',
-];
-
-export default defineConfig({
-    build: {
-        outDir: '../../public/build-auth',
-        emptyOutDir: true,
-        manifest: true,
-    },
-    plugins: [
-        laravel({
-            publicDirectory: '../../public',
-            buildDirectory: 'build-auth',
-            input: [
-                path.resolve(__dirname, 'resources/assets/css/app.css'),
-                path.resolve(__dirname, 'resources/assets/js/app.ts'),
-            ],
-            refresh: true,
-        }),
-    ],
-});
+/**
+ * Module Asset Configuration
+ *
+ * Define CSS, JS, and TS files to be compiled when this module is enabled.
+ * Paths are relative to this module's resources/ directory.
+ * Vue components in resources/js/pages/ are discovered automatically.
+ *
+ * Example:
+ * export const paths = [
+ *     'css/app.css',             // Becomes modules/ModuleName/resources/css/app.css
+ *     'js/app.ts',               // Becomes modules/ModuleName/resources/js/app.ts
+ *     'js/custom-feature.js',    // Becomes modules/ModuleName/resources/js/custom-feature.js
+ * ];
+ */
+export const paths = ['css/app.css', 'js/app.ts'];

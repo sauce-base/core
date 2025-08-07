@@ -20,6 +20,15 @@
 /storage/*.key
 /storage/pail
 /vendor
+
+# Module-specific ignores
+modules/*/node_modules/
+modules/*/package-lock.json
+modules/*/dist/
+modules/*/coverage/
+modules/*/*-lock.json
+modules/*/.turbo/
+modules/*/.cache/
 Homestead.json
 Homestead.yaml
 Thumbs.db

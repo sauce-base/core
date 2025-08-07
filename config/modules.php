@@ -24,18 +24,19 @@ return [
     |
     */
     'stubs' => [
-        'enabled' => false,
+        'enabled' => true,
         'path' => base_path().'/stubs/module',
         'files' => [
             'routes/web' => 'routes/web.php',
             'routes/api' => 'routes/api.php',
-            'views/index' => 'resources/views/index.blade.php',
             'scaffold/config' => 'config/config.php',
             'composer' => 'composer.json',
-            'assets/js/app' => 'resources/assets/js/app.ts',
-            'assets/css/app' => 'resources/assets/css/app.css',
+            'assets/js/app' => 'resources/js/app.ts',
+            'assets/js/pages/index' => 'resources/js/pages/Index.vue',
+            'assets/css/app' => 'resources/css/app.css',
             'vite' => 'vite.config.js',
             'package' => 'package.json',
+            '.gitignore' => '.gitignore',
         ],
         'replacements' => [
             /**
@@ -58,8 +59,6 @@ return [
             'routes/api' => ['LOWER_NAME', 'STUDLY_NAME', 'PLURAL_LOWER_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE', 'CONTROLLER_NAMESPACE'],
             'vite' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
             'json' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE', 'PROVIDER_NAMESPACE'],
-            'views/index' => ['LOWER_NAME'],
-            'views/master' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
             'scaffold/config' => ['STUDLY_NAME'],
             'composer' => [
                 'LOWER_NAME',
@@ -71,6 +70,7 @@ return [
                 'PROVIDER_NAMESPACE',
                 'APP_FOLDER_NAME',
             ],
+            'assets/js/pages/index' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
         ],
         'gitkeep' => true,
     ],
@@ -170,9 +170,9 @@ return [
             'lang' => ['path' => 'lang', 'generate' => false],
 
             // resource/
-            'assets' => ['path' => 'resources/assets', 'generate' => true],
+            'assets' => ['path' => 'resources/assets', 'generate' => false],
             'component-view' => ['path' => 'resources/views/components', 'generate' => false],
-            'views' => ['path' => 'resources/views', 'generate' => true],
+            'views' => ['path' => 'resources/views', 'generate' => false],
 
             // routes/
             'routes' => ['path' => 'routes', 'generate' => true],

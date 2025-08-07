@@ -13,68 +13,9 @@ class $CLASS$ extends Controller
      */
     public function index()
     {
-        return Inertia::render('modules/$LOWER_NAME$/index', [
+        return Inertia::render('$STUDLY_NAME$::Index', [
             'message' => 'Welcome to $STUDLY_NAME$ Module',
             'module' => '$LOWER_NAME$',
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return Inertia::render('modules/$LOWER_NAME$/create', [
-            'message' => 'Create new $LOWER_NAME$ resource',
-        ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        // Handle storage logic here
-        return redirect()->route('$LOWER_NAME$.index')->with('success', 'Resource created successfully');
-    }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return Inertia::render('modules/$LOWER_NAME$/show', [
-            'id' => $id,
-            'message' => "Showing $LOWER_NAME$ resource: {$id}",
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return Inertia::render('modules/$LOWER_NAME$/edit', [
-            'id' => $id,
-            'message' => "Editing $LOWER_NAME$ resource: {$id}",
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id)
-    {
-        // Handle update logic here
-        return redirect()->route('$LOWER_NAME$.show', $id)->with('success', 'Resource updated successfully');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        // Handle deletion logic here
-        return redirect()->route('$LOWER_NAME$.index')->with('success', 'Resource deleted successfully');
     }
 }

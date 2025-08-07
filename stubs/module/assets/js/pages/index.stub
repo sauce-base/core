@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-const title = 'Auth Module';
+const title = '$STUDLY_NAME$ Module';
 const message = 'Welcome to the ' + title;
 </script>
 <template>
