@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-import { useEventListener, useMediaQuery, useVModel } from '@vueuse/core';
+import { useUIStore } from '@/stores/ui';
+import { useEventListener, useMediaQuery } from '@vueuse/core';
 import { TooltipProvider } from 'reka-ui';
-import { computed, type HTMLAttributes, type Ref, ref } from 'vue';
+import { computed, type HTMLAttributes, ref } from 'vue';
 import {
     provideSidebarContext,
     SIDEBAR_COOKIE_MAX_AGE,
@@ -28,19 +29,16 @@ const emits = defineEmits<{
     'update:open': [open: boolean];
 }>();
 
+const uiStore = useUIStore();
 const isMobile = useMediaQuery('(max-width: 768px)');
 const openMobile = ref(false);
 
-const open = useVModel(props, 'open', emits, {
-    defaultValue: props.defaultOpen ?? false,
-    passive: (props.open === undefined) as false,
-}) as Ref<boolean>;
-
 function setOpen(value: boolean) {
-    open.value = value; // emits('update:open', value)
+    uiStore.setSidebarOpen(value);
+    emits('update:open', value);
 
     // This sets the cookie to keep the sidebar state.
-    document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    document.cookie = `${SIDEBAR_COOKIE_NAME}=${value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
 }
 
 function setOpenMobile(value: boolean) {
@@ -51,7 +49,7 @@ function setOpenMobile(value: boolean) {
 function toggleSidebar() {
     return isMobile.value
         ? setOpenMobile(!openMobile.value)
-        : setOpen(!open.value);
+        : setOpen(!uiStore.sidebarOpen);
 }
 
 useEventListener('keydown', (event: KeyboardEvent) => {
@@ -66,11 +64,11 @@ useEventListener('keydown', (event: KeyboardEvent) => {
 
 // We add a state so that we can do data-state="expanded" or "collapsed".
 // This makes it easier to style the sidebar with Tailwind classes.
-const state = computed(() => (open.value ? 'expanded' : 'collapsed'));
+const state = computed(() => (uiStore.sidebarOpen ? 'expanded' : 'collapsed'));
 
 provideSidebarContext({
     state,
-    open,
+    open: computed(() => uiStore.sidebarOpen),
     setOpen,
     isMobile,
     openMobile,

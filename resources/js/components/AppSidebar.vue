@@ -14,21 +14,30 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 
-import type { User } from '@/types';
+import { useAuthStore } from '@/stores/auth';
 import { usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 });
 
 const page = usePage();
+const authStore = useAuthStore();
+
+// Initialize auth store from Inertia props if not already set
+onMounted(() => {
+    if (!authStore.user && page.props.auth?.user) {
+        authStore.setUser(page.props.auth.user);
+    }
+});
 
 // Application data with real user context
 const data = {
     user: {
-        name: page.props.auth.user.name,
-        email: page.props.auth.user.email,
-        avatar: page.props.auth.user.avatar,
+        name: authStore.user?.name || '',
+        email: authStore.user?.email || '',
+        avatar: authStore.user?.avatar || '',
     },
     teams: [
         {
@@ -45,9 +54,7 @@ const data = {
             isActive: route().current('dashboard'),
         },
         // Only show User Management for admins
-        ...((page.props.auth.user as User).roles?.some(
-            (role) => role.name === 'admin',
-        )
+        ...(authStore.isAdmin
             ? [
                   {
                       title: 'User Management',

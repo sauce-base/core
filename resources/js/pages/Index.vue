@@ -2,7 +2,9 @@
 import Footer from '@/components/layout/Footer.vue';
 import Header from '@/components/layout/Header.vue';
 import Logo from '@/components/ui/Logo.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { useAuthStore } from '@/stores/auth';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 import IconCheck from '~icons/heroicons/check';
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconGlobe from '~icons/heroicons/globe-alt';
@@ -18,6 +20,16 @@ defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
 }>();
+
+const page = usePage();
+const authStore = useAuthStore();
+
+// Initialize auth store from Inertia props if not already set
+onMounted(() => {
+    if (!authStore.user && page.props.auth?.user) {
+        authStore.setUser(page.props.auth.user);
+    }
+});
 </script>
 
 <template>
@@ -67,7 +79,7 @@ defineProps<{
                 >
                     <!-- Primary CTA -->
                     <Link
-                        v-if="canRegister && !$page.props.auth.user"
+                        v-if="canRegister && !authStore.isAuthenticated"
                         :href="route('register')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
@@ -77,7 +89,7 @@ defineProps<{
 
                     <!-- Dashboard Button (if logged in) -->
                     <Link
-                        v-if="$page.props.auth.user"
+                        v-if="authStore.isAuthenticated"
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
@@ -98,7 +110,7 @@ defineProps<{
 
                     <!-- Sign In Button -->
                     <Link
-                        v-if="canLogin && !$page.props.auth.user"
+                        v-if="canLogin && !authStore.isAuthenticated"
                         :href="route('login')"
                         class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                     >
@@ -353,7 +365,7 @@ defineProps<{
                         </ul>
 
                         <Link
-                            v-if="canRegister && !$page.props.auth.user"
+                            v-if="canRegister && !authStore.isAuthenticated"
                             :href="route('register')"
                             class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                         >
@@ -361,7 +373,7 @@ defineProps<{
                         </Link>
 
                         <Link
-                            v-if="$page.props.auth.user"
+                            v-if="authStore.isAuthenticated"
                             :href="route('dashboard')"
                             class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                         >
@@ -635,7 +647,7 @@ defineProps<{
                     class="flex flex-col items-center justify-center gap-4 sm:flex-row"
                 >
                     <Link
-                        v-if="canRegister && !$page.props.auth.user"
+                        v-if="canRegister && !authStore.isAuthenticated"
                         :href="route('register')"
                         class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"
                     >
@@ -644,7 +656,7 @@ defineProps<{
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth.user"
+                        v-if="authStore.isAuthenticated"
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"
                     >
