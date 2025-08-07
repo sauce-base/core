@@ -72,7 +72,7 @@ return [
                 'APP_FOLDER_NAME',
             ],
             'assets/js/pages/index' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
-            'assets/js/stores/index' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME'],
+            'assets/js/stores/index' => ['LOWER_NAME', 'STUDLY_NAME', 'KEBAB_NAME', 'MODULE_NAMESPACE'],
         ],
         'gitkeep' => true,
     ],
