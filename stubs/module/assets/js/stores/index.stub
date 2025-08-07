@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 // Store
-export const use$STUDLY_NAME$Store = defineStore('$KEBAB_NAME$', () => {
+export const use$STUDLY_NAME$Store = defineStore('modules/$KEBAB_NAME$', () => {
     // State
     const counter = ref(0);
 
