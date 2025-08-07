@@ -49,12 +49,6 @@ const data = {
             icon: SquareTerminal,
             isActive: route().current('dashboard'),
         },
-        {
-            title: 'Auth',
-            url: '/auth',
-            icon: ShieldAlert,
-            isActive: route().current('auth'),
-        },
         // Only show User Management for admins
         ...((page.props.auth.user as User).roles?.some(
             (role) => role.name === 'admin',
