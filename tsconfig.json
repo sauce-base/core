@@ -13,12 +13,15 @@
         "skipLibCheck": true,
         "paths": {
             "@/*": ["./resources/js/*"],
+            "@modules/*": ["./modules/*"],
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         }
     },
     "include": [
         "resources/js/**/*.ts",
         "resources/js/**/*.vue",
+        "modules/**/resources/js/**/*.ts",
+        "modules/**/resources/js/**/*.vue",
         "types/**/*.ts"
     ]
 }

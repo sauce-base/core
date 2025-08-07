@@ -2,7 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { useSocialLogin } from '@/composables/useSocialLogin';
 import { getProviderUIConfig } from '@/lib/socialProviders';
-import { router, usePage } from '@inertiajs/vue3';
+import { useAuthStore } from '@/stores/auth';
+import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 interface ConnectedAccount {
@@ -11,9 +12,10 @@ interface ConnectedAccount {
     provider_avatar_url: string | null;
 }
 
-const page = usePage();
-const user = computed(() => page.props.auth.user as any);
-const connectedAccounts = computed(() => user.value?.connected_providers || []);
+const authStore = useAuthStore();
+const connectedAccounts = computed(
+    () => authStore.user?.connected_providers || [],
+);
 const { getEnabledProviders } = useSocialLogin();
 
 // Get available providers that aren't connected yet
@@ -33,7 +35,7 @@ const formatDate = (dateString: string | null) => {
 };
 
 const disconnect = (provider: string) => {
-    if (connectedAccounts.value.length === 1 && !user.value.password) {
+    if (connectedAccounts.value.length === 1 && !authStore.user?.password) {
         alert(
             'Cannot disconnect your only login method. Set a password first.',
         );
@@ -102,7 +104,8 @@ const connectProvider = (provider: string) => {
                         size="sm"
                         @click="disconnect(account.provider)"
                         :disabled="
-                            connectedAccounts.length === 1 && !user.password
+                            connectedAccounts.length === 1 &&
+                            !authStore.user?.password
                         "
                     >
                         Disconnect
