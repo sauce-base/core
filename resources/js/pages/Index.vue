@@ -3,8 +3,7 @@ import Footer from '@/components/layout/Footer.vue';
 import Header from '@/components/layout/Header.vue';
 import Logo from '@/components/ui/Logo.vue';
 import { useAuthStore } from '@/stores/auth';
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
 import IconCheck from '~icons/heroicons/check';
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconGlobe from '~icons/heroicons/globe-alt';
@@ -21,15 +20,7 @@ defineProps<{
     canRegister?: boolean;
 }>();
 
-const page = usePage();
 const authStore = useAuthStore();
-
-// Initialize auth store from Inertia props if not already set
-onMounted(() => {
-    if (!authStore.user && page.props.auth?.user) {
-        authStore.setUser(page.props.auth.user);
-    }
-});
 </script>
 
 <template>

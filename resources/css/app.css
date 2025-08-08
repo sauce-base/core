@@ -7,7 +7,7 @@
 @source '../../storage/framework/views/*.php';
 @source './resources/js/**/*.vue';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
 
 @theme {
   --font-sans:
@@ -183,7 +183,8 @@
 /*
   ---break---
 */
-.dark {
+.dark,
+[data-theme="dark"] {
   --background:
     oklch(0.145 0 0);
   --foreground:

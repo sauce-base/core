@@ -24,7 +24,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { Link } from '@inertiajs/vue3';
+import { useAuthStore } from '@/stores/auth';
+import { Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -36,6 +37,7 @@ const props = defineProps<{
 }>();
 
 const { isMobile } = useSidebar();
+const authStore = useAuthStore();
 
 const userInitials = computed(() => {
     return props.user.name
@@ -44,6 +46,14 @@ const userInitials = computed(() => {
         .slice(0, 2)
         .join('');
 });
+
+const handleLogout = () => {
+    // Clear the auth store first to ensure immediate UI update
+    authStore.clearUser();
+
+    // Then make the logout request
+    router.post(route('logout'));
+};
 </script>
 
 <template>
@@ -133,15 +143,9 @@ const userInitials = computed(() => {
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem as-child>
-                        <Link
-                            :href="route('logout')"
-                            method="post"
-                            class="flex w-full items-center"
-                        >
-                            <LogOut />
-                            Log out
-                        </Link>
+                    <DropdownMenuItem @click="handleLogout">
+                        <LogOut />
+                        Log out
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
