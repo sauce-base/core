@@ -13,7 +13,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "prepare": "husky",
-    "commitlint": "commitlint --edit --last",
+    "commitlint": "commitlint --edit",
     "commit": "git-cz"
   },
   "devDependencies": {
@@ -32,7 +32,7 @@
     "axios": "^1.8.2",
     "commitizen": "^4.3.1",
     "concurrently": "^9.0.1",
-    "cz-conventional-changelog": "^3.3.0",
+    "cz-conventional-changelog": "^3.0.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "husky": "^9.1.7",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@vee-validate/zod": "^4.15.1",
-    "@vueuse/core": "^13.5.0",
+    "@vueuse/core": "^13.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.525.0",
