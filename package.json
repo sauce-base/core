@@ -13,8 +13,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
     "prepare": "husky",
-    "commitlint": "commitlint --edit",
-    "commit": "git-cz"
+    "commitlint": "commitlint --edit"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -30,9 +29,7 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "axios": "^1.8.2",
-    "commitizen": "^4.3.1",
     "concurrently": "^9.0.1",
-    "cz-conventional-changelog": "^3.0.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
     "husky": "^9.1.7",
@@ -65,10 +62,5 @@
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.5.1"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
