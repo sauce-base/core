@@ -44,6 +44,13 @@
 - **BODY**: Must include "## Summary" section
 - **NO ATTRIBUTION**: Never add "Generated with Claude" or similar
 
+### Laravel Modules (nwidart/laravel-modules) - CRITICAL RULES
+- **NEVER USE rm**: Never delete modules using `rm -rf modules/ModuleName`
+- **USE ARTISAN**: Always use `php artisan module:delete ModuleName` to remove modules
+- **MODULE COMMANDS**: Use `php artisan module:*` commands for all module operations
+- **STATUS TRACKING**: Module states are tracked in `modules_statuses.json`
+- **SAFE OPERATIONS**: Module artisan commands ensure proper cleanup and dependency management
+
 ### Code Quality - ALWAYS RUN THESE
 - **BEFORE COMMIT**: Always run `./vendor/bin/pint` and `npm run lint`
 - **TESTS**: Run `composer test` after backend changes
