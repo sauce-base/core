@@ -15,30 +15,23 @@ import {
 } from '@/components/ui/sidebar';
 
 import { useAuthStore } from '@/stores/auth';
-import { usePage } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { computed } from 'vue';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 });
 
-const page = usePage();
 const authStore = useAuthStore();
 
-// Initialize auth store from Inertia props if not already set
-onMounted(() => {
-    if (!authStore.user && page.props.auth?.user) {
-        authStore.setUser(page.props.auth.user);
-    }
-});
+// Reactive user data that updates when auth store changes
+const userData = computed(() => ({
+    name: authStore.user?.name || '',
+    email: authStore.user?.email || '',
+    avatar: authStore.user?.avatar || '',
+}));
 
 // Application data with real user context
 const data = {
-    user: {
-        name: authStore.user?.name || '',
-        email: authStore.user?.email || '',
-        avatar: authStore.user?.avatar || '',
-    },
     teams: [
         {
             name: 'Sauce Base',
@@ -77,7 +70,7 @@ const data = {
             <NavMain :items="data.navMain" />
         </SidebarContent>
         <SidebarFooter>
-            <NavUser :user="data.user" />
+            <NavUser :user="userData" />
         </SidebarFooter>
         <SidebarRail />
     </Sidebar>

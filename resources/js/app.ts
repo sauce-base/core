@@ -2,9 +2,11 @@ import '../css/app.css';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import { useColorMode } from '@vueuse/core';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
@@ -31,11 +33,19 @@ createInertiaApp({
         );
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
-            .use(ZiggyVue)
-            .mount(el);
+            .use(ZiggyVue);
+
+        // Initialize middleware after app setup
+        setupMiddleware();
+
+        // Initialize global theme persistence after mount for proper Vue reactivity
+        useColorMode({ emitAuto: true });
+
+        // Mount the app
+        app.mount(el);
     },
     progress: {
         color: '#4B5563',
