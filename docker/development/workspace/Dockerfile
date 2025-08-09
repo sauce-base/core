@@ -5,6 +5,7 @@ RUN apk add --no-cache \
     postgresql-dev \
     oniguruma-dev \
     libzip-dev \
+    icu-dev \
     git \
     unzip \
     bash \
@@ -16,7 +17,8 @@ RUN docker-php-ext-install \
     pdo_pgsql \
     mbstring \
     zip \
-    pcntl
+    pcntl \
+    intl
 
 # Install Redis and Xdebug extensions via PECL
 RUN apk add --no-cache --virtual .build-deps \
