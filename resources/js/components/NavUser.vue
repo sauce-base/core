@@ -18,6 +18,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import LanguageMenuItems from '@/components/ui/LanguageMenuItems.vue';
 import {
     SidebarMenu,
     SidebarMenuButton,
@@ -141,6 +142,7 @@ const handleLogout = () => {
                             <Bell />
                             Notifications
                         </DropdownMenuItem>
+                        <LanguageMenuItems />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem @click="handleLogout">

@@ -4,10 +4,12 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { useColorMode } from '@vueuse/core';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
+import { useUIStore } from './stores/ui';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 
@@ -36,10 +38,24 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
+            .use(i18nVue, {
+                resolve: (lang: string) => {
+                    const langs = import.meta.glob('../../lang/*.json', {
+                        eager: true,
+                    }) as Record<string, { default: any }>;
+                    return langs[`../../lang/${lang}.json`]?.default || {};
+                },
+            })
             .use(ZiggyVue);
 
         // Initialize middleware after app setup
         setupMiddleware();
+
+        // Initialize language from store after app is mounted
+        const uiStore = useUIStore();
+        if (uiStore.language !== 'en') {
+            loadLanguageAsync(uiStore.language);
+        }
 
         // Initialize global theme persistence after mount for proper Vue reactivity
         useColorMode({ emitAuto: true });
