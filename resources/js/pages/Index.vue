@@ -24,7 +24,7 @@ const authStore = useAuthStore();
 </script>
 
 <template>
-    <Head title="Sauce Base - Modern Laravel SaaS Starter Kit" />
+    <Head :title="$t('Sauce Base - Modern Laravel SaaS Starter Kit')" />
     <div class="flex min-h-screen flex-col bg-white dark:bg-gray-950">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />
@@ -51,17 +51,16 @@ const authStore = useAuthStore();
                 <h1
                     class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl dark:text-white"
                 >
-                    Modern Laravel SaaS
-                    <span class="text-blue-600 dark:text-blue-400"
-                        >Starter Kit</span
-                    >
+                    {{ $t('Modern Laravel SaaS Starter Kit') }}
                 </h1>
 
                 <!-- Subheadline -->
                 <p class="mb-8 text-xl text-gray-600 dark:text-gray-400">
-                    Clone the repo, start building scalable and maintainable
-                    SaaS applications quickly. Built with the VILT stack -
-                    completely free and open source.
+                    {{
+                        $t(
+                            'Clone the repo, start building scalable and maintainable SaaS applications quickly. Built with the VILT stack - completely free and open source.',
+                        )
+                    }}
                 </p>
 
                 <!-- Action Buttons -->
@@ -75,7 +74,7 @@ const authStore = useAuthStore();
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
                         <IconUserPlus class="mr-2 h-5 w-5" />
-                        Get Started Free
+                        {{ $t('Get Started Free') }}
                     </Link>
 
                     <!-- Dashboard Button (if logged in) -->
@@ -96,7 +95,7 @@ const authStore = useAuthStore();
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-950"
                     >
                         <IconGitHub class="mr-2 h-5 w-5" />
-                        View on GitHub
+                        {{ $t('View on GitHub') }}
                     </a>
 
                     <!-- Sign In Button -->
@@ -105,7 +104,7 @@ const authStore = useAuthStore();
                         :href="route('login')"
                         class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                     >
-                        Already have an account? Sign In
+                        {{ $t('Already have an account? Sign In') }}
                     </Link>
                 </div>
             </div>
@@ -121,11 +120,14 @@ const authStore = useAuthStore();
                     <h2
                         class="mb-4 text-3xl font-bold text-gray-900 dark:text-white"
                     >
-                        Everything You Need to Launch Your SaaS
+                        {{ $t('Everything You Need to Launch Your SaaS') }}
                     </h2>
                     <p class="mb-16 text-lg text-gray-600 dark:text-gray-400">
-                        Production-ready features and modern development tools
-                        to accelerate your project
+                        {{
+                            $t(
+                                'Production-ready features and modern development tools to accelerate your project',
+                            )
+                        }}
                     </p>
                 </div>
 
@@ -144,11 +146,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Authentication & Authorization
+                            {{ $t('Authentication & Authorization') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Multi-provider social login, role-based permissions,
-                            and secure session management out of the box.
+                            {{
+                                $t(
+                                    'Multi-provider social login, role-based permissions, and secure session management out of the box.',
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -166,12 +171,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Modern Tech Stack
+                            {{ $t('Modern Tech Stack') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Laravel 12, Vue 3, TypeScript, Inertia.js, and
-                            Tailwind CSS - the perfect combination for modern
-                            web apps.
+                            {{
+                                $t(
+                                    'Laravel 12, Vue 3, TypeScript, Inertia.js, and Tailwind CSS - the perfect combination for modern web apps.',
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -189,11 +196,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Production Ready
+                            {{ $t('Production Ready') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Docker configuration, Redis caching, PostgreSQL
-                            database, and optimized build pipeline included.
+                            {{
+                                $t(
+                                    'Docker configuration, Redis caching, PostgreSQL database, and optimized build pipeline included.',
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -211,11 +221,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Developer Experience
+                            {{ $t('Developer Experience') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Hot reload, TypeScript support, ESLint, PHP CS
-                            Fixer, and comprehensive testing setup.
+                            {{
+                                $t(
+                                    'Hot reload, TypeScript support, ESLint, PHP CS Fixer, and comprehensive testing setup.',
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -233,11 +246,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            UI Components
+                            {{ $t('UI Components') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            shadcn/ui components with reka-ui implementation,
-                            dark mode support, and responsive design.
+                            {{
+                                $t(
+                                    'shadcn/ui components with reka-ui implementation, dark mode support, and responsive design.',
+                                )
+                            }}
                         </p>
                     </div>
 
@@ -255,11 +271,14 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-2 text-lg font-semibold text-gray-900 dark:text-white"
                         >
-                            Testing & Quality
+                            {{ $t('Testing & Quality') }}
                         </h3>
                         <p class="text-gray-600 dark:text-gray-400">
-                            Comprehensive PHP (Pest) and E2E (Playwright)
-                            testing with CI/CD pipeline configuration.
+                            {{
+                                $t(
+                                    'Comprehensive PHP (Pest) and E2E (Playwright) testing with CI/CD pipeline configuration.',
+                                )
+                            }}
                         </p>
                     </div>
                 </div>
@@ -272,11 +291,14 @@ const authStore = useAuthStore();
                 <h2
                     class="mb-4 text-3xl font-bold text-gray-900 dark:text-white"
                 >
-                    Simple, Transparent Pricing
+                    {{ $t('Simple, Transparent Pricing') }}
                 </h2>
                 <p class="mb-16 text-lg text-gray-600 dark:text-gray-400">
-                    No hidden fees, no premium plans, no limitations - just code
-                    and build
+                    {{
+                        $t(
+                            'No hidden fees, no premium plans, no limitations - just code and build',
+                        )
+                    }}
                 </p>
 
                 <div class="mx-auto max-w-md">
@@ -287,7 +309,7 @@ const authStore = useAuthStore();
                             <h3
                                 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white"
                             >
-                                SaaS Starter Kit
+                                {{ $t('SaaS Starter Kit') }}
                             </h3>
                             <div class="mb-4">
                                 <span
@@ -300,7 +322,7 @@ const authStore = useAuthStore();
                                 >
                             </div>
                             <p class="text-gray-600 dark:text-gray-400">
-                                Everything included, no restrictions
+                                {{ $t('Everything included, no restrictions') }}
                             </p>
                         </div>
 
@@ -309,48 +331,62 @@ const authStore = useAuthStore();
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Complete Laravel SaaS foundation</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{
+                                        $t('Complete Laravel SaaS foundation')
+                                    }}</span
                                 >
                             </li>
                             <li class="flex items-center">
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Authentication & authorization</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{
+                                        $t('Authentication & authorization')
+                                    }}</span
                                 >
                             </li>
                             <li class="flex items-center">
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Modern UI components</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{ $t('Modern UI components') }}</span
                                 >
                             </li>
                             <li class="flex items-center">
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Production deployment ready</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{
+                                        $t('Production deployment ready')
+                                    }}</span
                                 >
                             </li>
                             <li class="flex items-center">
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Comprehensive testing suite</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{
+                                        $t('Comprehensive testing suite')
+                                    }}</span
                                 >
                             </li>
                             <li class="flex items-center">
                                 <IconCheck
                                     class="mr-3 h-5 w-5 text-green-500"
                                 />
-                                <span class="text-gray-700 dark:text-gray-300"
-                                    >Active community support</span
+                                <span
+                                    class="text-gray-700 dark:text-gray-300"
+                                    >{{ $t('Active community support') }}</span
                                 >
                             </li>
                         </ul>
@@ -360,7 +396,7 @@ const authStore = useAuthStore();
                             :href="route('register')"
                             class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-6 py-3 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                         >
-                            Get Started Free
+                            {{ $t('Get Started Free') }}
                         </Link>
 
                         <Link
@@ -382,10 +418,14 @@ const authStore = useAuthStore();
                     <h2
                         class="mb-4 text-3xl font-bold text-gray-900 dark:text-white"
                     >
-                        Ship Faster
+                        {{ $t('Ship Faster') }}
                     </h2>
                     <p class="mb-16 text-lg text-gray-600 dark:text-gray-400">
-                        Get your SaaS up and running in minutes, not weeks
+                        {{
+                            $t(
+                                'Get your SaaS up and running in minutes, not weeks',
+                            )
+                        }}
                     </p>
                 </div>
 
@@ -395,7 +435,7 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-4 text-xl font-semibold text-gray-900 dark:text-white"
                         >
-                            Quick Start
+                            {{ $t('Quick Start') }}
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div
@@ -423,7 +463,7 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-4 text-xl font-semibold text-gray-900 dark:text-white"
                         >
-                            Environment Setup
+                            {{ $t('Environment Setup') }}
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div
@@ -452,7 +492,7 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-4 text-xl font-semibold text-gray-900 dark:text-white"
                         >
-                            Docker Setup (Alternative)
+                            {{ $t('Docker Setup (Alternative)') }}
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div
@@ -481,7 +521,7 @@ const authStore = useAuthStore();
                         <h3
                             class="mb-4 text-xl font-semibold text-gray-900 dark:text-white"
                         >
-                            Production Deployment
+                            {{ $t('Production Deployment') }}
                         </h3>
                         <div class="space-y-3 text-sm">
                             <div
@@ -509,10 +549,14 @@ const authStore = useAuthStore();
                     <h2
                         class="mb-4 text-3xl font-bold text-gray-900 dark:text-white"
                     >
-                        Frequently Asked Questions
+                        {{ $t('Frequently Asked Questions') }}
                     </h2>
                     <p class="mb-16 text-lg text-gray-600 dark:text-gray-400">
-                        Everything you need to know about getting started
+                        {{
+                            $t(
+                                'Everything you need to know about getting started',
+                            )
+                        }}
                     </p>
                 </div>
 
@@ -628,11 +672,14 @@ const authStore = useAuthStore();
         <section class="bg-blue-600 px-6 py-24 dark:bg-blue-700">
             <div class="mx-auto max-w-4xl text-center">
                 <h2 class="mb-4 text-3xl font-bold text-white">
-                    Ready to Get Started?
+                    {{ $t('Ready to Get Started?') }}
                 </h2>
                 <p class="mb-8 text-xl text-blue-100">
-                    Join developers who've already discovered the power of
-                    modern Laravel SaaS development.
+                    {{
+                        $t(
+                            "Join developers who've already discovered the power of modern Laravel SaaS development.",
+                        )
+                    }}
                 </p>
                 <div
                     class="flex flex-col items-center justify-center gap-4 sm:flex-row"
@@ -643,7 +690,7 @@ const authStore = useAuthStore();
                         class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"
                     >
                         <IconUserPlus class="mr-2 h-5 w-5" />
-                        Start Free Today
+                        {{ $t('Start Free Today') }}
                     </Link>
 
                     <Link
@@ -662,7 +709,7 @@ const authStore = useAuthStore();
                         class="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-blue-600 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"
                     >
                         <IconGitHub class="mr-2 h-5 w-5" />
-                        Star on GitHub
+                        {{ $t('Star on GitHub') }}
                     </a>
                 </div>
             </div>

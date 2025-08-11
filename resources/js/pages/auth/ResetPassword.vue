@@ -50,29 +50,29 @@ const onSubmit = form.handleSubmit((values: ResetPasswordFormData) => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head :title="$t('Reset Password')" />
 
         <!-- Title and Subtitle -->
         <div class="mb-6 text-center">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Reset Password
+                {{ $t('Reset Password') }}
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Enter your new password below
+                {{ $t('Enter your new password below') }}
             </p>
         </div>
 
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.email"
-                        >Email</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.email">{{
+                        $t('Email')
+                    }}</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="email"
-                            placeholder="Enter your email"
+                            :placeholder="$t('Enter your email')"
                             :error="inertiaForm.errors.email"
                             readonly
                         />
@@ -83,13 +83,13 @@ const onSubmit = form.handleSubmit((values: ResetPasswordFormData) => {
 
             <FormField name="password" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password"
-                        >New Password</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.password">{{
+                        $t('New Password')
+                    }}</FormLabel>
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Enter your new password"
+                            :placeholder="$t('Enter your new password')"
                             :error="inertiaForm.errors.password"
                         />
                     </FormControl>
@@ -99,13 +99,14 @@ const onSubmit = form.handleSubmit((values: ResetPasswordFormData) => {
 
             <FormField name="password_confirmation" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password_confirmation"
-                        >Confirm Password</FormLabel
+                    <FormLabel
+                        :error="inertiaForm.errors.password_confirmation"
+                        >{{ $t('Confirm Password') }}</FormLabel
                     >
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Confirm your new password"
+                            :placeholder="$t('Confirm your new password')"
                             :error="inertiaForm.errors.password_confirmation"
                         />
                     </FormControl>
@@ -124,7 +125,7 @@ const onSubmit = form.handleSubmit((values: ResetPasswordFormData) => {
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
-                    Reset Password
+                    {{ $t('Reset Password') }}
                 </Button>
             </div>
         </form>

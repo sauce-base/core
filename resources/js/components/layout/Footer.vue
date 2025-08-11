@@ -18,19 +18,19 @@ import IconHeart from '~icons/heroicons/heart';
                         rel="noopener noreferrer"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
-                        GitHub
+                        {{ $t('GitHub') }}
                     </a>
                     <a
                         href="#"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
-                        Documentation
+                        {{ $t('Documentation') }}
                     </a>
                 </div>
                 <div class="flex items-center gap-1">
-                    <span>Made with</span>
+                    <span>{{ $t('Made with') }}</span>
                     <IconHeart class="h-4 w-4 text-red-500" />
-                    <span>for developers</span>
+                    <span>{{ $t('for developers') }}</span>
                 </div>
             </div>
         </div>

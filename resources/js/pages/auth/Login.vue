@@ -61,15 +61,15 @@ const onSubmit = async () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head :title="$t('Log in')" />
 
         <!-- Title and Subtitle -->
         <div class="mb-6 text-center">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Welcome back
+                {{ $t('Welcome back') }}
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Login to your Sauce Base account to continue
+                {{ $t('Login to your Sauce Base account to continue') }}
             </p>
         </div>
 
@@ -103,7 +103,7 @@ const onSubmit = async () => {
             <div class="relative flex justify-center text-sm">
                 <span
                     class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                    >Or continue with email</span
+                    >{{ $t('Or continue with email') }}</span
                 >
             </div>
         </div>
@@ -111,14 +111,14 @@ const onSubmit = async () => {
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.email"
-                        >Email</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.email">{{
+                        $t('Email')
+                    }}</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="email"
-                            placeholder="Enter your email"
+                            :placeholder="$t('Enter your email')"
                             autocomplete="email"
                             :error="inertiaForm.errors.email"
                         />
@@ -129,13 +129,13 @@ const onSubmit = async () => {
 
             <FormField name="password" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password"
-                        >Password</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.password">{{
+                        $t('Password')
+                    }}</FormLabel>
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Enter your password"
+                            :placeholder="$t('Enter your password')"
                             autocomplete="current-password"
                             :error="inertiaForm.errors.password"
                         />
@@ -161,7 +161,7 @@ const onSubmit = async () => {
                                 for="remember"
                                 class="cursor-pointer text-sm text-gray-600 dark:text-gray-400"
                             >
-                                Remember me
+                                {{ $t('Remember me') }}
                             </label>
                         </div>
                     </FormControl>
@@ -174,7 +174,7 @@ const onSubmit = async () => {
                     :href="route('password.request')"
                     class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
-                    Forgot your password?
+                    {{ $t('Forgot your password?') }}
                 </Link>
 
                 <Button
@@ -182,7 +182,7 @@ const onSubmit = async () => {
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
-                    Log in
+                    {{ $t('Log in') }}
                 </Button>
             </div>
         </form>
@@ -190,12 +190,12 @@ const onSubmit = async () => {
         <template #outside>
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Don't have an account?
+                    {{ $t("Don't have an account?") }}
                     <Link
                         :href="route('register')"
                         class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
                     >
-                        Sign up
+                        {{ $t('Sign up') }}
                     </Link>
                 </p>
             </div>

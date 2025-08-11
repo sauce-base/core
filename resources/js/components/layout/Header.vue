@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import LanguageSelector from '@/components/ui/LanguageSelector.vue';
 import Logo from '@/components/ui/Logo.vue';
 import ThemeToggle from '@/components/ui/ThemeToggle.vue';
 import { Link } from '@inertiajs/vue3';
@@ -89,7 +90,7 @@ defineProps<{
                         "
                     >
                         <IconCube class="h-4 w-4" />
-                        Features
+                        {{ $t('Features') }}
                         <div
                             v-if="activeSection === 'features'"
                             class="absolute right-0 -bottom-1 left-0 h-0.5 rounded-full bg-blue-600 dark:bg-blue-400"
@@ -105,7 +106,7 @@ defineProps<{
                         "
                     >
                         <IconCurrencyDollar class="h-4 w-4" />
-                        Pricing
+                        {{ $t('Pricing') }}
                         <div
                             v-if="activeSection === 'pricing'"
                             class="absolute right-0 -bottom-1 left-0 h-0.5 rounded-full bg-blue-600 dark:bg-blue-400"
@@ -121,7 +122,7 @@ defineProps<{
                         "
                     >
                         <IconQuestionMarkCircle class="h-4 w-4" />
-                        FAQ
+                        {{ $t('FAQ') }}
                         <div
                             v-if="activeSection === 'faq'"
                             class="absolute right-0 -bottom-1 left-0 h-0.5 rounded-full bg-blue-600 dark:bg-blue-400"
@@ -132,7 +133,7 @@ defineProps<{
                         class="flex items-center gap-2 px-2 py-1 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                     >
                         <IconDocument class="h-4 w-4" />
-                        Docs
+                        {{ $t('Docs') }}
                     </a>
                     <a
                         href="https://github.com/roble/saucebase"
@@ -141,7 +142,7 @@ defineProps<{
                         class="flex items-center gap-2 px-2 py-1 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                     >
                         <IconGitHub class="h-4 w-4" />
-                        GitHub
+                        {{ $t('GitHub') }}
                         <IconExternalLink class="h-3 w-3 opacity-60" />
                     </a>
                 </div>
@@ -149,6 +150,7 @@ defineProps<{
                 <!-- Desktop Actions - Better hierarchy -->
                 <div class="hidden items-center space-x-3 lg:flex">
                     <div class="flex items-center space-x-1">
+                        <LanguageSelector mode="standalone" />
                         <ThemeToggle />
                     </div>
 
@@ -159,7 +161,7 @@ defineProps<{
                         :href="route('login')"
                         class="px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                     >
-                        Sign In
+                        {{ $t('Sign In') }}
                     </Link>
 
                     <Link
@@ -167,7 +169,7 @@ defineProps<{
                         :href="route('register')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                     >
-                        Get Started
+                        {{ $t('Get Started') }}
                     </Link>
 
                     <Link
@@ -175,12 +177,13 @@ defineProps<{
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                     >
-                        Dashboard
+                        {{ $t('Dashboard') }}
                     </Link>
                 </div>
 
                 <!-- Mobile Menu Button - Better positioning -->
                 <div class="flex items-center space-x-3 lg:hidden">
+                    <LanguageSelector mode="standalone" />
                     <ThemeToggle />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
@@ -216,7 +219,7 @@ defineProps<{
                             "
                         >
                             <IconCube class="h-5 w-5" />
-                            Features
+                            {{ $t('Features') }}
                         </button>
                         <button
                             @click="smoothScrollTo('pricing')"
@@ -228,7 +231,7 @@ defineProps<{
                             "
                         >
                             <IconCurrencyDollar class="h-5 w-5" />
-                            Pricing
+                            {{ $t('Pricing') }}
                         </button>
                         <button
                             @click="smoothScrollTo('faq')"
@@ -240,7 +243,7 @@ defineProps<{
                             "
                         >
                             <IconQuestionMarkCircle class="h-5 w-5" />
-                            FAQ
+                            {{ $t('FAQ') }}
                         </button>
                         <a
                             href="#"
@@ -248,7 +251,7 @@ defineProps<{
                             @click="mobileMenuOpen = false"
                         >
                             <IconDocument class="h-5 w-5" />
-                            Docs
+                            {{ $t('Docs') }}
                         </a>
                         <a
                             href="https://github.com/roble/saucebase"
@@ -259,7 +262,7 @@ defineProps<{
                         >
                             <IconGitHub class="h-5 w-5" />
                             <span class="flex items-center gap-2">
-                                GitHub
+                                {{ $t('GitHub') }}
                                 <IconExternalLink class="h-4 w-4 opacity-60" />
                             </span>
                         </a>
@@ -274,7 +277,7 @@ defineProps<{
                                     class="rounded-lg px-4 py-3 text-base font-medium text-gray-900 transition-colors duration-200 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-100 dark:hover:bg-gray-800/50 dark:hover:text-blue-400"
                                     @click="mobileMenuOpen = false"
                                 >
-                                    Sign In
+                                    {{ $t('Sign In') }}
                                 </Link>
 
                                 <Link
@@ -283,7 +286,7 @@ defineProps<{
                                     class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                                     @click="mobileMenuOpen = false"
                                 >
-                                    Get Started
+                                    {{ $t('Get Started') }}
                                 </Link>
 
                                 <Link
@@ -292,7 +295,7 @@ defineProps<{
                                     class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                                     @click="mobileMenuOpen = false"
                                 >
-                                    Dashboard
+                                    {{ $t('Dashboard') }}
                                 </Link>
                             </div>
                         </div>

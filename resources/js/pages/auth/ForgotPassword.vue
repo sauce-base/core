@@ -40,12 +40,14 @@ const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
 
 <template>
     <GuestLayout>
-        <Head title="Forgot Password" />
+        <Head :title="$t('Forgot Password')" />
 
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
+            {{
+                $t(
+                    'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
+                )
+            }}
         </div>
 
         <div
@@ -58,12 +60,12 @@ const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{{ $t('Email') }}</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="email"
-                            placeholder="Enter your email address"
+                            :placeholder="$t('Enter your email address')"
                         />
                     </FormControl>
                     <FormMessage />
@@ -76,7 +78,7 @@ const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
-                    Email Password Reset Link
+                    {{ $t('Email Password Reset Link') }}
                 </Button>
             </div>
         </form>
@@ -87,7 +89,7 @@ const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
                     :href="route('login')"
                     class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
                 >
-                    ← Back to login
+                    {{ $t('← Back to login') }}
                 </Link>
             </div>
         </template>

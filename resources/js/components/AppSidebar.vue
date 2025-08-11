@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 
 import { useAuthStore } from '@/stores/auth';
+import { trans } from 'laravel-vue-i18n';
 import { computed } from 'vue';
 
 const props = withDefaults(defineProps<SidebarProps>(), {
@@ -30,8 +31,8 @@ const userData = computed(() => ({
     avatar: authStore.user?.avatar || '',
 }));
 
-// Application data with real user context
-const data = {
+// Application data with real user context - using computed for reactivity with translations
+const data = computed(() => ({
     teams: [
         {
             name: 'Sauce Base',
@@ -41,7 +42,7 @@ const data = {
     ],
     navMain: [
         {
-            title: 'Dashboard',
+            title: trans('Dashboard'),
             url: '/dashboard',
             icon: SquareTerminal,
             isActive: route().current('dashboard'),
@@ -50,7 +51,7 @@ const data = {
         ...(authStore.isAdmin
             ? [
                   {
-                      title: 'User Management',
+                      title: trans('User Management'),
                       url: '/admin/users',
                       icon: Users,
                       isActive: route().current('admin.users'),
@@ -58,7 +59,7 @@ const data = {
               ]
             : []),
     ],
-};
+}));
 </script>
 
 <template>
