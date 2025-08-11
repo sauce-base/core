@@ -8,12 +8,11 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUIStore } from '@/stores/ui';
-import { loadLanguageAsync } from 'laravel-vue-i18n';
-import { Globe } from 'lucide-vue-next';
+import { useColorMode } from '@vueuse/core';
 import { computed } from 'vue';
-import IconBR from '~icons/circle-flags/br';
-import IconUS from '~icons/circle-flags/us';
+import IconAuto from '~icons/fluent/dark-theme-20-filled';
+import IconMoon from '~icons/heroicons/moon';
+import IconSun from '~icons/heroicons/sun';
 
 interface Props {
     /**
@@ -32,22 +31,22 @@ const props = withDefaults(defineProps<Props>(), {
         'flex items-center rounded-lg p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
 });
 
-const uiStore = useUIStore();
+const colorMode = useColorMode({
+    emitAuto: true,
+});
 
-const languages = [
-    { code: 'en', name: 'English', icon: IconUS },
-    { code: 'pt_BR', name: 'Português', icon: IconBR },
-];
+const themes = [
+    { code: 'light', name: 'Light', icon: IconSun },
+    { code: 'dark', name: 'Dark', icon: IconMoon },
+    { code: 'auto', name: 'Auto', icon: IconAuto },
+] as const;
 
-const switchLanguage = async (langCode: string) => {
-    await loadLanguageAsync(langCode);
-    uiStore.setLanguage(langCode);
+const switchTheme = (themeCode: string) => {
+    colorMode.value = themeCode as 'light' | 'dark' | 'auto';
 };
 
-const currentLanguage = computed(
-    () =>
-        languages.find((lang) => lang.code === uiStore.language) ||
-        languages[0],
+const currentTheme = computed(
+    () => themes.find((theme) => theme.code === colorMode.value) || themes[0],
 );
 </script>
 
@@ -56,23 +55,23 @@ const currentLanguage = computed(
     <DropdownMenu v-if="mode === 'standalone'">
         <DropdownMenuTrigger as-child>
             <button :class="props.triggerClass">
-                <slot name="trigger" :current-language="currentLanguage">
-                    <component :is="currentLanguage.icon" class="size-4.5" />
+                <slot name="trigger" :current-theme="currentTheme">
+                    <component :is="currentTheme.icon" class="h-5 w-5" />
                 </slot>
             </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="min-w-[160px]">
             <DropdownMenuItem
-                v-for="language in languages"
-                :key="language.code"
-                @click="switchLanguage(language.code)"
+                v-for="theme in themes"
+                :key="theme.code"
+                @click="switchTheme(theme.code)"
                 :class="{
                     'bg-accent text-accent-foreground':
-                        uiStore.language === language.code,
+                        colorMode === theme.code,
                 }"
             >
-                <component :is="language.icon" class="size-4" />
-                {{ language.name }}
+                <component :is="theme.icon" class="h-4 w-4" />
+                {{ $t(theme.name) }}
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
@@ -82,20 +81,20 @@ const currentLanguage = computed(
         <DropdownMenuSubTrigger
             class="[&>svg]:text-muted-foreground [&>svg]:mr-2"
         >
-            <slot name="submenu-trigger" :current-language="currentLanguage">
-                <Globe class="size-3.5" />
-                {{ $t('Language') }}
+            <slot name="submenu-trigger" :current-theme="currentTheme">
+                <component :is="currentTheme.icon" class="size-4" />
+                {{ $t('Theme') }}
             </slot>
         </DropdownMenuSubTrigger>
         <DropdownMenuSubContent>
             <DropdownMenuItem
-                v-for="language in languages"
-                :key="language.code"
-                @click="switchLanguage(language.code)"
-                :class="{ 'bg-accent': uiStore.language === language.code }"
+                v-for="theme in themes"
+                :key="theme.code"
+                @click="switchTheme(theme.code)"
+                :class="{ 'bg-accent': colorMode === theme.code }"
             >
-                <component :is="language.icon" class="h-4 w-4" />
-                {{ language.name }}
+                <component :is="theme.icon" class="h-4 w-4" />
+                {{ $t(theme.name) }}
             </DropdownMenuItem>
         </DropdownMenuSubContent>
     </DropdownMenuSub>

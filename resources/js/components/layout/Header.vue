@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LanguageSelector from '@/components/ui/LanguageSelector.vue';
 import Logo from '@/components/ui/Logo.vue';
-import ThemeToggle from '@/components/ui/ThemeToggle.vue';
+import ThemeSelector from '@/components/ui/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 import IconExternalLink from '~icons/heroicons/arrow-top-right-on-square';
@@ -151,7 +151,7 @@ defineProps<{
                 <div class="hidden items-center space-x-3 lg:flex">
                     <div class="flex items-center space-x-1">
                         <LanguageSelector mode="standalone" />
-                        <ThemeToggle />
+                        <ThemeSelector mode="standalone" />
                     </div>
 
                     <div class="h-6 w-px bg-gray-300 dark:bg-gray-600" />
@@ -184,7 +184,7 @@ defineProps<{
                 <!-- Mobile Menu Button - Better positioning -->
                 <div class="flex items-center space-x-3 lg:hidden">
                     <LanguageSelector mode="standalone" />
-                    <ThemeToggle />
+                    <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
                         class="rounded-lg p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"

@@ -25,6 +25,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
+import ThemeSelector from '@/components/ui/ThemeSelector.vue';
 import { useAuthStore } from '@/stores/auth';
 import { Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -143,6 +144,7 @@ const handleLogout = () => {
                             Notifications
                         </DropdownMenuItem>
                         <LanguageSelector mode="submenu" />
+                        <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem @click="handleLogout">
