@@ -37,7 +37,7 @@ const { isMobile } = useSidebar();
 
 <template>
     <SidebarGroup class="group-data-[collapsible=icon]:hidden">
-        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <SidebarGroupLabel>{{ $t('Projects') }}</SidebarGroupLabel>
         <SidebarMenu>
             <SidebarMenuItem v-for="item in projects" :key="item.name">
                 <SidebarMenuButton as-child>
@@ -50,7 +50,7 @@ const { isMobile } = useSidebar();
                     <DropdownMenuTrigger as-child>
                         <SidebarMenuAction show-on-hover>
                             <MoreHorizontal />
-                            <span class="sr-only">More</span>
+                            <span class="sr-only">{{ $t('More') }}</span>
                         </SidebarMenuAction>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -60,16 +60,16 @@ const { isMobile } = useSidebar();
                     >
                         <DropdownMenuItem>
                             <Folder class="text-muted-foreground" />
-                            <span>View Project</span>
+                            <span>{{ $t('View Project') }}</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <Forward class="text-muted-foreground" />
-                            <span>Share Project</span>
+                            <span>{{ $t('Share Project') }}</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <Trash2 class="text-muted-foreground" />
-                            <span>Delete Project</span>
+                            <span>{{ $t('Delete Project') }}</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -77,7 +77,7 @@ const { isMobile } = useSidebar();
             <SidebarMenuItem>
                 <SidebarMenuButton class="text-sidebar-foreground/70">
                     <MoreHorizontal class="text-sidebar-foreground/70" />
-                    <span>More</span>
+                    <span>{{ $t('More') }}</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>

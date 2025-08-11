@@ -53,15 +53,15 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head :title="$t('Register')" />
 
         <!-- Title and Subtitle -->
         <div class="mb-6 text-center">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Create your account
+                {{ $t('Create your account') }}
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Sign up for Sauce Base to start building your SaaS
+                {{ $t('Sign up for Sauce Base to start building your SaaS') }}
             </p>
         </div>
 
@@ -91,7 +91,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
             <div class="relative flex justify-center text-sm">
                 <span
                     class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                    >Or sign up with email</span
+                    >{{ $t('Or sign up with email') }}</span
                 >
             </div>
         </div>
@@ -99,12 +99,14 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="name" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.name">Name</FormLabel>
+                    <FormLabel :error="inertiaForm.errors.name">{{
+                        $t('Name')
+                    }}</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="text"
-                            placeholder="Enter your full name"
+                            :placeholder="$t('Enter your full name')"
                             autocomplete="name"
                             :error="inertiaForm.errors.name"
                         />
@@ -115,14 +117,14 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
 
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.email"
-                        >Email</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.email">{{
+                        $t('Email')
+                    }}</FormLabel>
                     <FormControl>
                         <Input
                             v-bind="componentField"
                             type="email"
-                            placeholder="Enter your email address"
+                            :placeholder="$t('Enter your email address')"
                             autocomplete="email"
                             :error="inertiaForm.errors.email"
                         />

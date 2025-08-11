@@ -41,29 +41,32 @@ const onSubmit = form.handleSubmit((values: ConfirmPasswordFormData) => {
 
 <template>
     <GuestLayout>
-        <Head title="Confirm Password" />
+        <Head :title="$t('Confirm Password')" />
 
         <!-- Title and Subtitle -->
         <div class="mb-6 text-center">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                Confirm Password
+                {{ $t('Confirm Password') }}
             </h1>
             <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                This is a secure area of the application. Please confirm your
-                password before continuing.
+                {{
+                    $t(
+                        'This is a secure area of the application. Please confirm your password before continuing.',
+                    )
+                }}
             </p>
         </div>
 
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="password" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password"
-                        >Password</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.password">{{
+                        $t('Password')
+                    }}</FormLabel>
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Enter your password"
+                            :placeholder="$t('Enter your password')"
                             :error="inertiaForm.errors.password"
                         />
                     </FormControl>
@@ -77,7 +80,7 @@ const onSubmit = form.handleSubmit((values: ConfirmPasswordFormData) => {
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
-                    Confirm
+                    {{ $t('Confirm') }}
                 </Button>
             </div>
         </form>

@@ -122,7 +122,7 @@ const updateRole = async (newRoleValue: RoleValue) => {
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
             <Button variant="outline" size="sm" :disabled="isUpdating">
-                {{ isUpdating ? 'Updating...' : 'Change Role' }}
+                {{ isUpdating ? $t('Updating...') : $t('Change Role') }}
                 <ChevronDown class="ml-2 h-4 w-4" />
             </Button>
         </DropdownMenuTrigger>

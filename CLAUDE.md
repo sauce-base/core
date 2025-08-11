@@ -89,3 +89,10 @@ resources/js/
 
 ### Branch Management
 - Never commit on main branch, it's protected. So create a feature branch and a PR for changes.
+
+### Internationalization (i18n)
+- **ALL user-facing strings MUST be translated** using the `$t()` function from laravel-vue-i18n
+- **NO hardcoded strings** in templates - every string visible to users must use `$t('Translation Key')`
+- **Dynamic placeholders** use `:placeholder="$t('Placeholder text')"` instead of `placeholder="Static text"`  
+- **Add Portuguese translations** to `/lang/pt_BR.json` for all new translation keys
+- **Test language switching** to ensure all text updates correctly
