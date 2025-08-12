@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
@@ -64,6 +65,9 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                 {{ $t('Sign up for Sauce Base to start building your SaaS') }}
             </p>
         </div>
+
+        <!-- Social Login Error -->
+        <ErrorMessage field="social" variant="error" />
 
         <!-- Social Login Section -->
         <div
@@ -135,13 +139,13 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
 
             <FormField name="password" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password"
-                        >Password</FormLabel
-                    >
+                    <FormLabel :error="inertiaForm.errors.password">{{
+                        $t('Password')
+                    }}</FormLabel>
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Create a password"
+                            :placeholder="$t('Create a password')"
                             autocomplete="new-password"
                             :error="inertiaForm.errors.password"
                         />
@@ -152,13 +156,14 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
 
             <FormField name="password_confirmation" v-slot="{ componentField }">
                 <FormItem>
-                    <FormLabel :error="inertiaForm.errors.password_confirmation"
-                        >Confirm Password</FormLabel
+                    <FormLabel
+                        :error="inertiaForm.errors.password_confirmation"
+                        >{{ $t('Confirm Password') }}</FormLabel
                     >
                     <FormControl>
                         <PasswordInput
                             v-bind="componentField"
-                            placeholder="Confirm your password"
+                            :placeholder="$t('Confirm your password')"
                             autocomplete="new-password"
                             :error="inertiaForm.errors.password_confirmation"
                         />
@@ -176,7 +181,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                     :href="route('login')"
                     class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                 >
-                    Already registered?
+                    {{ $t('Already registered?') }}
                 </Link>
 
                 <Button
@@ -184,7 +189,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
                 >
-                    Register
+                    {{ $t('Register') }}
                 </Button>
             </div>
         </form>

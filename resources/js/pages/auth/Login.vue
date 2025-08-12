@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
@@ -76,6 +77,9 @@ const onSubmit = async () => {
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
+
+        <!-- Social Login Error -->
+        <ErrorMessage field="social" variant="error" />
 
         <!-- Social Login Section -->
         <div

@@ -95,4 +95,5 @@ resources/js/
 - **NO hardcoded strings** in templates - every string visible to users must use `$t('Translation Key')`
 - **Dynamic placeholders** use `:placeholder="$t('Placeholder text')"` instead of `placeholder="Static text"`  
 - **Add Portuguese translations** to `/lang/pt_BR.json` for all new translation keys
+- **NEVER create en.json** - English uses translation keys as fallback values
 - **Test language switching** to ensure all text updates correctly
