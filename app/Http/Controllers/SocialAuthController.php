@@ -40,7 +40,7 @@ class SocialAuthController extends Controller
             ]);
         } catch (Exception $e) {
             return redirect('/login')->withErrors([
-                'social' => 'Authentication failed. Please try again.',
+                'social' => __('Authentication failed. Please try again.'),
             ]);
         }
     }
@@ -64,7 +64,7 @@ class SocialAuthController extends Controller
         try {
             $disconnectAction->execute($user, $provider);
 
-            return back()->with('success', ucfirst($provider).' account disconnected successfully.');
+            return back()->with('success', __(':provider account disconnected successfully.', ['provider' => ucfirst($provider)]));
         } catch (SocialAuthException $e) {
             return back()->withErrors([
                 'social' => $e->getMessage(),
