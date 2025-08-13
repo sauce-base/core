@@ -63,7 +63,7 @@ class LinkSocialAccountAction
     private function createNewUser(object $socialUser, ?string $avatarUrl): User
     {
         return User::create([
-            'name' => $socialUser->getName(),
+            'name' => $socialUser->getName() ?: $socialUser->getNickname(),
             'email' => $socialUser->getEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt(str()->random(32)), // Random password
@@ -85,9 +85,11 @@ class LinkSocialAccountAction
 
     private function validateSocialUser(object $socialUser): void
     {
-        if (! $socialUser->getEmail() ||
+        if (
+            ! $socialUser->getEmail() ||
             ! $socialUser->getId() ||
-            ! filter_var($socialUser->getEmail(), FILTER_VALIDATE_EMAIL)) {
+            ! filter_var($socialUser->getEmail(), FILTER_VALIDATE_EMAIL)
+        ) {
             throw SocialAuthException::invalidSocialUser();
         }
     }
