@@ -3,6 +3,7 @@ FROM php:8.4-cli-alpine
 # Install system dependencies
 RUN apk add --no-cache \
     postgresql-dev \
+    mysql-dev \
     oniguruma-dev \
     libzip-dev \
     icu-dev \
@@ -14,6 +15,7 @@ RUN apk add --no-cache \
 
 # Install PHP extensions
 RUN docker-php-ext-install \
+    pdo_mysql \
     pdo_pgsql \
     mbstring \
     zip \

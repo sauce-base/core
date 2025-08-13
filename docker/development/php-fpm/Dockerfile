@@ -3,12 +3,14 @@ FROM php:8.4-fpm-alpine
 # Install system dependencies
 RUN apk add --no-cache \
     postgresql-dev \
+    mysql-dev \
     oniguruma-dev \
     libzip-dev \
     icu-dev
 
 # Install essential PHP extensions
 RUN docker-php-ext-install \
+    pdo_mysql \
     pdo_pgsql \
     mbstring \
     zip \
