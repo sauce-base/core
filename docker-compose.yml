@@ -31,7 +31,7 @@ services:
       - APP_KEY=${APP_KEY}
       - APP_DEBUG=${APP_DEBUG:-true}
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
-      - DB_HOST=mariadb
+      - DB_HOST=mysql
       - DB_PORT=${DB_PORT:-3306}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
@@ -44,7 +44,7 @@ services:
       - XDEBUG_MODE=${XDEBUG_MODE:-debug}
       - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
     depends_on:
-      - mariadb
+      - mysql
       - redis
 
   workspace:
@@ -62,7 +62,7 @@ services:
       - APP_KEY=${APP_KEY}
       - APP_DEBUG=${APP_DEBUG:-true}
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
-      - DB_HOST=mariadb
+      - DB_HOST=mysql
       - DB_PORT=${DB_PORT:-3306}
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
@@ -75,12 +75,12 @@ services:
       - XDEBUG_MODE=${XDEBUG_MODE:-debug}
       - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
     depends_on:
-      - mariadb
+      - mysql
       - redis
     tty: true
 
-  mariadb:
-    image: 'mariadb:11.5'
+  mysql:
+    image: 'mysql:8.0'
     restart: unless-stopped
     ports:
       - '${FORWARD_DB_PORT:-3306}:3306'
@@ -90,7 +90,7 @@ services:
       MYSQL_USER: '${DB_USERNAME}'
       MYSQL_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - 'laravel-mariadb-dev:/var/lib/mysql'
+      - 'laravel-mysql-dev:/var/lib/mysql'
     networks:
       - laravel-dev
     healthcheck:
@@ -142,7 +142,7 @@ networks:
     driver: bridge
 
 volumes:
-  laravel-mariadb-dev:
+  laravel-mysql-dev:
     driver: local
   laravel-redis-dev:
     driver: local
