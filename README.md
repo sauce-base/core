@@ -6,7 +6,7 @@
 
 A modern Laravel SaaS starter kit built with the VILT stack (Vue, Inertia, Laravel, Tailwind) - your essential foundation for building scalable SaaS applications.
 
-[![CI](https://github.com/roble/saucebase/actions/workflows/ci.yml/badge.svg)](https://github.com/roble/saucebase/actions/workflows/ci.yml)
+[![CI](https://github.com/sauce-base/core/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/core/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
@@ -34,8 +34,8 @@ A modern Laravel SaaS starter kit built with the VILT stack (Vue, Inertia, Larav
 
 1. **Clone and setup**
    ```bash
-   git clone https://github.com/roble/saucebase.git
-   cd saucebase
+   git clone https://github.com/sauce-base/core.git
+   cd core
    chmod +x bin/setup-env
    ./bin/setup-env
    ```

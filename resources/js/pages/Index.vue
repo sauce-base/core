@@ -89,7 +89,7 @@ const authStore = useAuthStore();
 
                     <!-- GitHub Button -->
                     <a
-                        href="https://github.com/roble/saucebase"
+                        href="https://github.com/sauce-base/core"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-950"
@@ -444,7 +444,7 @@ const authStore = useAuthStore();
                                 <div class="mb-2"># Clone the repository</div>
                                 <div class="text-gray-300">
                                     git clone
-                                    https://github.com/roble/saucebase.git
+                                    https://github.com/sauce-base/core.git
                                 </div>
                                 <div class="mt-3 mb-2">
                                     # Install dependencies
@@ -703,7 +703,7 @@ const authStore = useAuthStore();
                     </Link>
 
                     <a
-                        href="https://github.com/roble/saucebase"
+                        href="https://github.com/sauce-base/core"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="inline-flex items-center justify-center rounded-lg border-2 border-white px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-white hover:text-blue-600 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600 focus:outline-hidden"
