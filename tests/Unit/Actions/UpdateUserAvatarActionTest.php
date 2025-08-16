@@ -35,13 +35,15 @@ class UpdateUserAvatarActionTest extends TestCase
         $this->assertNull($user->fresh()->avatar_url);
     }
 
-    public function test_update_to_latest_provider_avatar_with_no_accounts(): void
+    public function test_update_to_latest_provider_avatar_with_no_accounts_keeps_existing_avatar(): void
     {
-        $user = User::factory()->create(['avatar_url' => 'https://old-avatar.com/image.jpg']);
+        $avatarUrl = 'https://old-avatar.com/image.jpg';
+        $user = User::factory()->create(['avatar_url' => $avatarUrl]);
         $action = new UpdateUserAvatarAction;
 
         $updatedUser = $action->updateToLatestProviderAvatar($user);
 
-        $this->assertNull($updatedUser->avatar_url);
+        $this->assertEquals($avatarUrl, $updatedUser->avatar_url);
+        $this->assertEquals($avatarUrl, $user->fresh()->avatar_url);
     }
 }

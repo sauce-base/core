@@ -21,8 +21,10 @@ class UpdateUserAvatarAction
             ->orderBy('last_login_at', 'desc')
             ->first();
 
-        $avatarUrl = $latestAccount?->provider_avatar_url;
+        if (! $latestAccount) {
+            return $user;
+        }
 
-        return $this->execute($user, $avatarUrl);
+        return $this->execute($user, $latestAccount->provider_avatar_url);
     }
 }
