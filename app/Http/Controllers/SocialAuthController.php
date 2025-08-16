@@ -84,7 +84,7 @@ class SocialAuthController extends Controller
     private function getEnabledProviders(): array
     {
         return collect(config('app.social_providers', []))
-            ->filter(fn ($config) => $config['enabled'] == true ?? false)
+            ->filter(fn ($config) => ($config['enabled'] ?? false) === true)
             ->map(fn ($config) => ['name' => $config['name']])
             ->toArray();
     }
