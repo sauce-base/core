@@ -256,10 +256,10 @@ return [
     |
     */
     'composer' => [
-        'vendor' => env('MODULE_VENDOR', 'saucebase'),
+        'vendor' => env('MODULE_VENDOR', 'core'),
         'author' => [
             'name' => env('MODULE_AUTHOR_NAME', 'Sauce Base'),
-            'email' => env('MODULE_AUTHOR_EMAIL', 'contact@saucebase.dev'),
+            'email' => env('MODULE_AUTHOR_EMAIL', 'contact@core.dev'),
         ],
         'composer-output' => false,
     ],

@@ -13,7 +13,7 @@ import IconHeart from '~icons/heroicons/heart';
                 <div class="flex items-center gap-6">
                     <span>© 2025 Sauce Base</span>
                     <a
-                        href="https://github.com/roble/saucebase"
+                        href="https://github.com/sauce-base/core"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="hover:text-gray-900 dark:hover:text-white"
