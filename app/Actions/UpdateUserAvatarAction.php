@@ -15,7 +15,7 @@ class UpdateUserAvatarAction
 
     public function updateToLatestProviderAvatar(User $user): User
     {
-        // Get the most recent provider avatar
+        // Update the user's avatar to the most recent provider's avatar if available
         $latestAccount = $user->socialAccounts()
             ->whereNotNull('provider_avatar_url')
             ->orderBy('last_login_at', 'desc')
