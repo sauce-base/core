@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue';
+import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
@@ -10,6 +11,12 @@ async function createConfig() {
     const allPaths = await collectModuleAssetsPaths(paths, 'modules');
 
     return defineConfig({
+        server: {
+            https: {
+                key: fs.readFileSync('docker/development/ssl/app.key.pem'),
+                cert: fs.readFileSync('docker/development/ssl/app.pem'),
+            },
+        },
         plugins: [
             laravel({
                 input: allPaths,
