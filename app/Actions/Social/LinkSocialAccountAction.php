@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Social;
 
+use App\Actions\User\UpdateUserAvatarAction;
 use App\Exceptions\SocialAuthException;
 use App\Models\SocialAccount;
 use App\Models\User;
