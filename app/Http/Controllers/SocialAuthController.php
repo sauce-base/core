@@ -2,34 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\DisconnectSocialAccountAction;
-use App\Actions\LinkSocialAccountAction;
+use App\Actions\Social\DisconnectSocialAccountAction;
+use App\Actions\Social\GetEnabledProvidersAction;
+use App\Actions\Social\HandleProviderCallbackAction;
+use App\Actions\Social\ValidateProviderAction;
 use App\Exceptions\SocialAuthException;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
-    public function redirect(string $provider): RedirectResponse
+    public function redirect(string $provider, ValidateProviderAction $validateAction): RedirectResponse
     {
-        $this->validateProvider($provider);
+        if (! $validateAction->execute($provider)) {
+            abort(404);
+        }
 
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback(string $provider, LinkSocialAccountAction $linkAction): RedirectResponse
+    public function callback(string $provider, ValidateProviderAction $validateAction, HandleProviderCallbackAction $callbackAction): RedirectResponse
     {
-        $this->validateProvider($provider);
+        if (! $validateAction->execute($provider)) {
+            abort(404);
+        }
 
         try {
-            $socialUser = Socialite::driver($provider)->user();
-
-            $user = $linkAction->execute($provider, $socialUser);
+            $user = $callbackAction->execute($provider);
 
             Auth::login($user);
 
@@ -45,9 +47,9 @@ class SocialAuthController extends Controller
         }
     }
 
-    public function providers(): JsonResponse
+    public function providers(GetEnabledProvidersAction $providersAction): JsonResponse
     {
-        $enabledProviders = $this->getEnabledProviders();
+        $enabledProviders = $providersAction->execute();
 
         return response()->json([
             'providers' => $enabledProviders,
@@ -57,9 +59,9 @@ class SocialAuthController extends Controller
     /**
      * Disconnect a social provider from user account
      */
-    public function disconnect(Request $request, string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
+    public function disconnect(string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
     {
-        $user = $request->user();
+        $user = Auth::user();
 
         try {
             $disconnectAction->execute($user, $provider);
@@ -70,22 +72,5 @@ class SocialAuthController extends Controller
                 'social' => $e->getMessage(),
             ]);
         }
-    }
-
-    private function validateProvider(string $provider): void
-    {
-        $enabledProviders = array_keys($this->getEnabledProviders());
-
-        if (! in_array($provider, $enabledProviders)) {
-            abort(404);
-        }
-    }
-
-    private function getEnabledProviders(): array
-    {
-        return collect(config('app.social_providers', []))
-            ->filter(fn ($config) => ($config['enabled'] ?? false) === true)
-            ->map(fn ($config) => ['name' => $config['name']])
-            ->toArray();
     }
 }
