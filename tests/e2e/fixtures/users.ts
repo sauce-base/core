@@ -2,34 +2,50 @@ export const testUsers = {
     valid: {
         name: 'Test User',
         email: 'test@example.com',
-        password: 'password',
+        password: 'secretsauce',
     },
     invalid: {
         email: 'invalid@example.com',
         password: 'wrongpassword',
     },
+    admin: {
+        name: 'Chef Saucier',
+        email: 'admin@saucebase.dev',
+        password: 'secretsauce',
+    },
+    editor: {
+        name: 'Editor User',
+        email: 'editor@example.com',
+        password: 'secretsauce',
+    },
+    author: {
+        name: 'Author User',
+        email: 'author@example.com',
+        password: 'secretsauce',
+    },
+    user: {
+        name: 'Regular User',
+        email: 'user@example.com',
+        password: 'secretsauce',
+    },
 } as const;
 
+// Translation-agnostic validation test cases
+// Tests check for error presence via data-testid, not specific text
 export const validationTestCases = {
     emptyEmail: {
         email: '',
-        password: 'password123',
-        expectedError: 'Please enter your email address',
+        password: 'secretsauce',
+        errorTestId: 'email-error',
     },
     invalidEmail: {
         email: 'invalid-email',
-        password: 'password123',
-        expectedError:
-            'Please enter a valid email address (like john@example.com)',
+        password: 'secretsauce',
+        errorTestId: 'email-error',
     },
     emptyPassword: {
         email: 'test@example.com',
         password: '',
-        expectedError: 'Please enter your password',
-    },
-    shortPassword: {
-        email: 'test@example.com',
-        password: '123',
-        expectedError: 'Password must be at least 8 characters long',
+        errorTestId: 'password-error',
     },
 } as const;

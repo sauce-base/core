@@ -9,22 +9,16 @@ export class LoginPage {
     readonly loginButton: Locator;
     readonly forgotPasswordLink: Locator;
     readonly signUpLink: Locator;
-    readonly errorMessage: Locator;
-    readonly statusMessage: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.emailInput = page.getByTestId('email');
         this.passwordInput = page.getByTestId('password');
         this.passwordToggle = page.getByTestId('password-toggle');
-        this.rememberCheckbox = page.getByLabel('Remember me');
-        this.loginButton = page.getByRole('button', { name: 'Log in' });
-        this.forgotPasswordLink = page.getByRole('link', {
-            name: 'Forgot your password?',
-        });
-        this.signUpLink = page.getByRole('link', { name: 'Sign up' });
-        this.errorMessage = page.locator('[data-testid="form-error"]');
-        this.statusMessage = page.locator('.text-green-600');
+        this.rememberCheckbox = page.getByTestId('remember-me');
+        this.loginButton = page.getByTestId('login-button');
+        this.forgotPasswordLink = page.getByTestId('forgot-password-link');
+        this.signUpLink = page.getByTestId('sign-up-link');
     }
 
     async goto() {
@@ -43,26 +37,20 @@ export class LoginPage {
     }
 
     async expectToBeVisible() {
-        await expect(this.page.getByText('Welcome back')).toBeVisible();
+        await expect(this.page.getByTestId('login-form')).toBeVisible();
         await expect(this.emailInput).toBeVisible();
         await expect(this.passwordInput).toBeVisible();
         await expect(this.loginButton).toBeVisible();
     }
 
-    async expectEmailError(message?: string) {
+    async expectEmailError() {
         const emailError = this.page.getByTestId('email-error');
         await expect(emailError).toBeVisible();
-        if (message) {
-            await expect(emailError).toHaveText(message);
-        }
     }
 
-    async expectPasswordError(message?: string) {
+    async expectPasswordError() {
         const passwordError = this.page.getByTestId('password-error');
         await expect(passwordError).toBeVisible();
-        if (message) {
-            await expect(passwordError).toHaveText(message);
-        }
     }
 
     async togglePasswordVisibility() {
@@ -77,8 +65,11 @@ export class LoginPage {
         await expect(this.passwordInput).toHaveAttribute('type', 'password');
     }
 
-    async expectValidationError(message: string) {
-        const errorElement = this.page.getByText(message);
+    /**
+     * Generic method to check for any validation error by test ID
+     */
+    async expectValidationError(testId: string) {
+        const errorElement = this.page.getByTestId(testId);
         await expect(errorElement).toBeVisible();
     }
 }
