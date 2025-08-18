@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\LoginAction;
+use App\Actions\Auth\LogoutAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,21 +28,30 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request, LoginAction $loginAction): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $loginAction->execute(
+                $request->email,
+                $request->password,
+                $request->boolean('remember'),
+                $request->ip()
+            );
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            return redirect()->intended(route('dashboard', absolute: false));
+        } catch (ValidationException $e) {
+            throw $e;
+        }
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, LogoutAction $logoutAction): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        $logoutAction->execute();
 
         $request->session()->invalidate();
 
