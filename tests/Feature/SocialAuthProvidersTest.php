@@ -24,4 +24,3 @@ test('providers endpoint returns only enabled providers', function () {
     expect($response->json('providers'))->toHaveKey('google');
     expect($response->json('providers'))->not->toHaveKey('github');
 });
-

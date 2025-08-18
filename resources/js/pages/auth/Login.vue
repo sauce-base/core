@@ -112,7 +112,11 @@ const onSubmit = async () => {
             </div>
         </div>
 
-        <form @submit.prevent="onSubmit" class="space-y-4">
+        <form
+            @submit.prevent="onSubmit"
+            class="space-y-4"
+            data-testid="login-form"
+        >
             <FormField name="email" v-slot="{ componentField }">
                 <FormItem>
                     <FormLabel :error="inertiaForm.errors.email">{{
@@ -160,6 +164,7 @@ const onSubmit = async () => {
                                     componentField['onUpdate:modelValue']
                                 "
                                 @blur="componentField.onBlur"
+                                data-testid="remember-me"
                             />
                             <label
                                 for="remember"
@@ -177,6 +182,7 @@ const onSubmit = async () => {
                     v-if="canResetPassword"
                     :href="route('password.request')"
                     class="text-sm text-gray-600 underline hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+                    data-testid="forgot-password-link"
                 >
                     {{ $t('Forgot your password?') }}
                 </Link>
@@ -185,6 +191,7 @@ const onSubmit = async () => {
                     type="submit"
                     :class="{ 'opacity-25': inertiaForm.processing }"
                     :disabled="inertiaForm.processing"
+                    data-testid="login-button"
                 >
                     {{ $t('Log in') }}
                 </Button>
@@ -198,6 +205,7 @@ const onSubmit = async () => {
                     <Link
                         :href="route('register')"
                         class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                        data-testid="sign-up-link"
                     >
                         {{ $t('Sign up') }}
                     </Link>

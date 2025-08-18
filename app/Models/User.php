@@ -51,6 +51,14 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Set the user's email address.
+     */
+    protected function setEmailAttribute(string $value): void
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
     public function socialAccounts(): HasMany
     {
         return $this->hasMany(SocialAccount::class);

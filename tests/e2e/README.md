@@ -1,4 +1,4 @@
-# E2E Testing with Playwright
+# E2E Testing with Playwright (Multi-lingual Compatible)
 
 ## Quick Start
 
@@ -12,6 +12,12 @@
    ```bash
    npm run test:e2e
    ```
+
+## Multi-language Testing Features
+
+- **Translation-agnostic**: Tests use `data-testid` attributes instead of text content
+- **Language utilities**: Helper functions for testing different language versions  
+- **Flexible validation**: Error checking via test IDs, not specific text messages
 
 ## Development Workflow
 
@@ -70,9 +76,89 @@ tests/e2e/
 └── example.spec.ts # Basic example tests
 ```
 
+## Translation-Compatible Testing Approach
+
+### 1. Use data-testid Attributes (Language-Agnostic)
+
+Instead of:
+```typescript
+page.getByRole('button', { name: 'Log in' })  // ❌ Breaks in Portuguese
+```
+
+Use:
+```typescript
+page.getByTestId('login-button')  // ✅ Works in any language
+```
+
+### 2. Error Checking via Test IDs
+
+Instead of checking specific error text:
+```typescript
+await expect(page.getByText('Please enter your email')).toBeVisible();  // ❌ English only
+```
+
+Check for error presence:
+```typescript
+await expect(page.getByTestId('email-error')).toBeVisible();  // ✅ Language-agnostic
+```
+
+### 3. Required Frontend Test IDs
+
+Your components need these `data-testid` attributes:
+
+```vue
+<!-- Login form -->
+<form data-testid="login-form">
+  <input data-testid="email" type="email" />
+  <input data-testid="password" type="password" />
+  <button data-testid="login-button">{{ $t('Log in') }}</button>
+  <a data-testid="forgot-password-link">{{ $t('Forgot your password?') }}</a>
+  <a data-testid="sign-up-link">{{ $t('Sign up') }}</a>
+  <input data-testid="remember-me" type="checkbox" />
+</form>
+
+<!-- Error messages -->
+<div data-testid="email-error" v-if="errors.email">{{ errors.email }}</div>
+<div data-testid="password-error" v-if="errors.password">{{ errors.password }}</div>
+
+<!-- Language switcher -->
+<select data-testid="language-switcher">
+  <option data-testid="language-en" value="en">English</option>
+  <option data-testid="language-pt_BR" value="pt_BR">Português</option>
+</select>
+```
+
+### 4. Language Testing Utilities
+
+```typescript
+import { getPageLanguage, setPageLanguage } from '../utils/i18n';
+
+// Detect current language
+const language = await getPageLanguage(page);
+
+// Switch language for testing
+await setPageLanguage(page, 'pt_BR');
+```
+
 ## Writing New Tests
 
-1. Create Page Object Models in `pages/` for reusable page interactions
-2. Use `data-testid` attributes for reliable element selection
-3. Store test data in `fixtures/` 
-4. Use helper functions from `utils/` for common operations like login
+1. Create Page Object Models in `pages/` using `data-testid` selectors only
+2. Store test data in `fixtures/` without hardcoded text messages  
+3. Use `utils/i18n.ts` for language-aware testing
+4. Test functionality and behavior, not specific text content
+
+## Current Test Coverage Status
+
+✅ **Translation-compatible:**
+- Login form validation  
+- Basic page transitions
+- Password visibility toggle
+
+❌ **Still needs implementation:**
+- Registration flow tests
+- Password reset flow tests  
+- Logout functionality tests
+- Social login provider tests
+- Role-based access control tests
+- Profile management tests
+- Email verification tests

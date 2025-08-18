@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit\Actions;
+namespace Tests\Unit\Actions\User;
 
-use App\Actions\UpdateUserAvatarAction;
+use App\Actions\User\UpdateUserAvatarAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
