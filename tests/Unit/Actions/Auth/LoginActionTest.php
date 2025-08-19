@@ -1,95 +1,78 @@
 <?php
 
-namespace Tests\Unit\Actions\Auth;
-
 use App\Actions\Auth\LoginAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use Tests\TestCase;
 
-class LoginActionTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    private LoginAction $action;
+beforeEach(function () {
+    $this->action = new LoginAction;
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->action = new LoginAction;
-    }
+test('successfully logs in user with valid credentials', function () {
+    $user = User::factory()->create([
+        'email' => 'test@example.com',
+        'password' => Hash::make('password123'),
+    ]);
 
-    public function test_successfully_logs_in_user_with_valid_credentials(): void
-    {
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
-        ]);
+    expect($user->last_login_at)->toBeNull();
 
-        $result = $this->action->execute('test@example.com', 'password123');
+    $result = $this->action->execute('test@example.com', 'password123');
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertEquals($user->id, $result->id);
-        $this->assertTrue(Auth::check());
-        $this->assertEquals($user->id, Auth::id());
-    }
+    expect($result)->toBeInstanceOf(User::class)
+        ->and($result->id)->toBe($user->id);
+    expect(Auth::check())->toBeTrue()
+        ->and(Auth::id())->toBe($user->id);
+    
+    $user->refresh();
+    expect($user->last_login_at)->not->toBeNull()
+        ->and($user->last_login_at->isAfter(now()->subSeconds(5)))->toBeTrue();
+});
 
-    public function test_logs_in_user_with_remember_option(): void
-    {
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('password123'),
-        ]);
+test('logs in user with remember option', function () {
+    $user = User::factory()->create([
+        'email' => 'test@example.com',
+        'password' => Hash::make('password123'),
+    ]);
 
-        $result = $this->action->execute('test@example.com', 'password123', true);
+    expect($user->last_login_at)->toBeNull();
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertEquals($user->id, $result->id);
-        $this->assertTrue(Auth::check());
-    }
+    $result = $this->action->execute('test@example.com', 'password123', true);
 
-    public function test_throws_validation_exception_for_invalid_email(): void
-    {
-        $this->expectException(ValidationException::class);
+    expect($result)->toBeInstanceOf(User::class)
+        ->and($result->id)->toBe($user->id);
+    expect(Auth::check())->toBeTrue();
+    
+    $user->refresh();
+    expect($user->last_login_at)->not->toBeNull()
+        ->and($user->last_login_at->isAfter(now()->subSeconds(5)))->toBeTrue();
+});
 
-        $this->action->execute('invalid-email', 'password123');
-    }
+test('throws validation exception for invalid email', function () {
+    $this->action->execute('invalid-email', 'password123');
+})->throws(ValidationException::class);
 
-    public function test_throws_validation_exception_for_missing_email(): void
-    {
-        $this->expectException(ValidationException::class);
+test('throws validation exception for missing email', function () {
+    $this->action->execute('', 'password123');
+})->throws(ValidationException::class);
 
-        $this->action->execute('', 'password123');
-    }
+test('throws validation exception for missing password', function () {
+    $this->action->execute('test@example.com', '');
+})->throws(ValidationException::class);
 
-    public function test_throws_validation_exception_for_missing_password(): void
-    {
-        $this->expectException(ValidationException::class);
+test('throws validation exception for wrong credentials', function () {
+    User::factory()->create([
+        'email' => 'test@example.com',
+        'password' => Hash::make('correct-password'),
+    ]);
 
-        $this->action->execute('test@example.com', '');
-    }
+    $this->action->execute('test@example.com', 'wrong-password');
+})->throws(ValidationException::class, 'These credentials do not match our records.');
 
-    public function test_throws_validation_exception_for_wrong_credentials(): void
-    {
-        User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('correct-password'),
-        ]);
-
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('These credentials do not match our records.');
-
-        $this->action->execute('test@example.com', 'wrong-password');
-    }
-
-    public function test_throws_validation_exception_for_non_existent_user(): void
-    {
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('These credentials do not match our records.');
-
-        $this->action->execute('nonexistent@example.com', 'password123');
-    }
-}
+test('throws validation exception for non existent user', function () {
+    $this->action->execute('nonexistent@example.com', 'password123');
+})->throws(ValidationException::class, 'These credentials do not match our records.');
