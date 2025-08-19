@@ -185,7 +185,8 @@ test.describe('Login Flow', () => {
                     status: 429,
                     contentType: 'application/json',
                     body: JSON.stringify({
-                        message: 'Too many attempts. Account temporarily locked.',
+                        message:
+                            'Too many attempts. Account temporarily locked.',
                         retry_after: 900,
                     }),
                 });
