@@ -6,7 +6,6 @@ use App\Actions\Auth\RegisterUserAction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -28,9 +27,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request, RegisterUserAction $registerAction): RedirectResponse
     {
-        $user = $registerAction->execute($request->name, $request->email, $request->password);
-
-        Auth::login($user);
+        $registerAction->execute($request->name, $request->email, $request->password);
 
         return redirect(route('dashboard', absolute: false));
     }
