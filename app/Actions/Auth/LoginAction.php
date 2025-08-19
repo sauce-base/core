@@ -53,7 +53,10 @@ class LoginAction
      */
     private function ensureIsNotRateLimited(string $email, ?string $ip): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey($email, $ip), 5)) {
+        if (! RateLimiter::tooManyAttempts(
+            $this->throttleKey($email, $ip),
+            config('auth.login_rate_limit', 5)
+        )) {
             return;
         }
 
