@@ -6,6 +6,8 @@ use App\Actions\User\UpdateUserAvatarAction;
 use App\Exceptions\SocialAuthException;
 use App\Models\SocialAccount;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class LinkSocialAccountAction
 {
@@ -67,7 +69,7 @@ class LinkSocialAccountAction
             'name' => $socialUser->getName() ?: $socialUser->getNickname(),
             'email' => $socialUser->getEmail(),
             'email_verified_at' => now(),
-            'password' => bcrypt(str()->random(32)), // Random password
+            'password' => Hash::make(Str::random(32)), // Random password
             'avatar_url' => $avatarUrl,
         ]);
     }
