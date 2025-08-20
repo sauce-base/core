@@ -23,10 +23,12 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $adminRoute = config('filament.admin_route', 'admin');
+
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('core.admin')
+            ->path($adminRoute)
             ->login()
             ->colors([
                 'primary' => Color::Amber,
