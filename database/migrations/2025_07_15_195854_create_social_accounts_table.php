@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('provider'); // google, github, facebook, etc.
             $table->string('provider_id'); // unique ID from the provider
-            $table->string('provider_token')->nullable(); // access token
+            $table->text('provider_token')->nullable(); // access token
             $table->string('provider_refresh_token')->nullable(); // refresh token
             $table->timestamp('provider_token_expires_at')->nullable();
             $table->string('provider_avatar_url')->nullable(); // avatar URL from provider
