@@ -40,11 +40,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "coolsam/modules": "^5.0",
         "filament/actions": "^4.0",
         "filament/filament": "~4.0",
         "filament/forms": "^4.0",
         "filament/infolists": "^4.0",
         "filament/notifications": "^4.0",
+        "filament/spatie-laravel-media-library-plugin": "^4.0",
         "filament/tables": "^4.0",
         "filament/widgets": "^4.0",
         "inertiajs/inertia-laravel": "^2.0",
