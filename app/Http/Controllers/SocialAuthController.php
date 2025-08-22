@@ -41,6 +41,12 @@ class SocialAuthController extends Controller
                 'social' => $e->getMessage(),
             ]);
         } catch (Exception $e) {
+            // Log the exception or handle it as needed
+            \Log::error('Social authentication failed', [
+                'provider' => $provider,
+                'error' => $e->getMessage(),
+            ]);
+
             return redirect('/login')->withErrors([
                 'social' => __('Authentication failed. Please try again.'),
             ]);
