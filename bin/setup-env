@@ -389,6 +389,10 @@ fi
 echo "🗄️  Setting up database..."
 docker compose exec -T workspace php artisan migrate:fresh --seed
 
+# Create storage link for media library
+echo "🔗 Creating storage link..."
+docker compose exec -T workspace php artisan storage:link
+
 # Clear all caches
 echo "🧹 Clearing caches..."
 docker compose exec -T workspace php artisan optimize:clear
