@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, Notifiable;
+    use HasFactory, HasRoles, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +62,16 @@ class User extends Authenticatable
         $this->attributes['email'] = strtolower($value);
     }
 
+    /**
+     * Register media collections for this model
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatars')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+    }
+
     public function socialAccounts(): HasMany
     {
         return $this->hasMany(SocialAccount::class);
@@ -70,7 +82,19 @@ class User extends Authenticatable
      */
     public function getAvatarAttribute(): string
     {
-        return $this->avatar_url ?: '/images/default-avatar.jpg';
+        // First priority: Media library uploaded avatar
+        $mediaAvatar = $this->getFirstMediaUrl('avatars');
+        if ($mediaAvatar) {
+            return $mediaAvatar;
+        }
+
+        // Second priority: Social login avatar URL from database
+        if ($this->avatar_url) {
+            return $this->avatar_url;
+        }
+
+        // Final fallback: Default avatar
+        return asset('images/default-avatar.jpg');
     }
 
     /**

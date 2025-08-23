@@ -27,7 +27,7 @@ test('successfully logs in user with valid credentials', function () {
         ->and($result->id)->toBe($user->id);
     expect(Auth::check())->toBeTrue()
         ->and(Auth::id())->toBe($user->id);
-    
+
     $user->refresh();
     expect($user->last_login_at)->not->toBeNull()
         ->and($user->last_login_at->isAfter(now()->subSeconds(5)))->toBeTrue();
@@ -46,7 +46,7 @@ test('logs in user with remember option', function () {
     expect($result)->toBeInstanceOf(User::class)
         ->and($result->id)->toBe($user->id);
     expect(Auth::check())->toBeTrue();
-    
+
     $user->refresh();
     expect($user->last_login_at)->not->toBeNull()
         ->and($user->last_login_at->isAfter(now()->subSeconds(5)))->toBeTrue();

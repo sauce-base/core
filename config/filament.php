@@ -116,19 +116,4 @@ return [
     */
 
     'system_route_prefix' => 'filament',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin Panel Base URL
-    |--------------------------------------------------------------------------
-    |
-    | This setting determines the complete URL path for accessing the Filament 
-    | admin panel. Unlike a simple prefix, this allows for a fully customized
-    | URL structure. For example, setting this to 'my-custom-admin' will make
-    | your admin panel accessible at: http://your-domain.com/my-custom-admin
-    |
-    */
-
-    'admin_route' => 'admin',
-
 ];

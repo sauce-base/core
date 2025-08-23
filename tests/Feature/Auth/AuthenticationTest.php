@@ -20,7 +20,7 @@ test('users can authenticate using the login screen', function () {
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
-    
+
     $user->refresh();
     expect($user->last_login_at)->not()->toBeNull();
     expect($user->last_login_at->isAfter(now()->subSeconds(5)))->toBeTrue();
@@ -48,26 +48,26 @@ test('users can logout', function () {
 
 test('last_login_at is updated on successful authentication', function () {
     $user = User::factory()->create();
-    
+
     // First login
     $this->post('/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
-    
+
     $user->refresh();
     $firstLogin = $user->last_login_at;
     expect($firstLogin)->not()->toBeNull();
-    
+
     // Logout and login again after a brief delay
     $this->post('/logout');
     sleep(1);
-    
+
     $this->post('/login', [
         'email' => $user->email,
         'password' => 'password',
     ]);
-    
+
     $user->refresh();
     expect($user->last_login_at)->not()->toBeNull();
     expect($user->last_login_at->isAfter($firstLogin))->toBeTrue();
