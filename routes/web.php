@@ -25,18 +25,18 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::patch('/admin/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('admin.users.role');
+// Route::middleware(['auth', 'role:admin'])->group(function () {
+//     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+//     Route::patch('/admin/users/{user}/role', [AdminController::class, 'updateUserRole'])->name('admin.users.role');
 
-    // Test route
-    Route::get('/admin/test', function () {
-        return Inertia::render('test/AdminTest', [
-            'user' => auth()->user()->load('roles'),
-            'message' => 'Welcome to the Admin Test Area, Chef Saucier! 🍯👨‍🍳',
-        ]);
-    })->name('admin.test');
-});
+//     // Test route
+//     Route::get('/admin/test', function () {
+//         return Inertia::render('test/AdminTest', [
+//             'user' => auth()->user()->load('roles'),
+//             'message' => 'Welcome to the Admin Test Area, Chef Saucier! 🍯👨‍🍳',
+//         ]);
+//     })->name('admin.test');
+// });
 
 Route::middleware(['auth', 'role:editor|admin'])->group(function () {
     Route::get('/editor/test', function () {
