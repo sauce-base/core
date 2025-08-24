@@ -11,20 +11,14 @@ class UserRolePermissionsTest extends TestCase
     public function test_user_role_assignment()
     {
         $admin = User::factory()->admin()->create();
-        $editor = User::factory()->editor()->create();
-        $author = User::factory()->author()->create();
         $user = User::factory()->user()->create();
 
         // Test basic role assignment
         $this->assertTrue($admin->hasRole(Role::ADMIN));
-        $this->assertTrue($editor->hasRole(Role::EDITOR));
-        $this->assertTrue($author->hasRole(Role::AUTHOR));
         $this->assertTrue($user->hasRole(Role::USER));
 
         // Test helper methods
         $this->assertTrue($admin->isAdmin());
-        $this->assertTrue($editor->isEditor());
-        $this->assertTrue($author->isAuthor());
         $this->assertTrue($user->isUser());
     }
 
@@ -37,8 +31,6 @@ class UserRolePermissionsTest extends TestCase
         $this->assertEquals('admin', $admin->roles->first()->name);
 
         // Should not have other roles
-        $this->assertFalse($admin->hasRole(Role::EDITOR));
-        $this->assertFalse($admin->hasRole(Role::AUTHOR));
         $this->assertFalse($admin->hasRole(Role::USER));
     }
 
@@ -71,14 +63,14 @@ class UserRolePermissionsTest extends TestCase
     public function test_get_role_enum()
     {
         $admin = User::factory()->admin()->create();
-        $editor = User::factory()->editor()->create();
+        $user = User::factory()->user()->create();
 
         // Test getRole method returns correct enum
         $this->assertEquals(Role::ADMIN, $admin->getRole());
-        $this->assertEquals(Role::EDITOR, $editor->getRole());
+        $this->assertEquals(Role::USER, $user->getRole());
 
         // Test enum methods work
         $this->assertEquals('Administrator', $admin->getRole()->label());
-        $this->assertEquals('Content management and publication permissions', $editor->getRole()->description());
+        $this->assertEquals('Basic user with limited permissions', $user->getRole()->description());
     }
 }

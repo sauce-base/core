@@ -12,7 +12,7 @@ class RoleBasedAccessTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $response = $this->actingAs($admin)->get('/admin/test');
+        $response = $this->actingAs($admin)->get('/manage/test');
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
@@ -26,32 +26,17 @@ class RoleBasedAccessTest extends TestCase
     {
         $user = User::factory()->user()->create();
 
-        $response = $this->actingAs($user)->get('/admin/test');
+        $response = $this->actingAs($user)->get('/manage/test');
 
         $response->assertStatus(403); // Forbidden
     }
 
-    public function test_editor_cannot_access_admin_area()
-    {
-        $editor = User::factory()->editor()->create();
-
-        $response = $this->actingAs($editor)->get('/admin/test');
-
-        $response->assertStatus(403); // Forbidden
-    }
-
-    public function test_admin_and_editor_can_access_editor_area()
+    public function test_admin_can_access_editor_area()
     {
         $admin = User::factory()->admin()->create();
-        $editor = User::factory()->editor()->create();
 
         // Test admin access
         $response = $this->actingAs($admin)->get('/editor/test');
-        $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page->component('test/EditorTest'));
-
-        // Test editor access
-        $response = $this->actingAs($editor)->get('/editor/test');
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page->component('test/EditorTest'));
     }
@@ -68,12 +53,10 @@ class RoleBasedAccessTest extends TestCase
     public function test_all_authenticated_users_can_access_user_area()
     {
         $admin = User::factory()->admin()->create();
-        $editor = User::factory()->editor()->create();
-        $author = User::factory()->author()->create();
         $user = User::factory()->user()->create();
 
         // Test all role types can access user area
-        foreach ([$admin, $editor, $author, $user] as $testUser) {
+        foreach ([$admin, $user] as $testUser) {
             $response = $this->actingAs($testUser)->get('/user/test');
             $response->assertStatus(200);
             $response->assertInertia(fn ($page) => $page
@@ -88,7 +71,7 @@ class RoleBasedAccessTest extends TestCase
     public function test_unauthenticated_users_cannot_access_protected_areas()
     {
         // Test admin area
-        $response = $this->get('/admin/test');
+        $response = $this->get('/manage/test');
         $response->assertRedirect('/login');
 
         // Test editor area

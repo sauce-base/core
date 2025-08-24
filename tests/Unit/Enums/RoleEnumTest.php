@@ -10,8 +10,6 @@ class RoleEnumTest extends TestCase
     public function test_role_enum_values()
     {
         $this->assertEquals('admin', Role::ADMIN->value);
-        $this->assertEquals('editor', Role::EDITOR->value);
-        $this->assertEquals('author', Role::AUTHOR->value);
         $this->assertEquals('user', Role::USER->value);
     }
 
@@ -19,8 +17,6 @@ class RoleEnumTest extends TestCase
     {
         // Test valid role strings
         $this->assertEquals(Role::ADMIN, Role::fromString('admin'));
-        $this->assertEquals(Role::EDITOR, Role::fromString('editor'));
-        $this->assertEquals(Role::AUTHOR, Role::fromString('author'));
         $this->assertEquals(Role::USER, Role::fromString('user'));
 
         // Test invalid/null strings default to User
