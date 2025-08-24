@@ -55,26 +55,6 @@ class UserFactory extends Factory
     }
 
     /**
-     * Create a user with editor role.
-     */
-    public function editor(): static
-    {
-        return $this->afterCreating(function ($user) {
-            $user->syncRoles([Role::EDITOR]);
-        });
-    }
-
-    /**
-     * Create a user with author role.
-     */
-    public function author(): static
-    {
-        return $this->afterCreating(function ($user) {
-            $user->syncRoles([Role::AUTHOR]);
-        });
-    }
-
-    /**
      * Create a user with regular user role.
      */
     public function user(): static
