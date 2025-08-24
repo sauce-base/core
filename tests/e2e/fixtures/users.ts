@@ -13,16 +13,6 @@ export const testUsers = {
         email: 'admin@saucebase.dev',
         password: 'secretsauce',
     },
-    editor: {
-        name: 'Editor User',
-        email: 'editor@example.com',
-        password: 'secretsauce',
-    },
-    author: {
-        name: 'Author User',
-        email: 'author@example.com',
-        password: 'secretsauce',
-    },
     user: {
         name: 'Regular User',
         email: 'user@example.com',

@@ -5,8 +5,6 @@ namespace App\Enums;
 enum Role: string
 {
     case ADMIN = 'admin';
-    case EDITOR = 'editor';
-    case AUTHOR = 'author';
     case USER = 'user';
 
     /**
@@ -16,8 +14,6 @@ enum Role: string
     {
         return match ($this) {
             self::ADMIN => 'Administrator',
-            self::EDITOR => 'Editor',
-            self::AUTHOR => 'Author',
             self::USER => 'User',
         };
     }
@@ -29,8 +25,6 @@ enum Role: string
     {
         return match ($this) {
             self::ADMIN => 'Full system access with user management capabilities',
-            self::EDITOR => 'Content management and publication permissions',
-            self::AUTHOR => 'Content creation and editing permissions',
             self::USER => 'Basic user with limited permissions',
         };
     }

@@ -39,31 +39,6 @@ class UserSeeder extends Seeder
      */
     private function createTestUsers(): void
     {
-        // Create editor user for testing
-        $editor = User::firstOrCreate(
-            ['email' => 'editor@example.com'],
-            [
-                'name' => 'Editor User',
-                'password' => 'secretsauce',
-                'email_verified_at' => now(),
-            ]
-        );
-        if (! $editor->hasRole(Role::EDITOR)) {
-            $editor->assignRole(Role::EDITOR);
-        }
-
-        // Create author user for testing
-        $author = User::firstOrCreate(
-            ['email' => 'author@example.com'],
-            [
-                'name' => 'Author User',
-                'password' => 'secretsauce',
-                'email_verified_at' => now(),
-            ]
-        );
-        if (! $author->hasRole(Role::AUTHOR)) {
-            $author->assignRole(Role::AUTHOR);
-        }
 
         // Create regular user for testing
         $user = User::firstOrCreate(

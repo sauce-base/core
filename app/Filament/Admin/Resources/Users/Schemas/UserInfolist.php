@@ -2,9 +2,8 @@
 
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
-use Filament\Actions\Action;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -44,7 +43,7 @@ class UserInfolist
                                 TextEntry::make('last_login_at')->label('Last login at')->dateTime(),
                                 TextEntry::make('last_activity_at')->label('Last activity at')->dateTime(),
                             ]
-                        )
+                        ),
                 ]
             );
     }

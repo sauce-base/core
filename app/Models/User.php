@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, Notifiable, InteractsWithMedia;
+    use HasFactory, HasRoles, InteractsWithMedia, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -116,26 +116,6 @@ class User extends Authenticatable implements HasMedia
     public function isAdmin(): bool
     {
         return $this->hasRole(Role::ADMIN);
-    }
-
-    /**
-     * Check if user is an editor
-     *
-     * @return bool True if the user has editor role
-     */
-    public function isEditor(): bool
-    {
-        return $this->hasRole(Role::EDITOR);
-    }
-
-    /**
-     * Check if user is an author
-     *
-     * @return bool True if the user has author role
-     */
-    public function isAuthor(): bool
-    {
-        return $this->hasRole(Role::AUTHOR);
     }
 
     /**
