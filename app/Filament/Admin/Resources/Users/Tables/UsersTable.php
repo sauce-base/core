@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\LabelColumn;
 use Filament\Tables\Table;
 
 class UsersTable
@@ -26,11 +27,14 @@ class UsersTable
                 TextColumn::make('email')
                     ->label('Email address')
                     ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('last_login_at')
-                    ->dateTime()
+                TextColumn::make('roles.name')
+                    ->label('Role')
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'admin' => 'danger',
+                        'user' => 'primary',
+                        default => 'secondary',
+                    })
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

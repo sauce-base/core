@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -23,6 +24,16 @@ class UserForm
                     ->label('Email address')
                     ->email()
                     ->required(),
+                Select::make('roles')
+                    ->label('Role')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->minItems(1)
+                    ->maxItems(1)
+                    ->preload()
+                    ->searchable()
+                    // Optional: default to "user" on create:
+                    ->default(fn() => [Role::where('name', 'user')->value('id')]),
                 TextInput::make('email_verified_at')->readOnly(),
                 TextInput::make('password')
                     ->password()

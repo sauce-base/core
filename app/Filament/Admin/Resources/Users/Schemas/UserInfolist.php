@@ -29,11 +29,17 @@ class UserInfolist
                             ]
                         ),
                     Section::make()
-                        ->description('User roles and permissions')
+                        ->description('User roles')
                         ->schema(
                             [
-                                TextEntry::make('role')->label('Role'),
-                                TextEntry::make('permissions')->label('Permissions'),
+                                TextEntry::make('roles.name')
+                                    ->badge()
+                                    ->color(fn(string $state): string => match ($state) {
+                                        'admin' => 'danger',
+                                        'user' => 'primary',
+                                        default => 'secondary',
+                                    })
+                                    ->label('Role'),
                             ]
                         ),
                     Section::make()
