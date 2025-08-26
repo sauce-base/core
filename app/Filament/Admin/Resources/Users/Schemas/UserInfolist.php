@@ -22,13 +22,12 @@ class UserInfolist
                                 ImageEntry::make('avatar')->circular(),
                                 TextEntry::make('name')->label('Name'),
                                 TextEntry::make('email')->label('Email address'),
-                                TextEntry::make('email_verified_at')->label('Email verified at')->dateTime(),
-                                TextEntry::make('last_login_at')->label('Last login at')->dateTime(),
                                 TextEntry::make('created_at')->label('Created at')->dateTime(),
                                 TextEntry::make('updated_at')->label('Updated at')->dateTime(),
                             ]
                         ),
                     Section::make()
+                        ->inlineLabel()
                         ->description('User roles')
                         ->schema(
                             [
@@ -37,17 +36,22 @@ class UserInfolist
                                     ->color(fn(string $state): string => match ($state) {
                                         'admin' => 'danger',
                                         'user' => 'primary',
-                                        default => 'secondary',
+                                        default => 'gray',
                                     })
-                                    ->label('Role'),
+                                    ->label('Role')
+                                    ->default('No role assigned'),
                             ]
                         ),
                     Section::make()
                         ->description('Last login and activity')
                         ->schema(
                             [
-                                TextEntry::make('last_login_at')->label('Last login at')->dateTime(),
-                                TextEntry::make('last_activity_at')->label('Last activity at')->dateTime(),
+                                TextEntry::make('last_login_at')
+                                    ->label('Last login at')
+                                    ->dateTime(),
+                                TextEntry::make('last_activity_at')
+                                    ->label('Last activity at')
+                                    ->dateTime(),
                             ]
                         ),
                 ]
