@@ -22,12 +22,13 @@ class UsersTable
                     ->width(50),
                 TextColumn::make('name')
                     ->searchable()
+                    ->label(__('Name'))
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->searchable(),
                 TextColumn::make('roles.name')
-                    ->label('Role')
+                    ->label(__('Role'))
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
                         'admin' => 'danger',
@@ -38,14 +39,13 @@ class UsersTable
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
+                    ->label(__('Created at'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
+                    ->label(__('Updated at'))
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->recordActions([
                 ViewAction::make()->requiresConfirmation(),

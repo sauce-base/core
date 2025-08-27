@@ -21,11 +21,11 @@ class UserForm
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email address')
+                    ->label(__('Email address'))
                     ->email()
                     ->required(),
                 Select::make('roles')
-                    ->label('Role')
+                    ->label(__('Role'))
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->minItems(1)
@@ -34,11 +34,21 @@ class UserForm
                     ->searchable()
                     // Optional: default to "user" on create:
                     ->default(fn() => [Role::where('name', 'user')->value('id')]),
-                TextInput::make('email_verified_at')->readOnly(),
                 TextInput::make('password')
+                    ->label(__('Password'))
                     ->password()
                     ->hiddenOn('edit'),
-                TextInput::make('last_login_at')->readOnly(),
+                TextInput::make('password_confirmation')
+                    ->label(__('Password confirmation'))
+                    ->password()
+                    ->hiddenOn('edit')
+                    ->same('password'),
+                TextInput::make('email_verified_at')
+                    ->label(__('Email verified at'))
+                    ->readOnly(),
+                TextInput::make('last_login_at')
+                    ->label(__('Last login at'))
+                    ->readOnly(),
             ]);
     }
 }
