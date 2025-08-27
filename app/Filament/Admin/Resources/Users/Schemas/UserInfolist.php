@@ -15,20 +15,20 @@ class UserInfolist
             ->components(
                 [
                     Section::make()
-                        ->description('Basic information about the user')
+                        ->description(__('Basic information about the user'))
                         ->inlineLabel()
                         ->schema(
                             [
                                 ImageEntry::make('avatar')->circular(),
-                                TextEntry::make('name')->label('Name'),
-                                TextEntry::make('email')->label('Email address'),
-                                TextEntry::make('created_at')->label('Created at')->dateTime(),
-                                TextEntry::make('updated_at')->label('Updated at')->dateTime(),
+                                TextEntry::make('name')->label(__('Name')),
+                                TextEntry::make('email')->label(__('Email address')),
+                                TextEntry::make('created_at')->label(__('Created at'))->dateTime(),
+                                TextEntry::make('updated_at')->label(__('Updated at'))->dateTime(),
                             ]
                         ),
                     Section::make()
                         ->inlineLabel()
-                        ->description('User roles')
+                        ->description(__('User roles'))
                         ->schema(
                             [
                                 TextEntry::make('roles.name')
@@ -38,19 +38,19 @@ class UserInfolist
                                         'user' => 'primary',
                                         default => 'gray',
                                     })
-                                    ->label('Role')
-                                    ->default('No role assigned'),
+                                    ->label(__('Role'))
+                                    ->default(__('No role assigned')),
                             ]
                         ),
                     Section::make()
-                        ->description('Last login and activity')
+                        ->description(__('Last login and activity'))
                         ->schema(
                             [
                                 TextEntry::make('last_login_at')
-                                    ->label('Last login at')
+                                    ->label(__('Last login at'))
                                     ->dateTime(),
                                 TextEntry::make('last_activity_at')
-                                    ->label('Last activity at')
+                                    ->label(__('Last activity at'))
                                     ->dateTime(),
                             ]
                         ),
