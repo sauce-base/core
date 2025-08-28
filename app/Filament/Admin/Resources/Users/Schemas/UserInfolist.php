@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -26,6 +27,19 @@ class UserInfolist
                                 TextEntry::make('updated_at')->label(__('Updated at'))->dateTime(),
                             ]
                         ),
+                    Section::make()
+                        ->description(__('Social accounts connected to this user'))
+                        ->schema([
+                            RepeatableEntry::make('connected_providers')
+                                ->schema([
+                                    TextEntry::make('provider')
+                                        ->label(__('Provider')),
+                                    TextEntry::make('last_login_at')
+                                        ->datetime()
+                                        ->label(__('Last Login At'))
+                                ])
+                                ->columns(2)
+                        ]),
                     Section::make()
                         ->inlineLabel()
                         ->description(__('User roles'))
