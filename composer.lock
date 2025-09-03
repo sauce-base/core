@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f323c372def247cb65bcb2fcb5871bff",
+    "content-hash": "fd1e6620e9e0c0de6055d6017e832ea0",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -768,6 +768,72 @@
                 }
             ],
             "time": "2025-02-21T08:52:11+00:00"
+        },
+        {
+            "name": "dcblogdev/laravel-module-generator",
+            "version": "v2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dcblogdev/laravel-module-generator.git",
+                "reference": "9cfdd7d765d30ffab533026e48e3edb4c47385b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dcblogdev/laravel-module-generator/zipball/9cfdd7d765d30ffab533026e48e3edb4c47385b6",
+                "reference": "9cfdd7d765d30ffab533026e48e3edb4c47385b6",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "10.x|11.x|^12.0",
+                "laravel/prompts": "^0.1.15|^0.3",
+                "symfony/filesystem": "^6.0|^7.0",
+                "symfony/finder": "^6.0|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Generator": "Dcblogdev\\ModuleGenerator\\Facades\\ModuleGenerator"
+                    },
+                    "providers": [
+                        "Dcblogdev\\ModuleGenerator\\ModuleGeneratorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dcblogdev\\ModuleGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Carr",
+                    "email": "dave@dcblog.dev",
+                    "homepage": "https://dcblog.dev"
+                }
+            ],
+            "description": "Generate Laravel Modules from a template.",
+            "homepage": "https://github.com/dcblogdev/laravel-module-generator",
+            "keywords": [
+                "generator",
+                "laravel",
+                "laravel Modules"
+            ],
+            "support": {
+                "issues": "https://github.com/dcblogdev/laravel-module-generator/issues",
+                "source": "https://github.com/dcblogdev/laravel-module-generator/tree/v2.0.6"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dcblogdev",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-05-27T07:42:48+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -7129,6 +7195,76 @@
                 }
             ],
             "time": "2024-09-25T14:21:43+00:00"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v7.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "edcbb768a186b5c3f25d0643159a787d3e63b7fd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/edcbb768a186b5c3f25d0643159a787d3e63b7fd",
+                "reference": "edcbb768a186b5c3f25d0643159a787d3e63b7fd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-mbstring": "~1.8"
+            },
+            "require-dev": {
+                "symfony/process": "^6.4|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides basic utilities for the filesystem",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/filesystem/tree/v7.3.2"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2025-07-07T08:17:47+00:00"
         },
         {
             "name": "symfony/finder",
