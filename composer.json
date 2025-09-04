@@ -41,7 +41,6 @@
     "require": {
         "php": "^8.4",
         "coolsam/modules": "^5.0",
-        "dcblogdev/laravel-module-generator": "^2.0",
         "filament/actions": "^4.0",
         "filament/filament": "~4.0",
         "filament/forms": "^4.0",
@@ -73,7 +72,8 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-laravel": "^3.2"
+        "pestphp/pest-plugin-laravel": "^3.2",
+        "symfony/filesystem": "^7.3"
     },
     "autoload": {
         "psr-4": {
