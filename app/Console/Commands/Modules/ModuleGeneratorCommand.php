@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
+use Illuminate\Support\Facades\Process;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
@@ -56,6 +57,9 @@ class ModuleGeneratorCommand extends Command
 
         info('Starter ' . $this->moduleName . ' module generated successfully.');
 
+
+        Process::run('composer dump-autoload');
+
         // php artisan module:enable ModuleName
         $this->call('module:enable', ['module' => $this->moduleName]);
 
@@ -67,6 +71,7 @@ class ModuleGeneratorCommand extends Command
     {
         $this->moduleName = ucwords($this->argument('module')) ?? '';
 
+        // Validation don't work when not in the prompt
         if ($this->moduleName !== '') {
             return $this->moduleName;
         }
@@ -78,6 +83,7 @@ class ModuleGeneratorCommand extends Command
                 validate: fn(string $value) => match (true) {
                     strlen($value) < 1 => 'The name must be at least 1 characters.',
                     Str::contains($value, ' ') => 'The name must not contain spaces.',
+                    Str::contains($value, '-') => 'The name must not contain hyphens.',
                     file_exists($this->moduleConfigPath . $value) => 'Module already exists.',
                     default => null
                 }
@@ -322,6 +328,7 @@ class ModuleGeneratorCommand extends Command
 
             // MODULE_NAMESPACE
             '{MODULE_NAMESPACE}' => config('modules.namespace', 'Modules'),
+            '___MODULE_NAMESPACE___' => config('modules.namespace', 'Modules'),
         ];
     }
 
