@@ -1,0 +1,28 @@
+{
+    "name": "saucebase/{module_}",
+    "description": "",
+    "authors": [
+        {
+            "name": "Sauce Base",
+            "email": "contact@saucebase.dev"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "{MODULE_NAMESPACE}\\{ModuleStudly}\\": "app/",
+            "{MODULE_NAMESPACE}\\{ModuleStudly}\\Database\\Factories\\": "database/factories/",
+            "{MODULE_NAMESPACE}\\{ModuleStudly}\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "{MODULE_NAMESPACE}\\{ModuleStudly}\\Tests\\": "tests/"
+        }
+    }
+}
