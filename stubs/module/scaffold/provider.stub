@@ -2,7 +2,6 @@
 
 namespace $NAMESPACE$;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\ServiceProvider;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
@@ -122,14 +121,5 @@ class $CLASS$ extends ServiceProvider
     public function provides(): array
     {
         return [];
-    }
-
-    /**
-     *  Share module data across the application.
-     */
-    private function bootShareData()
-    {
-        $kernel = $this->app->make(Kernel::class);
-        $kernel->appendMiddlewareToGroup('web', ShareDataMiddleware::class);
     }
 }
