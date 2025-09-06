@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Console\Commands\Modules;
+namespace App\Console\Commands\SauceBase;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
-use Illuminate\Support\Facades\Process;
 
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
-class ModuleGeneratorCommand extends Command
+class RecipeToModuleCommand extends Command
 {
-    protected $signature = 'module:build {module?} {template?}';
+    protected $signature = 'saucebase:recipe {module?} {template?}';
     protected $description = 'Create starter module from a template';
     protected string $moduleName = '';
     protected string $template = '';
@@ -48,7 +47,7 @@ class ModuleGeneratorCommand extends Command
         $this->tempFolder = base_path('generator-temp');
 
         if (!file_exists($this->templatePath)) {
-            error("$this->templatePath Path does not exist! Please check your config/module-generator.php file.");
+            error("$this->templatePath Path does not exist! Please check your config/saucebase.php file.");
 
             return true;
         }
@@ -56,13 +55,8 @@ class ModuleGeneratorCommand extends Command
         $this->generate();
 
         info('Starter ' . $this->moduleName . ' module generated successfully.');
-
-
-        Process::run('composer dump-autoload');
-
-        // php artisan module:enable ModuleName
-        $this->call('module:enable', ['module' => $this->moduleName]);
-
+        info('You need to run: composer dump-autoload');
+        info('To enable the module use: php artisan module:enable ' . $this->moduleName);
 
         return true;
     }
@@ -94,7 +88,7 @@ class ModuleGeneratorCommand extends Command
     protected function getTemplate(): string
     {
         $template = $this->argument('template') ?? '';
-        $templateConfig = config('module-generator.template');
+        $templateConfig = config('saucebase.template');
 
         if ($template !== '') {
             if (in_array($template, array_keys($templateConfig))) {
@@ -183,7 +177,7 @@ class ModuleGeneratorCommand extends Command
             $relativePath
         );
 
-        if (in_array(basename($sourceFile), config('module-generator.ignore_files'), true)) {
+        if (in_array(basename($sourceFile), config('saucebase.ignore_files'), true)) {
             $targetFile = dirname($targetFile) . '/' . basename($sourceFile);
         }
 
