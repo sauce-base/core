@@ -14,7 +14,7 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import { trans } from 'laravel-vue-i18n';
 import { computed } from 'vue';
 

@@ -24,8 +24,8 @@ return [
     |
     */
     'stubs' => [
-        'enabled' => true,
-        'path' => base_path().'/stubs/module',
+        'enabled' => false,
+        'path' => base_path() . '/stubs/module',
         'files' => [
             'routes/web' => 'routes/web.php',
             'routes/api' => 'routes/api.php',
@@ -142,31 +142,31 @@ return [
             'helpers' => ['path' => 'app/Helpers', 'generate' => false],
             'interfaces' => ['path' => 'app/Interfaces', 'generate' => false],
             'listener' => ['path' => 'app/Listeners', 'generate' => false],
-            'model' => ['path' => 'app/Models', 'generate' => true],
+            'model' => ['path' => 'app/Models', 'generate' => false],
             'notifications' => ['path' => 'app/Notifications', 'generate' => false],
             'observer' => ['path' => 'app/Observers', 'generate' => false],
             'policies' => ['path' => 'app/Policies', 'generate' => false],
             'provider' => ['path' => 'app/Providers', 'generate' => true],
             'repository' => ['path' => 'app/Repositories', 'generate' => false],
             'resource' => ['path' => 'app/Transformers', 'generate' => false],
-            'route-provider' => ['path' => 'app/Providers', 'generate' => true],
+            'route-provider' => ['path' => 'app/Providers', 'generate' => false],
             'rules' => ['path' => 'app/Rules', 'generate' => false],
             'services' => ['path' => 'app/Services', 'generate' => false],
             'scopes' => ['path' => 'app/Models/Scopes', 'generate' => false],
             'traits' => ['path' => 'app/Traits', 'generate' => false],
 
             // app/Http/
-            'controller' => ['path' => 'app/Http/Controllers', 'generate' => true],
+            'controller' => ['path' => 'app/Http/Controllers', 'generate' => false],
             'filter' => ['path' => 'app/Http/Middleware', 'generate' => false],
             'request' => ['path' => 'app/Http/Requests', 'generate' => false],
 
             // config/
-            'config' => ['path' => 'config', 'generate' => true],
+            'config' => ['path' => 'config', 'generate' => false],
 
             // database/
-            'factory' => ['path' => 'database/factories', 'generate' => true],
-            'migration' => ['path' => 'database/migrations', 'generate' => true],
-            'seeder' => ['path' => 'database/seeders', 'generate' => true],
+            'factory' => ['path' => 'database/factories', 'generate' => false],
+            'migration' => ['path' => 'database/migrations', 'generate' => false],
+            'seeder' => ['path' => 'database/seeders', 'generate' => false],
 
             // lang/
             'lang' => ['path' => 'lang', 'generate' => false],
@@ -177,11 +177,11 @@ return [
             'views' => ['path' => 'resources/views', 'generate' => false],
 
             // routes/
-            'routes' => ['path' => 'routes', 'generate' => true],
+            'routes' => ['path' => 'routes', 'generate' => false],
 
             // tests/
-            'test-feature' => ['path' => 'tests/Feature', 'generate' => true],
-            'test-unit' => ['path' => 'tests/Unit', 'generate' => true],
+            'test-feature' => ['path' => 'tests/Feature', 'generate' => false],
+            'test-unit' => ['path' => 'tests/Unit', 'generate' => false],
         ],
     ],
 

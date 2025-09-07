@@ -4,7 +4,7 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-import collectModuleAssetsPaths from './vite-module-loader.js';
+import { collectModuleAssetsPaths } from './vite-module-loader.js';
 
 async function createConfig() {
     const paths = ['resources/js/app.ts'];

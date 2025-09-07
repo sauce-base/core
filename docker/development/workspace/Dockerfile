@@ -20,7 +20,8 @@ RUN docker-php-ext-install \
     mbstring \
     zip \
     pcntl \
-    intl
+    intl \
+    exif
 
 # Install Redis and Xdebug extensions via PECL
 RUN apk add --no-cache --virtual .build-deps \

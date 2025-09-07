@@ -26,8 +26,8 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import ThemeSelector from '@/components/ui/ThemeSelector.vue';
-import { useAuthStore } from '@/stores/auth';
 import { Link, router } from '@inertiajs/vue3';
+import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -128,6 +128,7 @@ const handleLogout = () => {
                     <DropdownMenuGroup>
                         <DropdownMenuItem as-child>
                             <Link
+                                v-if="route().has('profile.edit')"
                                 :href="route('profile.edit')"
                                 class="flex w-full items-center"
                             >

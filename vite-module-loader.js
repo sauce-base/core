@@ -30,7 +30,7 @@ const __dirname = path.dirname(__filename);
  * const allPaths = await collectModuleAssetsPaths(initialPaths, 'modules');
  * // Returns: ['resources/js/app.ts', 'modules/Auth/resources/css/app.css', ...]
  */
-async function collectModuleAssetsPaths(paths, modulesPath) {
+export async function collectModuleAssetsPaths(paths, modulesPath) {
     const modulesFullPath = path.join(__dirname, modulesPath);
     const moduleStatusesPath = path.join(__dirname, 'modules_statuses.json');
 
@@ -101,5 +101,3 @@ async function collectModuleAssetsPaths(paths, modulesPath) {
 
     return paths;
 }
-
-export default collectModuleAssetsPaths;
