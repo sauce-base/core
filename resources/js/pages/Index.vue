@@ -2,8 +2,8 @@
 import Footer from '@/components/layout/Footer.vue';
 import Header from '@/components/layout/Header.vue';
 import Logo from '@/components/ui/Logo.vue';
-import { useAuthStore } from '@/stores/auth';
 import { Head, Link } from '@inertiajs/vue3';
+import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import IconCheck from '~icons/heroicons/check';
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconGlobe from '~icons/heroicons/globe-alt';

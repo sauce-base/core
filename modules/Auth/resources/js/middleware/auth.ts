@@ -1,6 +1,6 @@
-import { useAuthStore } from '@/stores/auth';
 import type { PageProps } from '@/types';
 import { router } from '@inertiajs/vue3';
+import { useAuthStore } from '../stores';
 
 /**
  * Synchronize auth state between Inertia page props and Pinia store

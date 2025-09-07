@@ -2,17 +2,15 @@
 
 namespace Modules\Auth\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\Auth\Actions\LoginAction;
 use Modules\Auth\Actions\LogoutAction;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SessionController extends Controller
+class SessionController
 {
     /**
      * Display the login view.
@@ -30,20 +28,16 @@ class SessionController extends Controller
      */
     public function store(Request $request, LoginAction $loginAction): RedirectResponse
     {
-        // try {
-            $loginAction->execute(
-                $request->email,
-                $request->password,
-                $request->boolean('remember'),
-                $request->ip()
-            );
+        $loginAction->execute(
+            $request->email,
+            $request->password,
+            $request->boolean('remember'),
+            $request->ip()
+        );
 
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard', absolute: false));
-        // } catch (ValidationException $e) {
-        //     throw $e;
-        // }
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

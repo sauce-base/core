@@ -1,37 +1,49 @@
+import type { User } from '@/types';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-// Auth Store
 export const useAuthStore = defineStore(
-    'modules/auth',
+    'auth',
     () => {
-        // State
-        const counter = ref(0);
+        const user = ref<User | null>(null);
+
+        // Computed
+        const isAuthenticated = computed(() => !!user.value);
+        const userRoles = computed(() => user.value?.roles || []);
+        const isAdmin = computed(() =>
+            userRoles.value.some((role) => role.name === 'admin'),
+        );
 
         // Actions
-        const increment = () => {
-            counter.value++;
+        const setUser = (userData: User) => {
+            user.value = userData;
         };
 
-        const decrement = () => {
-            counter.value--;
+        const clearUser = () => {
+            user.value = null;
         };
 
-        const reset = () => {
-            counter.value = 0;
+        const hasRole = (roleName: string): boolean => {
+            return userRoles.value.some((role) => role.name === roleName);
+        };
+
+        const hasPermission = (): boolean => {
+            // Simple permission check - roles don't have permissions in current types
+            return isAdmin.value;
         };
 
         return {
-            // State
-            counter,
-            // Actions
-            increment,
-            decrement,
-            reset,
+            user,
+            isAuthenticated,
+            userRoles,
+            isAdmin,
+            setUser,
+            clearUser,
+            hasRole,
+            hasPermission,
         };
     },
     {
-        // Enable/Disable persistence for this store
-        persist: false,
+        persist: true,
     },
 );

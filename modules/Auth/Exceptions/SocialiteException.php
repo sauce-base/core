@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Exceptions;
+namespace Modules\Auth\Exceptions;
 
 use Exception;
 
-class SocialAuthException extends Exception
+class SocialiteException extends Exception
 {
     public static function invalidSocialUser(): self
     {

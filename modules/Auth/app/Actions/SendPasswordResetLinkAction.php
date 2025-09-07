@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace Modules\Auth\Actions;
 
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace Modules\Auth\Actions;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -20,7 +20,7 @@ class RegisterUserAction
             'password' => $password,
         ], [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
+            'email' => 'required|string|email|max:255|unique:' . User::class,
             'password' => ['required', Password::defaults()],
         ]);
 

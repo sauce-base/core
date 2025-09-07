@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Auth\Http\Controllers;
 
-use App\Actions\Social\DisconnectSocialAccountAction;
-use App\Actions\Social\GetEnabledProvidersAction;
-use App\Actions\Social\HandleProviderCallbackAction;
-use App\Actions\Social\ValidateProviderAction;
-use App\Exceptions\SocialAuthException;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Modules\Auth\Actions\Socialite\DisconnectSocialAccountAction;
+use Modules\Auth\Actions\Socialite\GetEnabledProvidersAction;
+use Modules\Auth\Actions\Socialite\HandleProviderCallbackAction;
+use Modules\Auth\Actions\Socialite\ValidateProviderAction;
+use Modules\Auth\Exceptions\SocialiteException;
+use Exception;
 
-class SocialAuthController extends Controller
+class SocialiteController
 {
     public function redirect(string $provider, ValidateProviderAction $validateAction): RedirectResponse
     {
@@ -35,9 +35,9 @@ class SocialAuthController extends Controller
 
             Auth::login($user);
 
-            return redirect()->intended('/dashboard');
-        } catch (SocialAuthException $e) {
-            return redirect('/login')->withErrors([
+            return redirect()->intended(route('dashboard'));
+        } catch (SocialiteException $e) {
+            return redirect(route('auth.login'))->withErrors([
                 'social' => $e->getMessage(),
             ]);
         } catch (Exception $e) {
@@ -47,7 +47,7 @@ class SocialAuthController extends Controller
                 'error' => $e->getMessage(),
             ]);
 
-            return redirect('/login')->withErrors([
+            return redirect(route('auth.login'))->withErrors([
                 'social' => __('Authentication failed. Please try again.'),
             ]);
         }
@@ -73,7 +73,7 @@ class SocialAuthController extends Controller
             $disconnectAction->execute($user, $provider);
 
             return back()->with('success', __(':provider account disconnected successfully.', ['provider' => ucfirst($provider)]));
-        } catch (SocialAuthException $e) {
+        } catch (SocialiteException $e) {
             return back()->withErrors([
                 'social' => $e->getMessage(),
             ]);

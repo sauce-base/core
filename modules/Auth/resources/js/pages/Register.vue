@@ -8,7 +8,7 @@ import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
 import Input from '@/components/ui/Input.vue';
 import PasswordInput from '@/components/ui/PasswordInput.vue';
-import SocialLoginButton from '@/components/ui/SocialLoginButton.vue';
+import SocialLoginButton from '@modules/Auth/resources/js/components/SocialLoginButton.vue';
 import { useSocialLogin } from '@/composables/useSocialLogin';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import { registerSchema, type RegisterFormData } from '@/validation';

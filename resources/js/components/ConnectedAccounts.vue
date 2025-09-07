@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { useSocialLogin } from '@/composables/useSocialLogin';
-import { getProviderUIConfig } from '@/lib/socialProviders';
-import { useAuthStore } from '@/stores/auth';
 import { router } from '@inertiajs/vue3';
+import { useSocialLogin } from '@modules/Auth/resources/js/composables/useSocialLogin';
+import { getProviderUIConfig } from '@modules/Auth/resources/js/lib/socialProviders';
+import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import { computed } from 'vue';
 
 interface ConnectedAccount {
@@ -16,10 +16,14 @@ const authStore = useAuthStore();
 const connectedAccounts = computed(
     () => authStore.user?.connected_providers || [],
 );
-const { getEnabledProviders } = useSocialLogin();
+const { getEnabledProviders, canUseSocialLogin } = useSocialLogin();
 
 // Get available providers that aren't connected yet
 const availableProviders = computed(() => {
+    if (!canUseSocialLogin) {
+        return [];
+    }
+
     const connected = connectedAccounts.value.map(
         (account: ConnectedAccount) => account.provider,
     );

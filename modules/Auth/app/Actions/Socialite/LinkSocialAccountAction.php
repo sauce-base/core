@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Actions\Social;
+namespace Modules\Auth\Actions\Socialite;
 
-use App\Actions\User\UpdateUserAvatarAction;
-use App\Exceptions\SocialAuthException;
-use App\Models\SocialAccount;
-use App\Models\User;
+use Modules\Auth\Actions\UpdateUserAvatarAction;
+use Modules\Auth\Exceptions\SocialAuthException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\SocialAccount;
+use App\Models\User;
 
 class LinkSocialAccountAction
 {

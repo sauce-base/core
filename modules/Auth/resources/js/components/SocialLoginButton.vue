@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SocialProvider } from '@/composables/useSocialLogin';
+import { type SocialProvider } from '../composables/useSocialLogin';
 
 interface Props {
     providerKey: string;
@@ -13,7 +13,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const handleLogin = () => {
     if (props.disabled) return;
-    window.location.href = `/auth/${props.providerKey}`;
+    window.location.href = route('auth.social.redirect', {
+        provider: props.providerKey,
+    });
 };
 </script>
 

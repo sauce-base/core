@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Auth;
+namespace Modules\Auth\Actions;
 
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;

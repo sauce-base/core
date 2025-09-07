@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {
     getProviderUIConfig,
     type ProviderUIConfig,
@@ -15,13 +15,15 @@ export function useSocialLogin() {
     const providers = ref<SocialProviders>({});
     const isLoading = ref(true);
     const error = ref<string | null>(null);
+    const providersRoute = 'auth.social.providers';
+    const canUseSocialLogin = computed(() => route().has(providersRoute));
 
     const fetchProviders = async () => {
         try {
             isLoading.value = true;
             error.value = null;
 
-            const response = await fetch('/auth/providers', {
+            const response = await fetch(route(providersRoute), {
                 headers: {
                     Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
@@ -77,7 +79,9 @@ export function useSocialLogin() {
     };
 
     onMounted(() => {
-        fetchProviders();
+        if (canUseSocialLogin.value) {
+            fetchProviders();
+        }
     });
 
     return {
@@ -88,5 +92,6 @@ export function useSocialLogin() {
         getEnabledProviders,
         getProviderConfig,
         refetch: fetchProviders,
+        canUseSocialLogin,
     };
 }

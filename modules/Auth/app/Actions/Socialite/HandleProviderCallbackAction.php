@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Social;
+namespace Modules\Auth\Actions\Socialite;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Social;
+namespace Modules\Auth\Actions\Socialite;
 
-use App\Actions\User\UpdateUserAvatarAction;
-use App\Exceptions\SocialAuthException;
+use Modules\Auth\Exceptions\SocialiteException;
+use Modules\Auth\Actions\UpdateUserAvatarAction;
 use App\Models\User;
 
 class DisconnectSocialAccountAction
@@ -16,7 +16,7 @@ class DisconnectSocialAccountAction
     {
         // Security: Don't disconnect if it's the only login method and no password
         if ($user->socialAccounts()->count() === 1 && ! $user->password) {
-            throw SocialAuthException::cannotDisconnectOnlyMethod();
+            throw SocialiteException::cannotDisconnectOnlyMethod();
         }
 
         // Remove the social account

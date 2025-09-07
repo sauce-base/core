@@ -1,4 +1,4 @@
-import { setupAuthMiddleware } from './auth';
+import { setupAuthMiddleware } from '@modules/Auth/resources/js/middleware/auth';
 
 /**
  * Initialize all application middleware

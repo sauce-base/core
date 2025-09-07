@@ -2,10 +2,9 @@
 
 namespace ___MODULE_NAMESPACE___\___Module___\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 
-class ___Module___Controller extends Controller
+class ___Module___Controller
 {
     /**
      * Display a listing of the resource.
