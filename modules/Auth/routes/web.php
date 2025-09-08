@@ -7,6 +7,9 @@ use Modules\Auth\Http\Controllers\SocialiteController;
 Route::prefix('auth')->group(function () {
 
     Route::middleware('guest')->group(function () {
+        /**
+         * Sign in
+         */
         Route::get('login', [SessionController::class, 'create'])->name('login');
         Route::post('login', [SessionController::class, 'store']);
 
