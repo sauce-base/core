@@ -16,7 +16,8 @@ Route::prefix('auth')->group(function () {
         /**
          * Sign up
          */
-        Route::get('register', [SessionController::class, 'create'])->name('register');
+        Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+        Route::post('register', [RegisteredUserController::class, 'store']);
 
         /**
          * Socialite 
@@ -28,7 +29,7 @@ Route::prefix('auth')->group(function () {
 
     Route::middleware('auth')->group(function () {
 
-        Route::post('logout', [SessionController::class, 'destroy']);
+        Route::post('logout', [SessionController::class, 'destroy'])->name('logout');
 
         /**
          * Socialite 
