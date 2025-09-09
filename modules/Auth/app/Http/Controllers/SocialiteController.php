@@ -11,9 +11,8 @@ use Modules\Auth\Actions\Socialite\GetEnabledProvidersAction;
 use Modules\Auth\Actions\Socialite\HandleProviderCallbackAction;
 use Modules\Auth\Actions\Socialite\ValidateProviderAction;
 use Modules\Auth\Exceptions\SocialiteException;
-use Exception;
 
-class SocialiteController
+class SocialiteController extends Controller
 {
     public function redirect(string $provider, ValidateProviderAction $validateAction): RedirectResponse
     {
@@ -21,7 +20,8 @@ class SocialiteController
             abort(404);
         }
 
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)
+            ->redirect();
     }
 
     public function callback(string $provider, ValidateProviderAction $validateAction, HandleProviderCallbackAction $callbackAction): RedirectResponse
@@ -30,27 +30,11 @@ class SocialiteController
             abort(404);
         }
 
-        try {
-            $user = $callbackAction->execute($provider);
+        $user = $callbackAction->execute($provider);
 
-            Auth::login($user);
+        Auth::login($user);
 
-            return redirect()->intended(route('dashboard'));
-        } catch (SocialiteException $e) {
-            return redirect(route('auth.login'))->withErrors([
-                'social' => $e->getMessage(),
-            ]);
-        } catch (Exception $e) {
-            // Log the exception or handle it as needed
-            \Log::error('Social authentication failed', [
-                'provider' => $provider,
-                'error' => $e->getMessage(),
-            ]);
-
-            return redirect(route('auth.login'))->withErrors([
-                'social' => __('Authentication failed. Please try again.'),
-            ]);
-        }
+        return redirect()->intended(route('dashboard'));
     }
 
     public function providers(GetEnabledProvidersAction $providersAction): JsonResponse
