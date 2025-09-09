@@ -1,16 +1,17 @@
 <?php
 
-namespace Modules\Auth\Http\Controllers;
+namespace  Modules\Auth\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Modules\Auth\Actions\LoginAction;
-use Modules\Auth\Actions\LogoutAction;
+use Modules\Auth\Http\Controllers\Controller;
+use Modules\Auth\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SessionController
+class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
@@ -25,17 +26,14 @@ class SessionController
 
     /**
      * Handle an incoming authentication request.
+     * Login 
      */
-    public function store(Request $request, LoginAction $loginAction): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
-        $loginAction->execute(
-            $request->email,
-            $request->password,
-            $request->boolean('remember'),
-            $request->ip()
-        );
+        $request->authenticate();
 
-        $request->session()->regenerate();
+        //TODO: check this intelisensse error.
+        request()->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
@@ -43,11 +41,12 @@ class SessionController
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request, LogoutAction $logoutAction): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
-        $logoutAction->execute();
+        Auth::guard('web')->logout();
 
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
 
         return redirect('/');
