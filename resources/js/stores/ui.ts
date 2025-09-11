@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -15,8 +16,19 @@ export const useUIStore = defineStore(
             sidebarOpen.value = open;
         };
 
-        const setLanguage = (lang: string) => {
-            language.value = lang;
+        const setLanguage = async (lang: string) => {
+            await axios
+                .post(route('locale', { locale: lang }))
+                .then((response) => {
+                    if (response.status === 200) {
+                        language.value = lang;
+                    }
+                })
+                .catch((error) => {
+                    // TODO: add proper error handling
+                    console.error('Error changing language', error);
+                    // Optional: show a toast/notification
+                });
         };
 
         return {
