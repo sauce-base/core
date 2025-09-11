@@ -34,14 +34,15 @@ const props = withDefaults(defineProps<Props>(), {
 
 const uiStore = useUIStore();
 
+//TODO: get this list from BE
 const languages = [
     { code: 'en', name: 'English', icon: IconUS },
     { code: 'pt_BR', name: 'Português', icon: IconBR },
 ];
 
 const switchLanguage = async (langCode: string) => {
+    await uiStore.setLanguage(langCode);
     await loadLanguageAsync(langCode);
-    uiStore.setLanguage(langCode);
 };
 
 const currentLanguage = computed(
