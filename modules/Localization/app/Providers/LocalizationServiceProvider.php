@@ -3,8 +3,6 @@
 namespace Modules\Localization\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Routing\Router;
-use Modules\Localization\Http\Middleware\HandleLocalization;
 
 class LocalizationServiceProvider extends ServiceProvider
 {
@@ -14,9 +12,8 @@ class LocalizationServiceProvider extends ServiceProvider
     /**
      * Boot the application events.
      */
-    public function boot(Router $router): void
+    public function boot(): void
     {
-        $this->registerMiddlewares($router);
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
@@ -40,16 +37,6 @@ class LocalizationServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         // $this->commands([]);
-    }
-
-    /**
-     * Register middlewares
-     */
-    protected function registerMiddlewares(Router $router): void
-    {
-        $router->middlewareGroup('web', [
-            HandleLocalization::class,
-        ]);
     }
 
     /**
