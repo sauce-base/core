@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Localization\Http\Controllers;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
-class LocaleController extends Controller
+class LocalizationController
 {
     public function __invoke($locale)
     {

@@ -1,25 +1,30 @@
 <?php
 
-namespace ___MODULE_NAMESPACE___\___Module___\Providers;
+namespace Modules\Localization\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
+use Modules\Localization\Http\Middleware\HandleLocalization;
 
-class ___Module___ServiceProvider extends ServiceProvider
+class LocalizationServiceProvider extends ServiceProvider
 {
-    protected string $moduleName = '{Module}';
-    protected string $moduleNameLower = '{module}';
+    protected string $moduleName = 'Localization';
+    protected string $moduleNameLower = 'localization';
 
     /**
      * Boot the application events.
      */
-    public function boot(): void
+    public function boot(Router $router): void
     {
+        $this->registerMiddlewares($router);
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
         $this->registerConfig();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
     }
+
+
 
     /**
      * Register the service provider.
@@ -35,6 +40,16 @@ class ___Module___ServiceProvider extends ServiceProvider
     protected function registerCommands(): void
     {
         // $this->commands([]);
+    }
+
+    /**
+     * Register middlewares
+     */
+    protected function registerMiddlewares(Router $router): void
+    {
+        $router->middlewareGroup('web', [
+            HandleLocalization::class,
+        ]);
     }
 
     /**

@@ -1,0 +1,28 @@
+{
+    "name": "saucebase/localization",
+    "description": "",
+    "authors": [
+        {
+            "name": "Sauce Base",
+            "email": "contact@saucebase.dev"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Localization\\": "app/",
+            "Modules\\Localization\\Database\\Factories\\": "database/factories/",
+            "Modules\\Localization\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Localization\\Tests\\": "tests/"
+        }
+    }
+}

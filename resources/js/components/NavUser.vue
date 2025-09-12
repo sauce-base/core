@@ -18,7 +18,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import LanguageSelector from '@/components/ui/LanguageSelector.vue';
 import {
     SidebarMenu,
     SidebarMenuButton,
@@ -28,6 +27,7 @@ import {
 import ThemeSelector from '@/components/ui/ThemeSelector.vue';
 import { Link, router } from '@inertiajs/vue3';
 import { useAuthStore } from '@modules/Auth/resources/js/stores';
+import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{

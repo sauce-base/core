@@ -3,6 +3,4 @@
 use Illuminate\Support\Facades\Route;
 use ___MODULE_NAMESPACE___\___Module___\Http\Controllers\___Module___Controller;
 
-Route::middleware(['guest'])->prefix('{module-}')->group(function () {
-    Route::resource('{module-}', ___Module___Controller::class);
-});
+Route::resource('{module-}', ___Module___Controller::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Modules\Localization\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class HandleLocalization
     {
         if ($locale = Session::get('locale')) {
 
-            $availableLocales = array_keys(config('app.available_locales', []));
+            $availableLocales = array_keys(config('localization.available_locales', []));
 
             if (isset($locale) && in_array($locale, $availableLocales)) {
                 App::setLocale($locale);

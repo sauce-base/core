@@ -8,12 +8,12 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUIStore } from '@/stores/ui';
 import { loadLanguageAsync } from 'laravel-vue-i18n';
 import { Globe } from 'lucide-vue-next';
 import { computed } from 'vue';
 import IconBR from '~icons/circle-flags/br';
 import IconUS from '~icons/circle-flags/us';
+import { useLocalizationStore } from '../stores';
 
 interface Props {
     /**
@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
         'flex items-center rounded-lg p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
 });
 
-const uiStore = useUIStore();
+const store = useLocalizationStore();
 
 //TODO: get this list from BE
 const languages = [
@@ -41,14 +41,13 @@ const languages = [
 ];
 
 const switchLanguage = async (langCode: string) => {
-    await uiStore.setLanguage(langCode);
+    await store.setLanguage(langCode);
     await loadLanguageAsync(langCode);
 };
 
 const currentLanguage = computed(
     () =>
-        languages.find((lang) => lang.code === uiStore.language) ||
-        languages[0],
+        languages.find((lang) => lang.code === store.language) || languages[0],
 );
 </script>
 
@@ -69,7 +68,7 @@ const currentLanguage = computed(
                 @click="switchLanguage(language.code)"
                 :class="{
                     'bg-accent text-accent-foreground':
-                        uiStore.language === language.code,
+                        store.language === language.code,
                 }"
             >
                 <component :is="language.icon" class="size-4" />
@@ -93,7 +92,7 @@ const currentLanguage = computed(
                 v-for="language in languages"
                 :key="language.code"
                 @click="switchLanguage(language.code)"
-                :class="{ 'bg-accent': uiStore.language === language.code }"
+                :class="{ 'bg-accent': store.language === language.code }"
             >
                 <component :is="language.icon" class="h-4 w-4" />
                 {{ language.name }}
