@@ -3,8 +3,6 @@
 namespace ___MODULE_NAMESPACE___\___Module___\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use ___MODULE_NAMESPACE___\___Module___\Http\Middleware\HandleInertiaRequests;
-use Illuminate\Routing\Router;
 
 class ___Module___ServiceProvider extends ServiceProvider
 {
@@ -14,9 +12,8 @@ class ___Module___ServiceProvider extends ServiceProvider
     /**
      * Boot the application events.
      */
-    public function boot(Router $router): void
+    public function boot(): void
     {
-        $this->registerMiddlewares($router);
         $this->registerCommands();
         $this->registerCommandSchedules();
         $this->registerTranslations();
@@ -82,15 +79,5 @@ class ___Module___ServiceProvider extends ServiceProvider
     public function provides(): array
     {
         return [];
-    }
-
-    /**
-     * Register the middlewares for this module
-     */
-    protected function registerMiddlewares(Router $router): void
-    {
-        $router->middlewareGroup('web', [
-            HandleInertiaRequests::class,
-        ]);
     }
 }
