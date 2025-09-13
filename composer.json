@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "roble/saucebase",
+    "name": "saucebase/core",
     "type": "project",
     "description": "A Laravel skeleton project with Filament, InertiaJS, and more",
     "keywords": [
