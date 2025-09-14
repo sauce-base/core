@@ -64,6 +64,7 @@
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
         "filament/upgrade": "^4.0",
+        "joshbrw/laravel-module-installer": "^2.0",
         "larastan/larastan": "^3.0",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.2.2",
@@ -128,6 +129,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
+            "joshbrw/laravel-module-installer": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "wikimedia/composer-merge-plugin": true
