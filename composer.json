@@ -56,7 +56,6 @@
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^2.10.1",
         "nwidart/laravel-modules": "^12.0",
-        "saucebase/pomodoro-module": "^0.0.2",
         "spatie/laravel-permission": "^6.21",
         "tightenco/ziggy": "^2.0"
     },
