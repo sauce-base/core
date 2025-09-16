@@ -44,7 +44,7 @@ class RecipeToModuleCommand extends Command
 
         $this->template = $this->getTemplate();
         $this->templatePath = base_path($this->template);
-        $this->tempFolder = base_path('generator-temp');
+        $this->tempFolder = base_path('saucebase-temp');
 
         if (!file_exists($this->templatePath)) {
             error("$this->templatePath Path does not exist! Please check your config/saucebase.php file.");
