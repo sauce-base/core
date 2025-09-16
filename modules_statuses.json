@@ -1,5 +1,4 @@
 {
     "Auth": true,
-    "Localization": true,
-    "Pomodoro": true
+    "Localization": true
 }
