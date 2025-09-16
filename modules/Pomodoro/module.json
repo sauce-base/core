@@ -1,0 +1,12 @@
+{
+    "name": "Pomodoro",
+    "alias": "pomodoro",
+    "description": "Test module ",
+    "keywords": ["pomodoro"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Pomodoro\\Providers\\PomodoroServiceProvider"
+    ],
+    "files": []
+}
+

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3338ab1588a13d4b34e1c7a7b7ca7be",
+    "content-hash": "5c7fd7e32d61184e102c3e864c981c4d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5946,6 +5946,47 @@
                 }
             ],
             "time": "2025-02-25T09:09:36+00:00"
+        },
+        {
+            "name": "saucebase/pomodoro-module",
+            "version": "v0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sauce-base/pomodoro-module.git",
+                "reference": "7cb3de98bb71754d85ab28172dc8debc3462818b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sauce-base/pomodoro-module/zipball/7cb3de98bb71754d85ab28172dc8debc3462818b",
+                "reference": "7cb3de98bb71754d85ab28172dc8debc3462818b",
+                "shasum": ""
+            },
+            "type": "laravel-module",
+            "extra": {
+                "laravel": {
+                    "aliases": [],
+                    "providers": []
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Modules\\Pomodoro\\": "app/",
+                    "Modules\\Pomodoro\\Database\\Seeders\\": "database/seeders/",
+                    "Modules\\Pomodoro\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Sauce Base",
+                    "email": "contact@saucebase.dev"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/sauce-base/pomodoro-module/issues",
+                "source": "https://github.com/sauce-base/pomodoro-module/tree/v0.0.2"
+            },
+            "time": "2025-09-14T16:35:24+00:00"
         },
         {
             "name": "scrivo/highlight.php",
