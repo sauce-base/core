@@ -3,40 +3,6 @@
     "name": "saucebase/core",
     "type": "project",
     "description": "A Laravel skeleton project with Filament, InertiaJS, and more",
-    "keywords": [
-        "saucebase",
-        "laravel skeleton",
-        "laravel",
-        "laravel project",
-        "laravel application",
-        "laravel starter kit",
-        "laravel boilerplate",
-        "laravel base",
-        "laravel foundation",
-        "laravel base project",
-        "laravel base application",
-        "laravel base skeleton",
-        "laravel base starter kit",
-        "laravel base boilerplate",
-        "laravel base foundation",
-        "laravel base framework",
-        "laravel base codebase",
-        "laravel base code",
-        "laravel base setup",
-        "laravel base environment",
-        "laravel base configuration",
-        "laravel base development",
-        "saas base",
-        "saas starter kit",
-        "saas boilerplate",
-        "saas foundation",
-        "saas framework",
-        "saas codebase",
-        "saas code",
-        "saas setup",
-        "saas environment",
-        "saas configuration"
-    ],
     "license": "MIT",
     "require": {
         "php": "^8.4",
@@ -64,7 +30,6 @@
         "barryvdh/laravel-ide-helper": "^3.6",
         "fakerphp/faker": "^1.23",
         "filament/upgrade": "^4.0",
-        "joshbrw/laravel-module-installer": "^2.0",
         "larastan/larastan": "^3.0",
         "laravel/breeze": "^2.3",
         "laravel/pail": "^1.2.2",
@@ -74,6 +39,7 @@
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.8",
         "pestphp/pest-plugin-laravel": "^3.2",
+        "saucebase/module-installer": "^1.0",
         "symfony/filesystem": "^7.3"
     },
     "autoload": {
@@ -130,12 +96,39 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "joshbrw/laravel-module-installer": true,
             "pestphp/pest-plugin": true,
             "php-http/discovery": true,
+            "saucebase/module-installer": true,
             "wikimedia/composer-merge-plugin": true
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Sauce Base",
+            "email": "hello@saucebase.dev"
+        }
+    ],
+    "keywords": [
+        "saucebase",
+        "laravel skeleton",
+        "laravel",
+        "laravel project",
+        "laravel application",
+        "laravel starter kit",
+        "laravel boilerplate",
+        "laravel base",
+        "laravel foundation",
+        "laravel base project",
+        "laravel base application",
+        "laravel base skeleton",
+        "laravel base starter kit",
+        "laravel boilerplate",
+        "saas base",
+        "saas starter kit",
+        "saas boilerplate",
+        "saas foundation",
+        "saas framework"
+    ]
 }
