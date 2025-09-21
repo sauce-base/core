@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Users\Schemas;
+namespace Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas;
 
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;

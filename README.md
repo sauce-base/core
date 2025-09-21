@@ -1,10 +1,8 @@
 # 🍯 Sauce Base
 
-**Laravel SaaS Boilerplate with VILT Stack**
+**Modular Laravel SaaS Starter Kit**
 
-> ⚠️ **Development Status**: This project is currently in active development and is **NOT production-ready**. APIs, features, and architecture may change significantly.
-
-A modern Laravel SaaS starter kit built with the VILT stack (Vue, Inertia, Laravel, Tailwind) - your essential foundation for building scalable SaaS applications.
+> ⚠️ **Active development** – APIs, features, and architecture may change without notice.
 
 [![CI](https://github.com/sauce-base/core/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/core/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -16,79 +14,93 @@ A modern Laravel SaaS starter kit built with the VILT stack (Vue, Inertia, Larav
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.1-06B6D4?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![Node.js](https://img.shields.io/badge/Node.js-22.0%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Inertia.js](https://img.shields.io/badge/Inertia.js-2.0-9553E9?logo=inertia&logoColor=white)](https://inertiajs.com)
+[![Filament](https://img.shields.io/badge/Filament-4.0-10B981?logo=filament&logoColor=white)](https://filamentphp.com)
+[![Pest](https://img.shields.io/badge/Pest-2.0-FF4785?logo=pest&logoColor=white)](https://pestphp.com)
+[![Playwright](https://img.shields.io/badge/Playwright-1.40-000000?logo=playwright&logoColor=white)](https://playwright.dev)
 
-## Tech Stack
-
-- **Backend**: Laravel 12, PHP 8.4+, PostgreSQL, Redis
-- **Frontend**: Vue 3, TypeScript, Inertia.js, Tailwind CSS 4
-- **UI**: shadcn/ui components, Lucide icons
-- **Development**: Docker, Vite, Pest (PHP testing), Playwright (E2E testing)
-
-## Quick Start
-
-### Prerequisites
-- Docker
-- Node.js 22+ and npm
-
-### Setup
-
-1. **Clone and setup**
-   ```bash
-   git clone https://github.com/sauce-base/core.git
-   cd core
-   chmod +x bin/setup-env
-   ./bin/setup-env
-   ```
-
-2. **Start development**
-   ```bash
-   npm run dev
-   ```
-
-3. **Visit** https://localhost or http://localhost
-
-### Manual Setup
-```bash
-# Environment
-cp .env.example .env
-
-# Docker services
-docker compose up -d
-
-# Dependencies and database
-docker compose exec workspace composer install
-docker compose exec workspace php artisan key:generate
-docker compose exec workspace php artisan migrate:fresh --seed
-
-# Frontend
-npm install && npm run build
-```
-
-## Development
-
-```bash
-# Start development server
-npm run dev
-
-# Code quality (run before commit)
-docker compose exec workspace ./vendor/bin/pint
-docker compose exec workspace npm run lint
-docker compose exec workspace composer test
-
-# Fresh database
-docker compose exec workspace php artisan migrate:fresh --seed
-```
-
-## Contributing
-
-1. Read `CLAUDE.md` for development guidelines
-2. Run quality checks before committing
-3. Follow conventional commit format: `feat: description`
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file.
+Sauce Base is a batteries-included Laravel starter kit built around the **VILT stack** (Vue, Inertia, Laravel, Tailwind). It embraces a modular architecture so you can
+**install, copy, and own** feature packs—just like shadcn/ui—without inheriting hidden dependencies. Start from a solid core, pick the modules you need, and ship your SaaS
+faster.
 
 ---
 
-⭐ Star us on GitHub if this project helped you!
+## 🚀 Why Sauce Base?
+
+- **Modern Foundations**: Laravel 12, PHP 8.4+, Vue 3, TypeScript, Tailwind CSS 4, Vite 6.
+- **First-Class Modules**: Installable feature modules (Auth, Localization, …) that you can copy, customize, and own forever.
+- **Full-Stack DX**: Inertia.js SPA experience, Pinia stores, Ziggy routes, persistent state, i18n, built-in dark/light mode and theme management.
+- **Production Ready**: Dockerized stack (Nginx, PHP-FPM, MySQL, Redis, Mailpit, Soketi), seeded roles/users, Playwright E2E tests, Pest unit tests.
+- **Headless Admin**: Filament 4 panel already wired with module discovery via `Coolsam/Modules`.
+
+---
+
+### Prerequisites
+
+- Docker
+- Node.js 22+ and npm
+
+## 🧱 Architecture Overview
+
+```
+├── app/                  # Core Laravel application (service providers, models, listeners)
+├── modules/              # Feature modules (Auth, Localization, …) – install, copy, own
+│   └── <ModuleName>/
+│       ├── app/          # Module controllers, actions, providers
+│       ├── resources/    # Vue pages/components, CSS, translations
+│       └── routes/       # Module routes (web + api)
+├── resources/js/         # Inertia SPA (layouts, pages, Pinia stores, middleware, UI lib)
+├── database/             # Migrations, factories, seeders (roles & demo users included)
+├── docker/               # Development Dockerfiles + configs
+└── vite-module-loader.js # Collects enabled module assets automatically for Vite
+```
+
+- Modules are managed with **nwidart/laravel-modules** and automatically discovered if marked `true` in `modules_statuses.json`.
+- The SPA loads module pages with the namespace syntax (e.g. `Auth::Login`) so copied modules stay self-contained.
+- Tailwind is configured via the new V4 workflow with shadcn-compatible component structure (`resources/js/components/...`).
+
+---
+
+## 📦 Included Modules
+
+| Module           | Highlights                                                                                          |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| **Auth**         | Inertia auth pages, Socialite (Google/GitHub/Facebook-ready), Pinia auth store, Social connections. |
+| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI.    |
+
+Upcoming modules will follow the same copy-and-own philosophy—pull the files you need, keep them in your repo, iterate freely.
+
+- The modules will be moved to a separate repo soon, along with a catalog of add-ons.
+
+---
+
+## ⚙️ Quick Start
+
+1. **Clone & bootstrap**
+
+    ```bash
+    git clone https://github.com/sauce-base/core.git
+    cd core
+    chmod +x bin/setup-env
+    ./bin/setup-env
+    ```
+
+    The script checks prerequisites, prepares SSL certs (if mkcert is present), spins up Docker, runs migrations/seeds, installs JS/PHP deps.
+
+2. **Run development services**
+
+    ```bash
+    docker compose up -d
+    npm run dev
+    ```
+
+3. **Visit the app**
+    - Site: https://localhost (self-signed cert) or http://localhost
+    - Filament Admin: https://localhost/admin
+
+Complete documentation coming soon!
+
+## 📄 License
+
+MIT © Sauce Base. See [LICENSE](LICENSE).
+
+---
