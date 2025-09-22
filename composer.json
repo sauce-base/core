@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "alizharb/filament-module-manager": "^1.1",
         "coolsam/modules": "^5.0",
         "filament/actions": "^4.0",
         "filament/filament": "~4.0",

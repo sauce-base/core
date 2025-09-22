@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Alizharb\FilamentModuleManager\FilamentModuleManagerPlugin;
 use Coolsam\Modules\ModulesPlugin;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -65,6 +66,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugin(ModulesPlugin::make())
+            ->plugin(FilamentModuleManagerPlugin::make())
             ->default();
     }
 }
