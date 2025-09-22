@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Coolsam\Modules\ModulesPlugin;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -28,8 +29,14 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
-            ->sidebarWidth('250px')
+            // ->sidebarWidth('250px')
             ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems([
+                Action::make('dashboard')
+                    ->label('Dashboard')
+                    ->url(fn(): string => route('dashboard'))
+                    ->icon('heroicon-o-home'),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
