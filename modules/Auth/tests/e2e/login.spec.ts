@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { testUsers, validationTestCases } from '../fixtures/users';
-import { LoginPage } from '../pages/LoginPage';
+import { testUsers, validationTestCases } from './fixtures/users';
+import { LoginPage } from './pages/LoginPage';
 
 test.describe('Login Flow', () => {
     let loginPage: LoginPage;
@@ -73,14 +73,14 @@ test.describe('Login Flow', () => {
 
     test('should navigate to sign up page', async () => {
         await loginPage.signUpLink.click();
-        await expect(loginPage.page).toHaveURL('/register');
+        await expect(loginPage.page).toHaveURL('/auth/register');
     });
 
     test('should navigate to forgot password page', async ({ page }) => {
         // Only test this if forgot password link is visible
         if (await loginPage.forgotPasswordLink.isVisible()) {
             await loginPage.forgotPasswordLink.click();
-            await expect(page).toHaveURL('/forgot-password');
+            await expect(page).toHaveURL('/auth/forgot-password');
         }
     });
 
@@ -90,7 +90,7 @@ test.describe('Login Flow', () => {
         await loginPage.login(invalidUser.email, invalidUser.password);
 
         // Should stay on login page and show error (this will depend on your backend implementation)
-        await expect(loginPage.page).toHaveURL('/login');
+        await expect(loginPage.page).toHaveURL('/auth/login');
     });
 
     test('should validate form before submission', async () => {
@@ -98,7 +98,7 @@ test.describe('Login Flow', () => {
         await loginPage.loginButton.click();
 
         // Should show validation errors without navigating
-        await expect(loginPage.page).toHaveURL('/login');
+        await expect(loginPage.page).toHaveURL('/auth/login');
 
         // Check for validation error using test ID
         await expect(loginPage.page.getByTestId('email-error')).toBeVisible();
@@ -125,7 +125,7 @@ test.describe('Login Flow', () => {
             await loginPage.login(user.email, user.password);
 
             // Should stay on login page and show network error
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
 
             // Check for network error message (if implemented)
             const networkError = loginPage.page.getByTestId('network-error');
@@ -138,7 +138,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate server error
-            await loginPage.page.route('/login', (route) => {
+            await loginPage.page.route('/auth/login', (route) => {
                 route.fulfill({
                     status: 500,
                     contentType: 'application/json',
@@ -149,7 +149,7 @@ test.describe('Login Flow', () => {
             await loginPage.login(user.email, user.password);
 
             // Should stay on login page and show server error
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
 
             // Check for server error message
             const serverError = loginPage.page.getByTestId('server-error');
@@ -162,7 +162,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate timeout by delaying response
-            await loginPage.page.route('/login', async (route) => {
+            await loginPage.page.route('/auth/login', async (route) => {
                 await new Promise((resolve) => setTimeout(resolve, 30000)); // 30s delay
                 route.continue();
             });
@@ -170,7 +170,7 @@ test.describe('Login Flow', () => {
             await loginPage.login(user.email, user.password);
 
             // Should eventually show timeout error or fallback
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
         });
     });
 
@@ -196,7 +196,7 @@ test.describe('Login Flow', () => {
             await loginPage.login(invalidUser.email, invalidUser.password);
 
             // Should stay on login page when rate limited
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
 
             // Should show rate limit message (if implemented)
             const rateLimitError =
@@ -222,7 +222,7 @@ test.describe('Login Flow', () => {
             // 1. Redirect to dashboard if already logged in, OR
             // 2. Show a message saying "You are already logged in", OR
             // 3. Allow re-login (current behavior)
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
             await loginPage.expectToBeVisible();
         });
 
@@ -230,7 +230,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate expired session response
-            await loginPage.page.route('/login', (route) => {
+            await loginPage.page.route('/auth/login', (route) => {
                 route.fulfill({
                     status: 401,
                     contentType: 'application/json',
@@ -259,7 +259,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Intercept request to check for CSRF token
-            await loginPage.page.route('/login', (route) => {
+            await loginPage.page.route('/auth/login', (route) => {
                 const request = route.request();
                 const postData = request.postData();
 
@@ -286,7 +286,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate CSRF token validation failure
-            await loginPage.page.route('/login', (route) => {
+            await loginPage.page.route('/auth/login', (route) => {
                 route.fulfill({
                     status: 419, // Laravel's CSRF token mismatch status
                     contentType: 'application/json',
@@ -300,7 +300,7 @@ test.describe('Login Flow', () => {
             await loginPage.login(user.email, user.password);
 
             // Should show CSRF error and stay on login page
-            await expect(loginPage.page).toHaveURL('/login');
+            await expect(loginPage.page).toHaveURL('/auth/login');
 
             const csrfError = loginPage.page.getByTestId('csrf-error');
             if (await csrfError.isVisible()) {
