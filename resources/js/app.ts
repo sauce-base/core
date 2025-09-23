@@ -6,7 +6,7 @@ import { useColorMode } from '@vueuse/core';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, DefineComponent, h } from 'vue';
-import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { ZiggyVue } from 'ziggy-js';
 import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
 import { useUIStore } from './stores/ui';
