@@ -39,6 +39,7 @@ async function createConfig() {
             alias: {
                 '@': path.resolve(__dirname, 'resources/js'),
                 '@modules': path.resolve(__dirname, 'modules'),
+                'ziggy-js': path.resolve(__dirname, 'vendor/tightenco/ziggy'),
             },
         },
     });
