@@ -1,4 +1,10 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import {
+    expect,
+    type Locator,
+    type Page,
+    type Request,
+    type Response,
+} from '@playwright/test';
 
 export class LoginPage {
     readonly page: Page;
@@ -9,9 +15,11 @@ export class LoginPage {
     readonly loginButton: Locator;
     readonly forgotPasswordLink: Locator;
     readonly signUpLink: Locator;
+    readonly loginEndpoint: string;
 
     constructor(page: Page) {
         this.page = page;
+        this.loginEndpoint = '/auth/login';
         this.emailInput = page.getByTestId('email');
         this.passwordInput = page.getByTestId('password');
         this.passwordToggle = page.getByTestId('password-toggle');
@@ -22,7 +30,7 @@ export class LoginPage {
     }
 
     async goto() {
-        await this.page.goto('/auth/login');
+        await this.page.goto(this.loginEndpoint);
     }
 
     async login(email: string, password: string, remember = false) {
@@ -71,5 +79,41 @@ export class LoginPage {
     async expectValidationError(testId: string) {
         const errorElement = this.page.getByTestId(testId);
         await expect(errorElement).toBeVisible();
+    }
+
+    async waitForLoginResponse() {
+        return this.page.waitForResponse((response: Response) =>
+            response.url().includes(this.loginEndpoint),
+        );
+    }
+
+    async waitForFailedLoginRequest() {
+        return this.page.waitForEvent('requestfailed', (request: Request) =>
+            request.url().includes(this.loginEndpoint),
+        );
+    }
+
+    async mockNetworkFailure() {
+        await this.page.route(this.loginEndpoint, (route) => route.abort());
+    }
+
+    async mockServerResponse(
+        status: number,
+        body: Record<string, unknown> = {},
+    ) {
+        await this.page.route(this.loginEndpoint, (route) => {
+            route.fulfill({
+                status,
+                contentType: 'application/json',
+                body: JSON.stringify(body),
+            });
+        });
+    }
+
+    async mockDelayedResponse(delayMs: number) {
+        await this.page.route(this.loginEndpoint, async (route) => {
+            await new Promise((resolve) => setTimeout(resolve, delayMs));
+            await route.continue();
+        });
     }
 }

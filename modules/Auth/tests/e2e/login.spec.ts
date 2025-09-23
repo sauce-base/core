@@ -77,11 +77,9 @@ test.describe('Login Flow', () => {
     });
 
     test('should navigate to forgot password page', async ({ page }) => {
-        // Only test this if forgot password link is visible
-        if (await loginPage.forgotPasswordLink.isVisible()) {
-            await loginPage.forgotPasswordLink.click();
-            await expect(page).toHaveURL('/auth/forgot-password');
-        }
+        await expect(loginPage.forgotPasswordLink).toBeVisible();
+        await loginPage.forgotPasswordLink.click();
+        await expect(page).toHaveURL('/auth/forgot-password');
     });
 
     test('should handle invalid credentials gracefully', async () => {
@@ -90,7 +88,7 @@ test.describe('Login Flow', () => {
         await loginPage.login(invalidUser.email, invalidUser.password);
 
         // Should stay on login page and show error (this will depend on your backend implementation)
-        await expect(loginPage.page).toHaveURL('/auth/login');
+        await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
     });
 
     test('should validate form before submission', async () => {
@@ -98,7 +96,7 @@ test.describe('Login Flow', () => {
         await loginPage.loginButton.click();
 
         // Should show validation errors without navigating
-        await expect(loginPage.page).toHaveURL('/auth/login');
+        await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
         // Check for validation error using test ID
         await expect(loginPage.page.getByTestId('email-error')).toBeVisible();
@@ -120,25 +118,29 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate network failure
-            await loginPage.page.route('/login', (route) => route.abort());
+            await loginPage.page.route(loginPage.loginEndpoint, (route) =>
+                route.abort(),
+            );
+
+            const requestFailedPromise = loginPage.page.waitForEvent(
+                'requestfailed',
+                (request) => request.url().includes(loginPage.loginEndpoint),
+            );
 
             await loginPage.login(user.email, user.password);
 
-            // Should stay on login page and show network error
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            // Should stay on login page even when the request fails
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
-            // Check for network error message (if implemented)
-            const networkError = loginPage.page.getByTestId('network-error');
-            if (await networkError.isVisible()) {
-                await expect(networkError).toBeVisible();
-            }
+            const failedRequest = await requestFailedPromise;
+            expect(failedRequest.url()).toContain(loginPage.loginEndpoint);
         });
 
         test('should handle server 500 error gracefully', async () => {
             const user = testUsers.valid;
 
             // Simulate server error
-            await loginPage.page.route('/auth/login', (route) => {
+            await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 route.fulfill({
                     status: 500,
                     contentType: 'application/json',
@@ -146,31 +148,35 @@ test.describe('Login Flow', () => {
                 });
             });
 
+            const responsePromise = loginPage.page.waitForResponse((response) =>
+                response.url().includes(loginPage.loginEndpoint),
+            );
+
             await loginPage.login(user.email, user.password);
 
-            // Should stay on login page and show server error
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            // Should stay on login page when the server responds with 500
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
-            // Check for server error message
-            const serverError = loginPage.page.getByTestId('server-error');
-            if (await serverError.isVisible()) {
-                await expect(serverError).toBeVisible();
-            }
+            const response = await responsePromise;
+            expect(response.status()).toBe(500);
         });
 
         test('should handle request timeout', async () => {
             const user = testUsers.valid;
 
             // Simulate timeout by delaying response
-            await loginPage.page.route('/auth/login', async (route) => {
-                await new Promise((resolve) => setTimeout(resolve, 30000)); // 30s delay
-                route.continue();
-            });
+            await loginPage.page.route(
+                loginPage.loginEndpoint,
+                async (route) => {
+                    await new Promise((resolve) => setTimeout(resolve, 30000)); // 30s delay
+                    route.continue();
+                },
+            );
 
             await loginPage.login(user.email, user.password);
 
             // Should eventually show timeout error or fallback
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
         });
     });
 
@@ -180,7 +186,7 @@ test.describe('Login Flow', () => {
             const invalidUser = testUsers.invalid;
 
             // Simulate rate limit response immediately
-            await loginPage.page.route('/login', (route) => {
+            await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 route.fulfill({
                     status: 429,
                     contentType: 'application/json',
@@ -192,18 +198,18 @@ test.describe('Login Flow', () => {
                 });
             });
 
+            const responsePromise = loginPage.page.waitForResponse((res) =>
+                res.url().includes(loginPage.loginEndpoint),
+            );
+
             // Make one login attempt that triggers rate limit
             await loginPage.login(invalidUser.email, invalidUser.password);
 
             // Should stay on login page when rate limited
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
-            // Should show rate limit message (if implemented)
-            const rateLimitError =
-                loginPage.page.getByTestId('rate-limit-error');
-            if (await rateLimitError.isVisible()) {
-                await expect(rateLimitError).toBeVisible();
-            }
+            const response = await responsePromise;
+            expect(response.status()).toBe(429);
         });
     });
 
@@ -222,7 +228,7 @@ test.describe('Login Flow', () => {
             // 1. Redirect to dashboard if already logged in, OR
             // 2. Show a message saying "You are already logged in", OR
             // 3. Allow re-login (current behavior)
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
             await loginPage.expectToBeVisible();
         });
 
@@ -230,7 +236,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate expired session response
-            await loginPage.page.route('/auth/login', (route) => {
+            await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 route.fulfill({
                     status: 401,
                     contentType: 'application/json',
@@ -241,15 +247,15 @@ test.describe('Login Flow', () => {
                 });
             });
 
+            const responsePromise = loginPage.page.waitForResponse((res) =>
+                res.url().includes(loginPage.loginEndpoint),
+            );
+
             await loginPage.login(user.email, user.password);
 
-            // Should show session expired message
-            const sessionError = loginPage.page.getByTestId(
-                'session-expired-error',
-            );
-            if (await sessionError.isVisible()) {
-                await expect(sessionError).toBeVisible();
-            }
+            // Should return 401 so the frontend can surface a session error
+            const response = await responsePromise;
+            expect(response.status()).toBe(401);
         });
     });
 
@@ -259,7 +265,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Intercept request to check for CSRF token
-            await loginPage.page.route('/auth/login', (route) => {
+            await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 const request = route.request();
                 const postData = request.postData();
 
@@ -286,7 +292,7 @@ test.describe('Login Flow', () => {
             const user = testUsers.valid;
 
             // Simulate CSRF token validation failure
-            await loginPage.page.route('/auth/login', (route) => {
+            await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 route.fulfill({
                     status: 419, // Laravel's CSRF token mismatch status
                     contentType: 'application/json',
@@ -297,15 +303,17 @@ test.describe('Login Flow', () => {
                 });
             });
 
+            const responsePromise = loginPage.page.waitForResponse((res) =>
+                res.url().includes(loginPage.loginEndpoint),
+            );
+
             await loginPage.login(user.email, user.password);
 
-            // Should show CSRF error and stay on login page
-            await expect(loginPage.page).toHaveURL('/auth/login');
+            // Should surface 419 response and stay on login page
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
-            const csrfError = loginPage.page.getByTestId('csrf-error');
-            if (await csrfError.isVisible()) {
-                await expect(csrfError).toBeVisible();
-            }
+            const response = await responsePromise;
+            expect(response.status()).toBe(419);
         });
     });
 });
