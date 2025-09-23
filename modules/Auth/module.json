@@ -1,12 +1,11 @@
 {
     "name": "Auth",
     "alias": "auth",
-    "description": "",
+    "description": "Authentication module",
+    "author": "Sauce Base",
+    "version": "v1.0",
     "keywords": ["auth"],
     "priority": 0,
-    "providers": [
-        "Modules\\Auth\\Providers\\AuthServiceProvider"
-    ],
+    "providers": ["Modules\\Auth\\Providers\\AuthServiceProvider"],
     "files": []
 }
-

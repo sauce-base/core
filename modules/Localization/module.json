@@ -1,7 +1,9 @@
 {
     "name": "Localization",
     "alias": "localization",
-    "description": "",
+    "description": "Localization module",
+    "author": "Sauce Base",
+    "version": "v1.0",
     "keywords": ["localization"],
     "priority": 0,
     "providers": [
@@ -9,4 +11,3 @@
     ],
     "files": []
 }
-
