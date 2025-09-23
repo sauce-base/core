@@ -30,13 +30,19 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
-            // ->sidebarWidth('250px')
+            ->sidebarWidth('250px')
             ->sidebarCollapsibleOnDesktop()
             ->userMenuItems([
+                Action::make('site')
+                    ->label('Ver site')
+                    ->url(fn(): string => route('index'))
+                    ->icon('heroicon-o-globe-alt')
+                    ->openUrlInNewTab(),
                 Action::make('dashboard')
-                    ->label('Dashboard')
+                    ->label('Ver Dashboard')
                     ->url(fn(): string => route('dashboard'))
-                    ->icon('heroicon-o-home'),
+                    ->icon('heroicon-o-home')
+                    ->openUrlInNewTab(),
             ])
             ->colors([
                 'primary' => Color::Amber,
