@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 
+uses(Tests\TestCase::class);
+
 test('providers endpoint returns only enabled providers', function () {
     config(['app.social_providers' => [
         'github' => [
