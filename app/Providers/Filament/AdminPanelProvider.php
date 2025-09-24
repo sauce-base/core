@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use Alizharb\FilamentModuleManager\FilamentModuleManagerPlugin;
 use Coolsam\Modules\ModulesPlugin;
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,6 +32,18 @@ class AdminPanelProvider extends PanelProvider
             ->spa()
             ->sidebarWidth('250px')
             ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems([
+                Action::make('site')
+                    ->label('Ver site')
+                    ->url(fn(): string => route('index'))
+                    ->icon('heroicon-o-globe-alt')
+                    ->openUrlInNewTab(),
+                Action::make('dashboard')
+                    ->label('Ver Dashboard')
+                    ->url(fn(): string => route('dashboard'))
+                    ->icon('heroicon-o-home')
+                    ->openUrlInNewTab(),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -58,6 +72,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugin(ModulesPlugin::make())
+            ->plugin(FilamentModuleManagerPlugin::make())
             ->default();
     }
 }

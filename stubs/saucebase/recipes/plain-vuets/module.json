@@ -1,12 +1,11 @@
 {
     "name": "{Module}",
     "alias": "{module_}",
-    "description": "",
+    "description": "{Module} module",
+    "author": "Sauce Base",
+    "version": "v1.0",
     "keywords": ["{module_}"],
     "priority": 0,
-    "providers": [
-        "Modules\\{Module}\\Providers\\{Module}ServiceProvider"
-    ],
+    "providers": ["Modules\\{Module}\\Providers\\{Module}ServiceProvider"],
     "files": []
 }
-
