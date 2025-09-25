@@ -1,9 +1,18 @@
 <?php
 
-uses(Tests\TestCase::class);
+namespace Modules\Settings\Tests\Feature;
 
-test('returns a successful response for the Module URL', function () {
-    $response = $this->get('/settings');
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-    $response->assertStatus(200);
-});
+class ExampleTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_returns_a_successful_response()
+    {
+        $response = $this->get('/settings');
+
+        $response->assertStatus(200);
+    }
+}
