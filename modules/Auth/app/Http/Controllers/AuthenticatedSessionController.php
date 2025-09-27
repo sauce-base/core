@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Fortify\Features;
 use Modules\Auth\Http\Requests\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
