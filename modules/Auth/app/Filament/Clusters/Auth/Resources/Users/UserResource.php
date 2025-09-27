@@ -2,13 +2,6 @@
 
 namespace Modules\Auth\Filament\Clusters\Auth\Resources\Users;
 
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\CreateUser;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\EditUser;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\ListUsers;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\ViewUser;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas\UserForm;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas\UserInfolist;
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Tables\UsersTable;
 use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -16,6 +9,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Modules\Auth\Filament\Clusters\Auth\AuthCluster;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\CreateUser;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\EditUser;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\ListUsers;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages\ViewUser;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas\UserForm;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas\UserInfolist;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\Tables\UsersTable;
 
 class UserResource extends Resource
 {

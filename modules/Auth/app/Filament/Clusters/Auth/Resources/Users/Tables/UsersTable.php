@@ -30,7 +30,7 @@ class UsersTable
                 TextColumn::make('roles.name')
                     ->label(__('Role'))
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'admin' => 'danger',
                         'user' => 'primary',
                         default => 'secondary',

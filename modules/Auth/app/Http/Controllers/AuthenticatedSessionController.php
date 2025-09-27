@@ -1,15 +1,14 @@
 <?php
 
-namespace  Modules\Auth\Http\Controllers;
+namespace Modules\Auth\Http\Controllers;
 
-use Modules\Auth\Http\Controllers\Controller;
-use Modules\Auth\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Modules\Auth\Http\Requests\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -26,13 +25,23 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
-     * Login 
+     * Login
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $user = $request->validateCredentials();
 
-        //TODO: check this intelisensse error.
+        if (Features::enabled(Features::twoFactorAuthentication()) && $user->hasEnabledTwoFactorAuthentication()) {
+            request()->session()->put([
+                'login.id' => $user->getKey(),
+                'login.remember' => request()->boolean('remember'),
+            ]);
+
+            return to_route('two-factor.login');
+        }
+
+        Auth::login($user, request()->boolean('remember'));
+
         request()->session()->regenerate();
 
         return redirect()->intended(route('dashboard', absolute: false));
@@ -46,7 +55,6 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

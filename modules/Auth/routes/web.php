@@ -9,8 +9,8 @@ use Modules\Auth\Http\Controllers\NewPasswordController;
 use Modules\Auth\Http\Controllers\PasswordController;
 use Modules\Auth\Http\Controllers\PasswordResetLinkController;
 use Modules\Auth\Http\Controllers\RegisteredUserController;
-use Modules\Auth\Http\Controllers\VerifyEmailController;
 use Modules\Auth\Http\Controllers\SocialiteController;
+use Modules\Auth\Http\Controllers\VerifyEmailController;
 
 Route::prefix('auth')->group(function () {
     Route::middleware('guest')->group(function () {

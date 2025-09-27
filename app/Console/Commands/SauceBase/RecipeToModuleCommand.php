@@ -16,12 +16,19 @@ use function Laravel\Prompts\text;
 class RecipeToModuleCommand extends Command
 {
     protected $signature = 'saucebase:recipe {module?} {template?}';
+
     protected $description = 'Create starter module from a template';
+
     protected string $moduleName = '';
+
     protected string $template = '';
+
     protected string $templatePath = '';
+
     protected string $tempFolder = '';
+
     protected string $moduleConfigPath = '';
+
     protected array $caseTypes = [
         'module' => 'strtolower',
         'Module' => 'ucwords',
@@ -33,10 +40,10 @@ class RecipeToModuleCommand extends Command
     {
         $this->moduleName = $this->getModuleName();
 
-        $moduleConfigPath = config('modules.paths.modules', 'Modules') . '/';
-        $this->moduleConfigPath = Str::endsWith($moduleConfigPath, '/') ? $moduleConfigPath : $moduleConfigPath . '/';
+        $moduleConfigPath = config('modules.paths.modules', 'Modules').'/';
+        $this->moduleConfigPath = Str::endsWith($moduleConfigPath, '/') ? $moduleConfigPath : $moduleConfigPath.'/';
 
-        if (file_exists($this->moduleConfigPath . $this->moduleName)) {
+        if (file_exists($this->moduleConfigPath.$this->moduleName)) {
             error("$this->moduleName module already exists.");
 
             return true;
@@ -46,7 +53,7 @@ class RecipeToModuleCommand extends Command
         $this->templatePath = base_path($this->template);
         $this->tempFolder = base_path('saucebase-temp');
 
-        if (!file_exists($this->templatePath)) {
+        if (! file_exists($this->templatePath)) {
             error("$this->templatePath Path does not exist! Please check your config/saucebase.php file.");
 
             return true;
@@ -54,9 +61,9 @@ class RecipeToModuleCommand extends Command
 
         $this->generate();
 
-        info('Starter ' . $this->moduleName . ' module generated successfully.');
+        info('Starter '.$this->moduleName.' module generated successfully.');
         info('You need to run: composer dump-autoload');
-        info('To enable the module use: php artisan module:enable ' . $this->moduleName);
+        info('To enable the module use: php artisan module:enable '.$this->moduleName);
 
         return true;
     }
@@ -74,11 +81,11 @@ class RecipeToModuleCommand extends Command
             text(
                 label: 'Please enter a name for the module to be created',
                 required: true,
-                validate: fn(string $value) => match (true) {
+                validate: fn (string $value) => match (true) {
                     strlen($value) < 1 => 'The name must be at least 1 characters.',
                     Str::contains($value, ' ') => 'The name must not contain spaces.',
                     Str::contains($value, '-') => 'The name must not contain hyphens.',
-                    file_exists($this->moduleConfigPath . $value) => 'Module already exists.',
+                    file_exists($this->moduleConfigPath.$value) => 'Module already exists.',
                     default => null
                 }
             )
@@ -112,17 +119,17 @@ class RecipeToModuleCommand extends Command
 
     protected function generate(): void
     {
-        //ensure directory does not exist
+        // ensure directory does not exist
         $this->delete($this->tempFolder);
-        $this->copy($this->templatePath, $this->tempFolder . '/Module');
+        $this->copy($this->templatePath, $this->tempFolder.'/Module');
 
-        $finder = new Finder();
+        $finder = new Finder;
         $finder->files()->in($this->tempFolder);
 
         $this->renameFiles($finder);
         $this->updateFilesContent($finder);
 
-        $this->copy($this->tempFolder . '/' . $this->moduleName, $this->moduleConfigPath . $this->moduleName);
+        $this->copy($this->tempFolder.'/'.$this->moduleName, $this->moduleConfigPath.$this->moduleName);
         $this->delete($this->tempFolder);
     }
 
@@ -146,7 +153,7 @@ class RecipeToModuleCommand extends Command
     {
         foreach ($finder as $file) {
             $type = Str::endsWith($file->getPath(), ['migrations', 'Migrations']) ? 'migration' : '';
-            $sourceFile = $file->getPath() . '/' . $file->getFilename();
+            $sourceFile = $file->getPath().'/'.$file->getFilename();
             $this->alterFilename($sourceFile, $type);
         }
     }
@@ -159,13 +166,13 @@ class RecipeToModuleCommand extends Command
         $projectPath = base_path();
         $relativePath = substr($sourceFile, strlen($projectPath));
 
-        $targetFile = $projectPath . str_replace(
+        $targetFile = $projectPath.str_replace(
             [
                 'Module',
                 'module',
-                strtolower($name) . '_plural',
+                strtolower($name).'_plural',
                 'Model',
-                'model'
+                'model',
             ],
             [
                 $name,
@@ -178,21 +185,21 @@ class RecipeToModuleCommand extends Command
         );
 
         if (in_array(basename($sourceFile), config('saucebase.ignore_files'), true)) {
-            $targetFile = dirname($targetFile) . '/' . basename($sourceFile);
+            $targetFile = dirname($targetFile).'/'.basename($sourceFile);
         }
 
-        $targetFile = str_replace("Entities", "Models", $targetFile);
+        $targetFile = str_replace('Entities', 'Models', $targetFile);
 
-        //hack to ensure modules if used does not get replaced
-        if (Str::contains($targetFile, $name . 's')) {
-            $targetFile = str_replace($name . 's', "Modules", $targetFile);
+        // hack to ensure modules if used does not get replaced
+        if (Str::contains($targetFile, $name.'s')) {
+            $targetFile = str_replace($name.'s', 'Modules', $targetFile);
         }
 
-        $targetFile = str_replace($name . "_plural", Str::plural($name), $targetFile);
+        $targetFile = str_replace($name.'_plural', Str::plural($name), $targetFile);
 
         if (
-            !is_dir(dirname($targetFile))
-            && !mkdir($concurrentDirectory = dirname($targetFile), 0777, true) && !is_dir($concurrentDirectory)
+            ! is_dir(dirname($targetFile))
+            && ! mkdir($concurrentDirectory = dirname($targetFile), 0777, true) && ! is_dir($concurrentDirectory)
         ) {
             throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
@@ -216,13 +223,13 @@ class RecipeToModuleCommand extends Command
         $timestamp = date('Y_m_d_his_');
         $file = basename($sourceFile);
 
-        return str_replace($file, $timestamp . $file, $sourceFile);
+        return str_replace($file, $timestamp.$file, $sourceFile);
     }
 
     protected function updateFilesContent($finder): void
     {
         foreach ($finder as $file) {
-            $sourceFile = $file->getPath() . '/' . $file->getFilename();
+            $sourceFile = $file->getPath().'/'.$file->getFilename();
             $this->replaceInFile($sourceFile);
         }
     }
@@ -233,7 +240,7 @@ class RecipeToModuleCommand extends Command
         $model = Str::singular($name);
         $types = $this->generatePlaceholderMap($name, $model);
 
-        if (!file_exists($sourceFile)) {
+        if (! file_exists($sourceFile)) {
             return;
         }
 
@@ -244,8 +251,8 @@ class RecipeToModuleCommand extends Command
 
     protected function generatePlaceholderMap(string $name, string $model): array
     {
-        $spaceify = fn(string $string) => trim(preg_replace('/(?<!\ )[A-Z]/', ' $0', $string));
-        $titleCase = fn(string $string) => ucwords(str_replace('_', ' ', Str::snake($string)));
+        $spaceify = fn (string $string) => trim(preg_replace('/(?<!\ )[A-Z]/', ' $0', $string));
+        $titleCase = fn (string $string) => ucwords(str_replace('_', ' ', Str::snake($string)));
 
         $pluralName = Str::plural($name);
         $snakeName = Str::snake($name);

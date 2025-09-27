@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Database\Factories;
 
-use Modules\Auth\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Modules\Auth\Models\SocialAccount;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SocialAccount>

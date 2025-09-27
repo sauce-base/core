@@ -36,9 +36,9 @@ class UserInfolist
                                         ->label(__('Provider')),
                                     TextEntry::make('last_login_at')
                                         ->datetime()
-                                        ->label(__('Last Login At'))
+                                        ->label(__('Last Login At')),
                                 ])
-                                ->columns(2)
+                                ->columns(2),
                         ]),
                     Section::make()
                         ->inlineLabel()
@@ -47,7 +47,7 @@ class UserInfolist
                             [
                                 TextEntry::make('roles.name')
                                     ->badge()
-                                    ->color(fn(string $state): string => match ($state) {
+                                    ->color(fn (string $state): string => match ($state) {
                                         'admin' => 'danger',
                                         'user' => 'primary',
                                         default => 'gray',
