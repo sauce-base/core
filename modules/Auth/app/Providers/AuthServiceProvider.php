@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class AuthServiceProvider extends ServiceProvider
 {
     protected string $moduleName = 'Auth';
+
     protected string $moduleNameLower = 'auth';
 
     /**
@@ -27,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(FortifyServiceProvider::class);
     }
 
     /**

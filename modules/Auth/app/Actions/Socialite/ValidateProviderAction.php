@@ -7,7 +7,7 @@ class ValidateProviderAction
     public function execute(string $provider): bool
     {
         $enabledProviders = collect(config('auth.social_providers', []))
-            ->filter(fn($config) => ($config['enabled'] ?? false) === true)
+            ->filter(fn ($config) => ($config['enabled'] ?? false) === true)
             ->keys()
             ->toArray();
 

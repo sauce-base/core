@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Actions\Socialite;
 
-use Modules\Auth\Exceptions\SocialiteException;
-use Modules\Auth\Actions\UpdateUserAvatarAction;
 use App\Models\User;
+use Modules\Auth\Actions\UpdateUserAvatarAction;
+use Modules\Auth\Exceptions\SocialiteException;
 
 class DisconnectSocialAccountAction
 {

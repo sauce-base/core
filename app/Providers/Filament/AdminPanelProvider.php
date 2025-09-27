@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use Alizharb\FilamentModuleManager\FilamentModuleManagerPlugin;
 use Coolsam\Modules\ModulesPlugin;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -35,12 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 Action::make('site')
                     ->label('Ver site')
-                    ->url(fn(): string => route('index'))
+                    ->url(fn (): string => route('index'))
                     ->icon('heroicon-o-globe-alt')
                     ->openUrlInNewTab(),
                 Action::make('dashboard')
                     ->label('Ver Dashboard')
-                    ->url(fn(): string => route('dashboard'))
+                    ->url(fn (): string => route('dashboard'))
                     ->icon('heroicon-o-home')
                     ->openUrlInNewTab(),
             ])
@@ -72,7 +71,6 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugin(ModulesPlugin::make())
-            ->plugin(FilamentModuleManagerPlugin::make())
             ->default();
     }
 }

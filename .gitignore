@@ -23,6 +23,7 @@
 
 # Module-specific ignores
 modules/*/node_modules/
+modules/*/vendor/
 modules/*/package-lock.json
 modules/*/dist/
 modules/*/coverage/

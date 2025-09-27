@@ -2,12 +2,12 @@
 
 namespace Modules\Auth\Actions\Socialite;
 
-use Modules\Auth\Actions\UpdateUserAvatarAction;
-use Modules\Auth\Exceptions\SocialAuthException;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use App\Models\SocialAccount;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Modules\Auth\Actions\UpdateUserAvatarAction;
+use Modules\Auth\Exceptions\SocialAuthException;
 
 class LinkSocialAccountAction
 {

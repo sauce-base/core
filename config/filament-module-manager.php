@@ -6,8 +6,6 @@
  * This configuration file is used by the Filament Module Manager plugin
  * for FilamentPHP 4. It handles navigation settings, module upload settings,
  * and other module manager-related configurations.
- *
- * @package FilamentModuleManager
  */
 
 return [

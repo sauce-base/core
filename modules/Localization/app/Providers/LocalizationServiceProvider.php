@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class LocalizationServiceProvider extends ServiceProvider
 {
     protected string $moduleName = 'Localization';
+
     protected string $moduleNameLower = 'localization';
 
     /**
@@ -20,8 +21,6 @@ class LocalizationServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
     }
-
-
 
     /**
      * Register the service provider.
@@ -55,7 +54,7 @@ class LocalizationServiceProvider extends ServiceProvider
      */
     public function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
+        $langPath = resource_path('lang/modules/'.$this->moduleNameLower);
 
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
@@ -71,7 +70,7 @@ class LocalizationServiceProvider extends ServiceProvider
      */
     protected function registerConfig(): void
     {
-        $this->publishes([module_path($this->moduleName, 'config/config.php') => config_path($this->moduleNameLower . '.php')], 'config');
+        $this->publishes([module_path($this->moduleName, 'config/config.php') => config_path($this->moduleNameLower.'.php')], 'config');
         $this->mergeConfigFrom(module_path($this->moduleName, 'config/config.php'), $this->moduleNameLower);
     }
 

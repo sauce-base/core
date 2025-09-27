@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Filament\Clusters\Auth\Resources\Users\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -33,7 +33,7 @@ class UserForm
                     ->preload()
                     ->searchable()
                     // Optional: default to "user" on create:
-                    ->default(fn() => [Role::where('name', 'user')->value('id')]),
+                    ->default(fn () => [Role::where('name', 'user')->value('id')]),
                 TextInput::make('password')
                     ->label(__('Password'))
                     ->password()

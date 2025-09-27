@@ -2,6 +2,7 @@ import '../css/app.css';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import { useLocalizationStore } from '@modules/Localization/resources/js/stores';
 import { useColorMode } from '@vueuse/core';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
@@ -9,7 +10,6 @@ import { createApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
-import { useUIStore } from './stores/ui';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 
@@ -52,9 +52,10 @@ createInertiaApp({
         setupMiddleware();
 
         // Initialize language from store after app is mounted
-        const uiStore = useUIStore();
-        if (uiStore.language !== 'en') {
-            loadLanguageAsync(uiStore.language);
+
+        const localizationStore = useLocalizationStore();
+        if (localizationStore.language !== 'en') {
+            loadLanguageAsync(localizationStore.language);
         }
 
         // Initialize global theme persistence after mount for proper Vue reactivity

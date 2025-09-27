@@ -2,8 +2,8 @@
 
 namespace Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages;
 
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\UserResource;
 use Filament\Resources\Pages\CreateRecord;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\UserResource;
 
 class CreateUser extends CreateRecord
 {

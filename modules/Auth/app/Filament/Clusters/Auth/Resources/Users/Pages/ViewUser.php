@@ -2,9 +2,9 @@
 
 namespace Modules\Auth\Filament\Clusters\Auth\Resources\Users\Pages;
 
-use Modules\Auth\Filament\Clusters\Auth\Resources\Users\UserResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Modules\Auth\Filament\Clusters\Auth\Resources\Users\UserResource;
 
 class ViewUser extends ViewRecord
 {
