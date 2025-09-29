@@ -38,7 +38,7 @@ const colorMode = useColorMode({
 const themes = [
     { code: 'light', name: 'Light', icon: IconSun },
     { code: 'dark', name: 'Dark', icon: IconMoon },
-    { code: 'auto', name: 'Auto', icon: IconAuto },
+    { code: 'auto', name: 'Device', icon: IconAuto },
 ] as const;
 
 const switchTheme = (themeCode: string) => {
