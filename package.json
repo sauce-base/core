@@ -1,6 +1,8 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
     "private": true,
+    "name": "saucebase",
+    "description": "A complete saas boilerplace powered with Vue, Filament, InertiaJS, and more",
     "type": "module",
     "scripts": {
         "build": "vue-tsc && vite build",
