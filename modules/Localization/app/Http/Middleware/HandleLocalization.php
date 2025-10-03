@@ -21,7 +21,7 @@ class HandleLocalization
 
             $availableLocales = array_keys(config('localization.available_locales', []));
 
-            if (isset($locale) && in_array($locale, $availableLocales)) {
+            if (in_array($locale, $availableLocales)) {
                 App::setLocale($locale);
             }
         }

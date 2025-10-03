@@ -9,8 +9,6 @@ trait HasSocialAccounts
 {
     /**
      * Get the social accounts associated with the user.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function socialAccounts(): HasMany
     {

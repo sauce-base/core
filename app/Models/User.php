@@ -7,20 +7,19 @@ use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Auth\Traits\HasSocialAccounts;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+// TODO: add to auth module install doc
 use Spatie\Permission\Traits\HasRoles;
-
-//TODO: add to auth module install doc
-use Modules\Auth\Traits\HasSocialAccounts;
 
 class User extends Authenticatable implements HasMedia
 {
     use HasFactory,
         HasRoles,
+        HasSocialAccounts,
         InteractsWithMedia,
-        Notifiable,
-        HasSocialAccounts;
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -95,8 +94,6 @@ class User extends Authenticatable implements HasMedia
         // Final fallback: Default avatar
         return asset('images/default-avatar.jpg');
     }
-
-
 
     /**
      * Check if user is an administrator

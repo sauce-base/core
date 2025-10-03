@@ -17,14 +17,12 @@ return [
 
     'social_providers' => [
         'github' => [
-            'enabled' => env('GITHUB_LOGIN_ENABLED', false),
             'name' => 'GitHub',
-            'provider' => \SocialiteProviders\GitHub\Provider::class,
+            'enabled' => env('GITHUB_LOGIN_ENABLED', false),
         ],
         'google' => [
-            'enabled' => env('GOOGLE_LOGIN_ENABLED', true),
             'name' => 'Google',
-            'provider' => \SocialiteProviders\Google\Provider::class,
+            'enabled' => env('GOOGLE_LOGIN_ENABLED', true),
         ],
     ],
 ];
