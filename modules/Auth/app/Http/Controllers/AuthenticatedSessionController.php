@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
-use Laravel\Fortify\Features;
 use Modules\Auth\Http\Requests\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
@@ -32,14 +31,9 @@ class AuthenticatedSessionController extends Controller
     {
         $user = $request->validateCredentials();
 
-        if (Features::enabled(Features::twoFactorAuthentication()) && $user->hasEnabledTwoFactorAuthentication()) {
-            request()->session()->put([
-                'login.id' => $user->getKey(),
-                'login.remember' => request()->boolean('remember'),
-            ]);
-
-            return to_route('two-factor.login');
-        }
+        /*
+        TODO: ADD multi factor
+        */
 
         Auth::login($user, request()->boolean('remember'));
 

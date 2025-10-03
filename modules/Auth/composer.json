@@ -26,7 +26,6 @@
         }
     },
     "require": {
-        "laravel/fortify": "^1.30",
         "laravel/socialite": "^5.21"
     }
 }
