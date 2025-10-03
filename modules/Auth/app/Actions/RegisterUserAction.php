@@ -20,7 +20,7 @@ class RegisterUserAction
             'password' => $password,
         ], [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:' . User::class,
+            'email' => 'required|string|email|max:255|unique:'.User::class,
             'password' => ['required', Password::defaults()],
         ]);
 
