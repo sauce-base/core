@@ -20,8 +20,11 @@ class SocialiteController extends Controller
             abort(404);
         }
 
-        return Socialite::driver($provider)
-            ->redirect();
+        $targetUrl = Socialite::driver($provider)
+            ->redirect()
+            ->getTargetUrl();
+
+        return redirect()->away($targetUrl);
     }
 
     public function callback(string $provider, ValidateProviderAction $validateAction, HandleProviderCallbackAction $callbackAction): RedirectResponse
