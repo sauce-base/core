@@ -1,1 +1,4 @@
-composer analyse --ansi
+composer analyze
+composer lint
+
+npm run lint
