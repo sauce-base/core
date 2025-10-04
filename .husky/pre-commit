@@ -1,1 +1,1 @@
-composer analyze --ansi --no-interaction --no-progress --no-plugins --no-scripts
+composer analyse --ansi
