@@ -36,14 +36,11 @@ Route::prefix('auth')->group(function () {
         Route::post('reset-password', [NewPasswordController::class, 'store'])
             ->name('password.store');
 
-        Route::get('social/providers', [SocialiteController::class, 'providers'])
-            ->name('auth.social.providers');
-
         Route::get('social/{provider}', [SocialiteController::class, 'redirect'])
-            ->name('auth.social.redirect');
+            ->name('auth.socialite.redirect');
 
         Route::get('social/{provider}/callback', [SocialiteController::class, 'callback'])
-            ->name('auth.social.callback');
+            ->name('auth.socialite.callback');
     });
 
     Route::middleware('auth')->group(function () {
