@@ -17,7 +17,7 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 
-    'socialite' => [ //TODO: check if is used
+    'socialite' => [ // TODO: check if is used
         'connect_with' => 'Connect with :Provider',
         'disconnect' => 'Disconnect',
         'not_connected' => 'Not connected',

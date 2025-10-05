@@ -15,9 +15,7 @@ class HandleProviderCallbackAction
 
     public function execute(string $provider): User
     {
-        $validator = Validator::make([
-            'provider' => $provider,
-        ], [
+        $validator = Validator::make(['provider' => $provider], [
             'provider' => 'required|string',
         ]);
 
@@ -25,8 +23,8 @@ class HandleProviderCallbackAction
             throw new ValidationException($validator);
         }
 
-        $socialUser = Socialite::driver($provider)->user();
+        $user = Socialite::driver($provider)->user();
 
-        return $this->linkAction->execute($provider, $socialUser);
+        return $this->linkAction->execute($provider, $user);
     }
 }
