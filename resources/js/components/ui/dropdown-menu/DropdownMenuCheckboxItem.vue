@@ -2,10 +2,12 @@
 import { cn } from '@/lib/utils';
 import { reactiveOmit } from '@vueuse/core';
 import { Check } from 'lucide-vue-next';
+import type {
+    DropdownMenuCheckboxItemEmits,
+    DropdownMenuCheckboxItemProps,
+} from 'reka-ui';
 import {
     DropdownMenuCheckboxItem,
-    type DropdownMenuCheckboxItemEmits,
-    type DropdownMenuCheckboxItemProps,
     DropdownMenuItemIndicator,
     useForwardPropsEmits,
 } from 'reka-ui';

@@ -1,39 +1,23 @@
-<script setup lang="ts">
-import type { FieldContext } from '@/types/form';
-import { computed, inject } from 'vue';
+<script lang="ts" setup>
+import { cn } from '@/lib/utils';
+import { ErrorMessage } from 'vee-validate';
+import type { HTMLAttributes } from 'vue';
+import { toValue } from 'vue';
+import { useFormField } from './useFormField';
 
-const props = withDefaults(
-    defineProps<{
-        message?: string;
-        inertiaError?: string;
-    }>(),
-    {},
-);
+const props = defineProps<{
+    class?: HTMLAttributes['class'];
+}>();
 
-const fieldContext = inject<FieldContext | null>('fieldContext', null);
-
-const displayMessage = computed(() => {
-    return (
-        props.inertiaError || props.message || fieldContext?.errorMessage.value
-    );
-});
+const { name, formMessageId } = useFormField();
 </script>
 
 <template>
-    <p
-        v-if="displayMessage"
-        :id="
-            fieldContext?.id.value
-                ? `${fieldContext.id.value}-message`
-                : undefined
-        "
-        :data-testid="
-            fieldContext?.id.value
-                ? `${fieldContext.id.value}-error`
-                : 'form-error'
-        "
-        class="text-sm font-medium text-red-600 dark:text-red-400"
-    >
-        {{ displayMessage }}
-    </p>
+    <ErrorMessage
+        :id="formMessageId"
+        data-slot="form-message"
+        as="p"
+        :name="toValue(name)"
+        :class="cn('text-destructive text-sm', props.class)"
+    />
 </template>

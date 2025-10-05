@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
-import { useUIStore } from '@/stores/ui';
-import { useEventListener, useMediaQuery } from '@vueuse/core';
+import {
+    defaultDocument,
+    useEventListener,
+    useMediaQuery,
+    useVModel,
+} from '@vueuse/core';
 import { TooltipProvider } from 'reka-ui';
-import { computed, type HTMLAttributes, ref } from 'vue';
+import type { HTMLAttributes, Ref } from 'vue';
+import { computed, ref } from 'vue';
 import {
     provideSidebarContext,
     SIDEBAR_COOKIE_MAX_AGE,
@@ -20,7 +25,9 @@ const props = withDefaults(
         class?: HTMLAttributes['class'];
     }>(),
     {
-        defaultOpen: true,
+        defaultOpen: !defaultDocument?.cookie.includes(
+            `${SIDEBAR_COOKIE_NAME}=false`,
+        ),
         open: undefined,
     },
 );
@@ -29,16 +36,19 @@ const emits = defineEmits<{
     'update:open': [open: boolean];
 }>();
 
-const uiStore = useUIStore();
 const isMobile = useMediaQuery('(max-width: 768px)');
 const openMobile = ref(false);
 
+const open = useVModel(props, 'open', emits, {
+    defaultValue: props.defaultOpen ?? false,
+    passive: (props.open === undefined) as false,
+}) as Ref<boolean>;
+
 function setOpen(value: boolean) {
-    uiStore.setSidebarOpen(value);
-    emits('update:open', value);
+    open.value = value; // emits('update:open', value)
 
     // This sets the cookie to keep the sidebar state.
-    document.cookie = `${SIDEBAR_COOKIE_NAME}=${value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    document.cookie = `${SIDEBAR_COOKIE_NAME}=${open.value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
 }
 
 function setOpenMobile(value: boolean) {
@@ -49,7 +59,7 @@ function setOpenMobile(value: boolean) {
 function toggleSidebar() {
     return isMobile.value
         ? setOpenMobile(!openMobile.value)
-        : setOpen(!uiStore.sidebarOpen);
+        : setOpen(!open.value);
 }
 
 useEventListener('keydown', (event: KeyboardEvent) => {
@@ -64,11 +74,11 @@ useEventListener('keydown', (event: KeyboardEvent) => {
 
 // We add a state so that we can do data-state="expanded" or "collapsed".
 // This makes it easier to style the sidebar with Tailwind classes.
-const state = computed(() => (uiStore.sidebarOpen ? 'expanded' : 'collapsed'));
+const state = computed(() => (open.value ? 'expanded' : 'collapsed'));
 
 provideSidebarContext({
     state,
-    open: computed(() => uiStore.sidebarOpen),
+    open,
     setOpen,
     isMobile,
     openMobile,

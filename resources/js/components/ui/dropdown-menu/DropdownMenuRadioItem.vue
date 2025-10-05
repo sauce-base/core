@@ -2,11 +2,13 @@
 import { cn } from '@/lib/utils';
 import { reactiveOmit } from '@vueuse/core';
 import { Circle } from 'lucide-vue-next';
+import type {
+    DropdownMenuRadioItemEmits,
+    DropdownMenuRadioItemProps,
+} from 'reka-ui';
 import {
     DropdownMenuItemIndicator,
     DropdownMenuRadioItem,
-    type DropdownMenuRadioItemEmits,
-    type DropdownMenuRadioItemProps,
     useForwardPropsEmits,
 } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';

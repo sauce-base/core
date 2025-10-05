@@ -2,11 +2,10 @@
 import { cn } from '@/lib/utils';
 import { reactiveOmit } from '@vueuse/core';
 import { X } from 'lucide-vue-next';
+import type { DialogContentEmits, DialogContentProps } from 'reka-ui';
 import {
     DialogClose,
     DialogContent,
-    type DialogContentEmits,
-    type DialogContentProps,
     DialogPortal,
     useForwardPropsEmits,
 } from 'reka-ui';
