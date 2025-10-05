@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import TextInput from '@/components/Input.vue';
 import { Button } from '@/components/ui/button';
 import InputLabel from '@/components/ui/form/FormLabel.vue';
 import InputError from '@/components/ui/form/FormMessage.vue';
-import TextInput from '@/components/ui/Input.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 

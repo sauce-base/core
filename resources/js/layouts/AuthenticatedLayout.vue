@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppSidebar from '@/components/AppSidebar.vue';
 import PageTransition from '@/components/PageTransition.vue';
-import ThemeSelector from '@/components/ui/ThemeSelector.vue';
+import ThemeSelector from '@/components/ThemeSelector.vue';
 import {
     Breadcrumb,
     BreadcrumbItem,

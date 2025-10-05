@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
 import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
-import PasswordInput from '@/components/ui/PasswordInput.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import {
     confirmPasswordSchema,

@@ -3,9 +3,7 @@ import IconHeart from '~icons/heroicons/heart';
 </script>
 
 <template>
-    <footer
-        class="mt-auto border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
-    >
+    <footer class="mt-auto border-t">
         <div class="mx-auto max-w-7xl px-6 py-8">
             <div
                 class="flex flex-col items-center justify-between gap-4 text-sm text-gray-600 md:flex-row dark:text-gray-400"

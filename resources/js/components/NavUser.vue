@@ -8,6 +8,7 @@ import {
     Sparkles,
 } from 'lucide-vue-next';
 
+import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
@@ -24,7 +25,6 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import ThemeSelector from '@/components/ui/ThemeSelector.vue';
 import { Link, router } from '@inertiajs/vue3';
 import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';

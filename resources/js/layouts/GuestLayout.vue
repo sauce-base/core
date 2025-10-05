@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import Footer from '@/components/layout/Footer.vue';
+import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import Footer from '@/components/Footer.vue';
 import PageTransition from '@/components/PageTransition.vue';
-import Logo from '@/components/ui/Logo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <div
-        class="flex min-h-screen flex-col bg-gray-100 transition-opacity dark:bg-gray-900"
-    >
+    <div class="flex min-h-screen flex-col transition-opacity">
         <div class="flex flex-1 items-center justify-center px-4 py-8">
             <div class="w-full max-w-md">
                 <!-- Logo Section -->
                 <div class="mb-8 text-center">
                     <Link href="/">
-                        <Logo size="lg" :showText="true" :centered="true" />
+                        <ApplicationLogo
+                            size="lg"
+                            :showText="true"
+                            :centered="true"
+                        />
                     </Link>
                 </div>
 
