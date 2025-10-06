@@ -20,6 +20,7 @@
 /storage/*.key
 /storage/pail
 /vendor
+/bootstrap/ssr
 
 # Module-specific ignores
 modules/*/node_modules/
