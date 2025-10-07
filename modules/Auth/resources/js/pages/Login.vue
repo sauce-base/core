@@ -9,12 +9,12 @@ import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
 import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
-import GuestLayout from '@/layouts/GuestLayout.vue';
 import { loginSchema, type LoginFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
+import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 
 defineProps<{
     canResetPassword?: boolean;
@@ -57,18 +57,11 @@ const onSubmit = async () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <AuthCardLayout
+        :title="$t('Welcome back')"
+        :description="$t('Login to your Sauce Base account to continue')"
+    >
         <Head :title="$t('Log in')" />
-
-        <!-- Title and Subtitle -->
-        <div class="mb-6 text-center">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ $t('Welcome back') }}
-            </h1>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {{ $t('Login to your Sauce Base account to continue') }}
-            </p>
-        </div>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
@@ -178,5 +171,5 @@ const onSubmit = async () => {
                 </p>
             </div>
         </template>
-    </GuestLayout>
+    </AuthCardLayout>
 </template>

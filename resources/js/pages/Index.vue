@@ -20,7 +20,7 @@ const authStore = useAuthStore();
 
 <template>
     <Head :title="$t('Sauce Base - Modern Laravel SaaS Starter Kit')" />
-    <div class="flex min-h-screen flex-col">
+    <div class="flex min-h-screen flex-col bg-white dark:bg-black">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />
 

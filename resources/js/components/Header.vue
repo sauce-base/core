@@ -46,7 +46,7 @@ defineProps<{
         class="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
         :class="
             isScrolled
-                ? 'border-bß bg-white/50 shadow-sm backdrop-blur-md dark:border-gray-800/30 dark:bg-gray-950/50'
+                ? 'border-b bg-white/50 shadow-sm backdrop-blur-md dark:border-gray-800/30 dark:bg-gray-950/50'
                 : 'bg-transparent'
         "
     >
