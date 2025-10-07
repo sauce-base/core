@@ -1,35 +1,22 @@
-<script setup lang="ts">
-import type { FieldContext } from '@/types/form';
-import { computed, inject } from 'vue';
+<script lang="ts" setup>
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import type { LabelProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
+import { useFormField } from './useFormField';
 
-const props = withDefaults(
-    defineProps<{
-        required?: boolean;
-        error?: string;
-    }>(),
-    {
-        required: false,
-    },
-);
+const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>();
 
-const fieldContext = inject<FieldContext | null>('fieldContext', null);
-
-const hasError = computed(() => {
-    return !!(props.error || fieldContext?.errorMessage.value);
-});
+const { error, formItemId } = useFormField();
 </script>
 
 <template>
-    <label
-        :for="fieldContext?.id?.value"
-        :class="[
-            'text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-            hasError
-                ? 'text-red-600 dark:text-red-400'
-                : 'text-gray-900 dark:text-gray-100',
-        ]"
+    <Label
+        data-slot="form-label"
+        :data-error="!!error"
+        :class="cn('data-[error=true]:text-destructive', props.class)"
+        :for="formItemId"
     >
         <slot />
-        <span v-if="required" class="ml-1 text-red-500">*</span>
-    </label>
+    </Label>
 </template>

@@ -1,20 +1,19 @@
 <script setup lang="ts">
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import Input from '@/components/Input.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
-import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
 import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
-import Input from '@/components/ui/Input.vue';
-import PasswordInput from '@/components/ui/PasswordInput.vue';
 import GuestLayout from '@/layouts/GuestLayout.vue';
 import { registerSchema, type RegisterFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import SocialLoginButton from '../components/SocialLoginButton.vue';
-import { useSocialLogin } from '../composables/useSocialLogin';
+import SocialiteProviders from '../components/SocialiteProviders.vue';
 
 const formSchema = toTypedSchema(registerSchema);
 
@@ -34,12 +33,6 @@ const inertiaForm = useInertiaForm<RegisterFormData>({
     password: '',
     password_confirmation: '',
 });
-
-const {
-    providers,
-    isLoading: providersLoading,
-    getEnabledProviders,
-} = useSocialLogin();
 
 const onSubmit = form.handleSubmit((values: RegisterFormData) => {
     Object.assign(inertiaForm, values);
@@ -70,35 +63,7 @@ const onSubmit = form.handleSubmit((values: RegisterFormData) => {
         <ErrorMessage field="social" variant="error" />
 
         <!-- Social Login Section -->
-        <div
-            v-if="!providersLoading && getEnabledProviders().length > 0"
-            class="mb-6 space-y-3"
-        >
-            <SocialLoginButton
-                v-for="providerKey in getEnabledProviders()"
-                :key="providerKey"
-                :provider-key="providerKey"
-                :provider-config="providers[providerKey]"
-            />
-        </div>
-
-        <!-- Divider -->
-        <div
-            v-if="!providersLoading && getEnabledProviders().length > 0"
-            class="relative mb-6"
-        >
-            <div class="absolute inset-0 flex items-center">
-                <div
-                    class="w-full border-t border-gray-300 dark:border-gray-600"
-                ></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-                <span
-                    class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                    >{{ $t('Or sign up with email') }}</span
-                >
-            </div>
-        </div>
+        <SocialiteProviders />
 
         <form @submit.prevent="onSubmit" class="space-y-4">
             <FormField name="name" v-slot="{ componentField }">

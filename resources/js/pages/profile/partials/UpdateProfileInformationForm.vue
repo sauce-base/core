@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import Input from '@/components/Input.vue';
 import { Button } from '@/components/ui/button';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
 import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
-import Input from '@/components/ui/Input.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps<{
-    mustVerifyEmail?: Boolean;
-    status?: String;
+    mustVerifyEmail?: boolean;
+    status?: string;
 }>();
 
 const user = usePage().props.auth?.user;

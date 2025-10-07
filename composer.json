@@ -74,6 +74,12 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "analyse": [
+            "vendor/bin/phpstan analyse --memory-limit=2G"
+        ],
+        "lint": [
+            "vendor/bin/pint"
         ]
     },
     "extra": {

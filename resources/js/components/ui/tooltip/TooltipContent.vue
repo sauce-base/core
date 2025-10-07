@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { cn } from '@/lib/utils';
 import { reactiveOmit } from '@vueuse/core';
+import type { TooltipContentEmits, TooltipContentProps } from 'reka-ui';
 import {
     TooltipArrow,
     TooltipContent,
-    type TooltipContentEmits,
-    type TooltipContentProps,
     TooltipPortal,
     useForwardPropsEmits,
 } from 'reka-ui';

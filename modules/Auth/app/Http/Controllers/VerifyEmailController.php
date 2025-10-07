@@ -5,6 +5,7 @@ namespace Modules\Auth\Http\Controllers;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyEmailController extends Controller
 {
@@ -20,6 +21,7 @@ class VerifyEmailController extends Controller
         }
 
         if ($user->markEmailAsVerified()) {
+            /** @phpstan-ignore-next-line */
             event(new Verified($user));
         }
 

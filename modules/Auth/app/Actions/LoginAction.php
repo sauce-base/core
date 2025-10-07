@@ -77,6 +77,6 @@ class LoginAction
      */
     private function throttleKey(string $email, ?string $ip): string
     {
-        return Str::transliterate(Str::lower($email) . '|' . ($ip ?? request()->ip()));
+        return Str::transliterate(Str::lower($email).'|'.($ip ?? request()->ip()));
     }
 }

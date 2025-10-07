@@ -28,7 +28,6 @@ class AuthServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
-        $this->app->register(FortifyServiceProvider::class);
     }
 
     /**
@@ -55,15 +54,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerTranslations(): void
     {
-        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
-
-        if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
-            $this->loadJsonTranslationsFrom($langPath);
-        } else {
-            $this->loadTranslationsFrom(module_path($this->moduleName, 'lang'), $this->moduleNameLower);
-            $this->loadJsonTranslationsFrom(module_path($this->moduleName, 'lang'));
-        }
+        $this->loadTranslationsFrom(module_path($this->moduleName, 'lang'));
+        $this->loadJsonTranslationsFrom(module_path($this->moduleName, 'lang'));
     }
 
     /**
@@ -71,8 +63,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerConfig(): void
     {
-        $this->publishes([module_path($this->moduleName, 'config/config.php') => config_path($this->moduleNameLower . '.php')], 'config');
-        $this->mergeConfigFrom(module_path($this->moduleName, 'config/config.php'), $this->moduleNameLower);
+        $this->mergeConfigFrom(module_path($this->moduleName, 'config/services.php'), 'services');
     }
 
     /**

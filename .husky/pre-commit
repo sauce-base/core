@@ -1,1 +1,3 @@
-npm test
+vendor/bin/phpstan analyse --memory-limit=2G --no-progress
+composer lint
+npm run lint

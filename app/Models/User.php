@@ -4,20 +4,22 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Auth\Traits\HasSocialAccounts;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+// TODO: add to auth module install doc
 use Spatie\Permission\Traits\HasRoles;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable implements HasMedia
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, InteractsWithMedia, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory,
+        HasRoles,
+        HasSocialAccounts,
+        InteractsWithMedia,
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -73,11 +75,6 @@ class User extends Authenticatable implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 
-    public function socialAccounts(): HasMany
-    {
-        return $this->hasMany(SocialAccount::class);
-    }
-
     /**
      * Get avatar with fallback to default
      */
@@ -96,17 +93,6 @@ class User extends Authenticatable implements HasMedia
 
         // Final fallback: Default avatar
         return asset('images/default-avatar.jpg');
-    }
-
-    /**
-     * Get connected providers for profile display
-     */
-    public function getConnectedProvidersAttribute(): array
-    {
-        return $this->socialAccounts()
-            ->orderBy('last_login_at', 'desc')
-            ->get(['provider', 'last_login_at', 'provider_avatar_url'])
-            ->toArray();
     }
 
     /**

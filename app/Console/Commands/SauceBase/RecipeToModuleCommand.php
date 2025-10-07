@@ -70,7 +70,7 @@ class RecipeToModuleCommand extends Command
 
     protected function getModuleName(): string
     {
-        $this->moduleName = ucwords($this->argument('module')) ?? '';
+        $this->moduleName = ucwords($this->argument('module'));
 
         // Validation don't work when not in the prompt
         if ($this->moduleName !== '') {

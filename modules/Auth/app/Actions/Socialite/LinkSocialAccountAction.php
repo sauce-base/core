@@ -2,12 +2,12 @@
 
 namespace Modules\Auth\Actions\Socialite;
 
-use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Modules\Auth\Actions\UpdateUserAvatarAction;
-use Modules\Auth\Exceptions\SocialAuthException;
+use Modules\Auth\Exceptions\SocialiteException;
+use Modules\Auth\Models\SocialAccount;
 
 class LinkSocialAccountAction
 {
@@ -57,10 +57,16 @@ class LinkSocialAccountAction
             'last_login_at' => now(),
         ]);
 
-        // Update user's current avatar to latest login
-        $this->updateAvatarAction->execute($socialAccount->user, $avatarUrl);
+        $user = $socialAccount->user()->first();
 
-        return $socialAccount->user;
+        if (! $user instanceof User) {
+            throw SocialiteException::invalidSocialUser();
+        }
+
+        // Update user's current avatar to latest login
+        $this->updateAvatarAction->execute($user, $avatarUrl);
+
+        return $user;
     }
 
     private function createNewUser(object $socialUser, ?string $avatarUrl): User
@@ -76,7 +82,8 @@ class LinkSocialAccountAction
 
     private function createSocialAccount(User $user, string $provider, object $socialUser, ?string $avatarUrl): SocialAccount
     {
-        return $user->socialAccounts()->create([
+        return SocialAccount::create([
+            'user_id' => $user->id,
             'provider' => $provider,
             'provider_id' => $socialUser->getId(),
             'provider_token' => $socialUser->token,
@@ -93,7 +100,7 @@ class LinkSocialAccountAction
             ! $socialUser->getId() ||
             ! filter_var($socialUser->getEmail(), FILTER_VALIDATE_EMAIL)
         ) {
-            throw SocialAuthException::invalidSocialUser();
+            throw SocialiteException::invalidSocialUser();
         }
     }
 

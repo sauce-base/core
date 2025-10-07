@@ -129,7 +129,7 @@
     "Theme": "Tema",
     "Light": "Claro",
     "Dark": "Escuro",
-    "Auto": "Auto",
+    "Device": "Dispositivo",
     "Authentication failed. Please try again.": "Falha na autenticação. Tente novamente.",
     ":provider account disconnected successfully.": "Conta :provider desconectada com sucesso."
 }

@@ -1,4 +1,8 @@
-# 🍯 Sauce Base
+<p align="center">
+  <img src="public/images/logo.svg" alt="Saucebase logo" width="250">
+</p>
+
+# Saucebase
 
 **Modular Laravel SaaS Starter Kit**
 

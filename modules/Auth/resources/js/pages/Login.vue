@@ -1,21 +1,20 @@
 <script setup lang="ts">
+import ErrorMessage from '@/components/ErrorMessage.vue';
+import Input from '@/components/Input.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import ErrorMessage from '@/components/ui/ErrorMessage.vue';
 import FormControl from '@/components/ui/form/FormControl.vue';
 import FormField from '@/components/ui/form/FormField.vue';
 import FormItem from '@/components/ui/form/FormItem.vue';
 import FormLabel from '@/components/ui/form/FormLabel.vue';
 import FormMessage from '@/components/ui/form/FormMessage.vue';
-import Input from '@/components/ui/Input.vue';
-import PasswordInput from '@/components/ui/PasswordInput.vue';
-import GuestLayout from '@/layouts/GuestLayout.vue';
 import { loginSchema, type LoginFormData } from '@/validation';
 import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
-import SocialLoginButton from '@modules/Auth/resources/js/components/SocialLoginButton.vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import { useSocialLogin } from '../composables/useSocialLogin';
+import SocialiteProviders from '../components/SocialiteProviders.vue';
+import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 
 defineProps<{
     canResetPassword?: boolean;
@@ -39,12 +38,6 @@ const inertiaForm = useInertiaForm<LoginFormData>({
     remember: false,
 });
 
-const {
-    providers,
-    isLoading: providersLoading,
-    getEnabledProviders,
-} = useSocialLogin();
-
 const onSubmit = async () => {
     const { valid } = await form.validate();
 
@@ -64,56 +57,19 @@ const onSubmit = async () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <AuthCardLayout
+        :title="$t('Welcome back')"
+        :description="$t('Login to your Sauce Base account to continue')"
+    >
         <Head :title="$t('Log in')" />
-
-        <!-- Title and Subtitle -->
-        <div class="mb-6 text-center">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ $t('Welcome back') }}
-            </h1>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                {{ $t('Login to your Sauce Base account to continue') }}
-            </p>
-        </div>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
 
-        <!-- Social Login Error -->
         <ErrorMessage field="social" variant="error" />
 
-        <!-- Social Login Section -->
-        <div
-            v-if="!providersLoading && getEnabledProviders().length > 0"
-            class="mb-6 space-y-3"
-        >
-            <SocialLoginButton
-                v-for="providerKey in getEnabledProviders()"
-                :key="providerKey"
-                :provider-key="providerKey"
-                :provider-config="providers[providerKey]"
-            />
-        </div>
-
-        <!-- Divider -->
-        <div
-            v-if="!providersLoading && getEnabledProviders().length > 0"
-            class="relative mb-6"
-        >
-            <div class="absolute inset-0 flex items-center">
-                <div
-                    class="w-full border-t border-gray-300 dark:border-gray-600"
-                ></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-                <span
-                    class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
-                    >{{ $t('Or continue with email') }}</span
-                >
-            </div>
-        </div>
+        <SocialiteProviders />
 
         <form
             @submit.prevent="onSubmit"
@@ -215,5 +171,5 @@ const onSubmit = async () => {
                 </p>
             </div>
         </template>
-    </GuestLayout>
+    </AuthCardLayout>
 </template>
