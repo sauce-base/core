@@ -38,8 +38,13 @@ const authStore = useAuthStore();
                 </div>
 
                 <!-- Logo -->
-                <div class="mb-8 flex justify-center">
-                    <ApplicationLogo size="xl" :showText="true" />
+                <div class="mb-12 flex justify-center">
+                    <ApplicationLogo
+                        showText
+                        size="xxl"
+                        showSubtitle
+                        centered
+                    />
                 </div>
 
                 <!-- Main Headline -->

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 defineProps<{
-    size?: 'sm' | 'md' | 'lg' | 'xl';
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
     showText?: boolean;
     centered?: boolean;
+    variant?: 'brand' | 'light';
+    showSubtitle?: boolean;
+    subtitleSize?: 'xs' | 'sm' | 'md' | 'xl' | 'xxl';
 }>();
 
 const sizeClasses = {
@@ -10,6 +13,7 @@ const sizeClasses = {
     md: 'h-12 w-12',
     lg: 'h-16 w-16',
     xl: 'h-20 w-20',
+    xxl: 'h-30 w-30',
 };
 
 const textSizeClasses = {
@@ -17,57 +21,39 @@ const textSizeClasses = {
     md: 'text-2xl',
     lg: 'text-3xl',
     xl: 'text-4xl',
+    xxl: 'text-6xl',
 };
+
+const subtitleSizeClasses = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    xxl: 'text-2xl',
+};
+
+const defaultLogoSrc = '/images/logo.svg';
+const lightLogoSrc = '/images/logo-white.svg';
+const logoAlt = 'Saucebase logo';
 </script>
 
 <template>
     <div
         :class="
             centered
-                ? 'flex flex-col items-center gap-3'
-                : 'flex items-center gap-3'
+                ? 'flex flex-col items-center gap-1'
+                : 'flex items-center gap-1'
         "
     >
         <!-- SVG Logo -->
         <div class="relative">
-            <svg
-                :class="sizeClasses[size || 'md']"
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <!-- Background circle with gradient -->
-                <defs>
-                    <radialGradient
-                        id="sauceGradient"
-                        cx="0.3"
-                        cy="0.3"
-                        r="0.8"
-                    >
-                        <stop offset="0%" stop-color="#F97316" />
-                        <stop offset="100%" stop-color="#DC2626" />
-                    </radialGradient>
-                </defs>
-
-                <!-- Main sauce drop shape -->
-                <path
-                    d="M50 15 C60 15, 70 25, 70 35 C70 45, 65 50, 60 55 L55 65 C53 70, 52 75, 50 80 C48 75, 47 70, 45 65 L40 55 C35 50, 30 45, 30 35 C30 25, 40 15, 50 15 Z"
-                    fill="url(#sauceGradient)"
-                />
-
-                <!-- Sauce highlight -->
-                <ellipse
-                    cx="45"
-                    cy="30"
-                    rx="8"
-                    ry="12"
-                    fill="#FED7AA"
-                    opacity="0.6"
-                />
-
-                <!-- Subtle sauce droplet -->
-                <circle cx="65" cy="70" r="3" fill="#DC2626" opacity="0.8" />
-            </svg>
+            <img
+                :src="variant === 'light' ? lightLogoSrc : defaultLogoSrc"
+                :alt="logoAlt"
+                :class="['object-contain', sizeClasses[size || 'md']]"
+                loading="lazy"
+            />
         </div>
 
         <!-- Text Logo -->
@@ -82,13 +68,25 @@ const textSizeClasses = {
             <h1
                 :class="[
                     textSizeClasses[size || 'md'],
-                    'leading-none font-bold text-gray-900 dark:text-white',
+                    variant === 'light'
+                        ? 'leading-none font-bold text-white'
+                        : 'leading-none font-bold text-gray-900 dark:text-white',
                 ]"
             >
-                sauce base
+                <span class="text-secondary">sauce</span>
+                <span class="text-primary">base</span>
             </h1>
-            <p class="text-xs leading-tight text-gray-600 dark:text-gray-400">
-                your saas foundation
+            <p
+                v-if="showSubtitle !== false"
+                :class="[
+                    subtitleSizeClasses[subtitleSize || size || 'sm'],
+                    'leading-tight',
+                    variant === 'light'
+                        ? 'text-white/80'
+                        : 'text-gray-600 dark:text-gray-400',
+                ]"
+            >
+                the recipe that works
             </p>
         </div>
     </div>
