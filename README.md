@@ -99,6 +99,23 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 
 Complete documentation coming soon!
 
+## 🔒 Security
+
+Sauce Base includes comprehensive security features and best practices:
+
+- **Security Headers**: CSP, HSTS, X-Frame-Options, and more (automatic in production)
+- **CORS Configuration**: Environment-based origin restrictions
+- **Session Security**: Encryption, secure cookies, CSRF protection
+- **Authentication**: Rate limiting, bcrypt hashing, Sanctum API auth
+- **Dependency Auditing**: Regular npm and composer security checks
+
+For detailed security information:
+- [Security Policy & Best Practices](SECURITY.md)
+- [Production Deployment Security Checklist](docs/DEPLOYMENT_SECURITY_CHECKLIST.md)
+- [Security Quick Reference](docs/SECURITY_QUICK_REFERENCE.md)
+
+**Report security vulnerabilities to:** security@saucebase.dev
+
 ## 📄 License
 
 MIT © Sauce Base. See [LICENSE](LICENSE).
