@@ -4,7 +4,7 @@ import { i18nVue } from 'laravel-vue-i18n';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { ZiggyVue } from 'ziggy-js';
-import { resolveLanguage, resolveModularComponent } from './lib/utils';
+import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 
@@ -14,7 +14,7 @@ createServer(
             page,
             render: renderToString,
             title: (title) => `${title} - ${appName}`,
-            resolve: resolveModularComponent,
+            resolve: resolveModularPageComponent,
             setup({ App, props, plugin }) {
                 const app = createSSRApp({ render: () => h(App, props) })
                     .use(plugin)

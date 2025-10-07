@@ -6,7 +6,7 @@ import { useColorMode } from '@vueuse/core';
 import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
-import { resolveLanguage, resolveModularComponent } from './lib/utils';
+import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
 import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
 
@@ -14,7 +14,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: resolveModularComponent,
+    resolve: resolveModularPageComponent,
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
