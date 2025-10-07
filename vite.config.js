@@ -21,6 +21,7 @@ async function createConfig() {
             laravel({
                 input: allPaths,
                 refresh: true,
+                ssr: 'resources/js/ssr.ts', //TODO: make SSR compatible with the modular application.
             }),
             vue({
                 template: {
