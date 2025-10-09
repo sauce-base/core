@@ -27,7 +27,7 @@
         "@commitlint/config-conventional": "^19.8.1",
         "@eslint/js": "^9.19.0",
         "@iconify/json": "^2.2.357",
-        "@inertiajs/vue3": "^2.0.0",
+        "@inertiajs/vue3": "^2.2.7",
         "@playwright/test": "^1.54.1",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/postcss": "^4.1.11",
