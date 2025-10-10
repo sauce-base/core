@@ -19,7 +19,7 @@ class HandleProviderCallbackAction
             'provider' => 'required|string',
         ]);
 
-        if (! $validator->fails()) {
+        if ($validator->fails()) {
             throw ValidationException::withMessages([
                 'social' => trans('auth.socialite.error'),
             ]);
