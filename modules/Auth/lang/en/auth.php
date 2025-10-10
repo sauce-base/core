@@ -24,7 +24,7 @@ return [
         'connected' => 'Connected',
         'account_connected' => ':Provider account connected successfully.',
         'account_disconnected' => ':Provider account disconnected successfully.',
-        'error' => 'An error occurred while processing your social account. Please try again.',
+        'error' => 'An error occurred while processing your social account.',
         'invalid_provider' => 'The selected social provider is invalid or not supported.',
     ],
 ];

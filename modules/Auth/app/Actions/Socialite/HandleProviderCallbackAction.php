@@ -19,8 +19,10 @@ class HandleProviderCallbackAction
             'provider' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
+        if (! $validator->fails()) {
+            throw ValidationException::withMessages([
+                'social' => trans('auth.socialite.error'),
+            ]);
         }
 
         $user = Socialite::driver($provider)->user();
