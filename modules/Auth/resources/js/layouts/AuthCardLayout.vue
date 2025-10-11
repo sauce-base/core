@@ -15,42 +15,37 @@ import { Head, Link } from '@inertiajs/vue3';
 defineProps<{
     title?: string;
     description?: string;
+    cardClass?: string | object;
 }>();
 </script>
 
 <template>
-    <div>
-        <Head :title="title" />
-        <div class="flex flex-col items-center justify-center gap-6 p-3 md:p-7">
-            <div class="flex w-full max-w-md flex-col gap-6">
-                <Link
-                    :href="route('index')"
-                    class="flex items-center gap-2 self-center font-medium"
-                >
-                    <div class="flex h-full w-full items-center justify-center">
-                        <ApplicationLogo size="md" :showText="true" />
-                    </div>
-                </Link>
-                <div class="flex flex-col gap-6">
-                    <Card class="py-8">
-                        <CardHeader class="px-8 text-center">
-                            <CardTitle class="text-2xl">
-                                {{ title }}
-                            </CardTitle>
-                            <CardDescription>
-                                {{ description }}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent class="px-8">
-                            <PageTransition>
-                                <slot />
-                            </PageTransition>
-                        </CardContent>
-                    </Card>
-                    <slot name="outside" />
-                </div>
-            </div>
+    <div class="flex h-screen flex-col items-center gap-6">
+        <div class="mt-6">
+            <Head :title="title" />
+            <Link :href="route('index')" class="mt-6 font-medium">
+                <ApplicationLogo size="md" :showText="true" />
+            </Link>
         </div>
-        <Footer />
+
+        <div class="min-w-md flex-grow">
+            <Card>
+                <CardHeader class="px-8 text-center">
+                    <CardTitle class="text-2xl">
+                        {{ title }}
+                    </CardTitle>
+                    <CardDescription>
+                        {{ description }}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent class="px-8">
+                    <PageTransition>
+                        <slot />
+                    </PageTransition>
+                </CardContent>
+            </Card>
+            <slot name="outside" />
+        </div>
+        <Footer class="mt-6 w-full" />
     </div>
 </template>

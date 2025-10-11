@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import ErrorMessage from '@/components/ErrorMessage.vue';
+import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input, PasswordInput } from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { Form, Link } from '@inertiajs/vue3';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
@@ -31,6 +32,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     {{ $t('Email') }}
                 </FieldLabel>
                 <Input
+                    id="email"
                     name="email"
                     type="email"
                     :placeholder="$t('Enter your email')"
@@ -60,6 +62,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     </Link>
                 </div>
                 <PasswordInput
+                    id="password"
                     name="password"
                     :placeholder="$t('Enter your password')"
                     autocomplete="current-password"
