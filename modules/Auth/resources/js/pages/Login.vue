@@ -39,7 +39,9 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     :placeholder="$t('Enter your email')"
                     :aria-invalid="!!errors?.email ? 'true' : 'false'"
                     aria-labelledby="email-label"
-                    :aria-describedby="errors?.email ? 'email-error' : undefined"
+                    :aria-describedby="
+                        errors?.email ? 'email-error' : undefined
+                    "
                     autocomplete="email"
                     required
                 />
@@ -77,7 +79,9 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     :placeholder="$t('Enter your password')"
                     :aria-invalid="!!errors?.password ? 'true' : 'false'"
                     aria-labelledby="password-label"
-                    :aria-describedby="errors?.password ? 'password-error' : undefined"
+                    :aria-describedby="
+                        errors?.password ? 'password-error' : undefined
+                    "
                     required
                 />
                 <FieldError
