@@ -44,7 +44,7 @@ const togglePasswordVisibility = () => {
             @click="togglePasswordVisibility"
             class="absolute inset-y-0 right-0 h-full px-3 py-2 hover:bg-transparent"
             :title="showPassword ? $t('Hide password') : $t('Show password')"
-            tabindex="-1"
+            :aria-label="showPassword ? $t('Hide password') : $t('Show password')"
             :data-testid="
                 $attrs['data-testid']
                     ? `${$attrs['data-testid']}-toggle`
