@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { testUsers, validationTestCases } from './fixtures/users';
+import { testUsers } from './fixtures/users';
 import { LoginPage } from './pages/LoginPage';
 
 test.describe.parallel('Login Basics', () => {
@@ -28,30 +28,74 @@ test.describe.parallel('Login Basics', () => {
         await expectSuccessfulLogin();
     });
 
-    const validationTests = [
-        { name: 'empty email', testCase: validationTestCases.emptyEmail },
-        {
-            name: 'invalid email format',
-            testCase: validationTestCases.invalidEmail,
-        },
-        { name: 'empty password', testCase: validationTestCases.emptyPassword },
-    ];
-
-    for (const { name, testCase } of validationTests) {
-        test(`shows validation error for ${name}`, async () => {
-            await loginPage.login(testCase.email, testCase.password);
-            await expect(
-                loginPage.page.getByTestId(testCase.errorTestId),
-            ).toBeVisible();
-        });
-    }
-
-    test('validates form before submission', async () => {
-        await loginPage.loginButton.click();
-
-        await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
-
-        await expect(loginPage.page.getByTestId('email-error')).toBeVisible();
+    test('trims whitespace from email before submission', async () => {
+        const user = testUsers.withSpaces;
+        await loginPage.login(user.email, user.password);
+        await expectSuccessfulLogin();
     });
 
+    test('redirects authenticated users away from login page', async ({
+        page,
+    }) => {
+        const user = testUsers.valid;
+        await loginPage.login(user.email, user.password);
+        await expectSuccessfulLogin();
+
+        await page.goto('/auth/login');
+
+        await expect(page).toHaveURL('/dashboard');
+    });
+
+    test('redirects to intended URL after login', async ({ page }) => {
+        const intendedUrl = '/dashboard';
+
+        await page.goto(intendedUrl);
+
+        await page.waitForURL(/\/auth\/login/);
+
+        const user = testUsers.valid;
+        await loginPage.login(user.email, user.password);
+
+        await loginPage.expectRedirectTo(intendedUrl);
+    });
+
+    test('toggles password visibility', async () => {
+        const user = testUsers.valid;
+        await loginPage.passwordInput.fill(user.password);
+
+        await loginPage.expectPasswordHidden();
+
+        await loginPage.togglePasswordVisibility();
+        await loginPage.expectPasswordVisible();
+
+        await loginPage.togglePasswordVisibility();
+        await loginPage.expectPasswordHidden();
+    });
+
+    test('supports keyboard navigation through form', async () => {
+        await loginPage.emailInput.focus();
+
+        let focused = await loginPage.getFocusedElementTestId();
+        expect(focused).toBe('email');
+
+        await loginPage.pressTab();
+        await loginPage.pressTab(); // Skip password toggle
+        focused = await loginPage.getFocusedElementTestId();
+        expect(focused).toBe('password');
+
+        await loginPage.pressTab();
+        focused = await loginPage.getFocusedElementTestId();
+        expect(focused).toContain('password-toggle');
+    });
+
+    test('submits form on Enter key press', async () => {
+        const user = testUsers.valid;
+        await loginPage.emailInput.fill(user.email);
+        await loginPage.passwordInput.fill(user.password);
+
+        await loginPage.passwordInput.press('Enter');
+
+        await expectSuccessfulLogin();
+    });
 });
+

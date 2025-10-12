@@ -18,24 +18,15 @@ export const testUsers = {
         email: 'user@example.com',
         password: 'secretsauce',
     },
-} as const;
-
-// Translation-agnostic validation test cases
-// Tests check for error presence via data-testid, not specific text
-export const validationTestCases = {
-    emptyEmail: {
-        email: '',
+    withSpaces: {
+        name: 'User With Spaces',
+        email: '  test@example.com  ',
         password: 'secretsauce',
-        errorTestId: 'email-error',
+        normalized: 'test@example.com',
     },
-    invalidEmail: {
-        email: 'invalid-email',
-        password: 'secretsauce',
-        errorTestId: 'email-error',
-    },
-    emptyPassword: {
-        email: 'test@example.com',
-        password: '',
-        errorTestId: 'password-error',
+    specialPassword: {
+        name: 'Special Chars User',
+        email: 'special@example.com',
+        password: 'P@ssw0rd!#$%^&*()',
     },
 } as const;

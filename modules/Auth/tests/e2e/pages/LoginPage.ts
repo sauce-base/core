@@ -73,13 +73,6 @@ export class LoginPage {
         await expect(this.passwordInput).toHaveAttribute('type', 'password');
     }
 
-    /**
-     * Generic method to check for any validation error by test ID
-     */
-    async expectValidationError(testId: string) {
-        const errorElement = this.page.getByTestId(testId);
-        await expect(errorElement).toBeVisible();
-    }
 
     async waitForLoginResponse() {
         return this.page.waitForResponse((response: Response) =>
@@ -114,6 +107,38 @@ export class LoginPage {
         await this.page.route(this.loginEndpoint, async (route) => {
             await new Promise((resolve) => setTimeout(resolve, delayMs));
             await route.continue();
+        });
+    }
+
+
+    /**
+     * Verify redirect to specific intended URL
+     */
+    async expectRedirectTo(url: string) {
+        await expect(this.page).toHaveURL(url);
+    }
+
+    /**
+     * Press Tab key for keyboard navigation
+     */
+    async pressTab() {
+        await this.page.keyboard.press('Tab');
+    }
+
+    /**
+     * Press Enter key
+     */
+    async pressEnter() {
+        await this.page.keyboard.press('Enter');
+    }
+
+    /**
+     * Get the currently focused element's test ID
+     */
+    async getFocusedElementTestId(): Promise<string | null> {
+        return await this.page.evaluate(() => {
+            const focused = document.activeElement;
+            return focused?.getAttribute('data-testid') || null;
         });
     }
 }

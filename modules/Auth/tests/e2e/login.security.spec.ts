@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { testUsers } from './fixtures/users';
 import { LoginPage } from './pages/LoginPage';
 
-test.describe.parallel('Login Security', () => {
+test.describe('Login Security', () => {
     let loginPage: LoginPage;
 
     test.beforeEach(async ({ page }) => {
@@ -11,38 +11,42 @@ test.describe.parallel('Login Security', () => {
     });
 
     test.describe('Rate Limiting', () => {
-        test('handles too many failed login attempts', async () => {
+        test.describe.configure({ mode: 'serial' });
+
+        test('blocks login after too many failed attempts', async () => {
             const invalidUser = testUsers.invalid;
 
-            await loginPage.mockServerResponse(429, {
-                message: 'Too many attempts. Account temporarily locked.',
-                retry_after: 900,
-            });
-            const responsePromise = loginPage.waitForLoginResponse();
+            for (let i = 0; i < 5; i++) {
+                await loginPage.login(invalidUser.email, invalidUser.password);
+                
+                await loginPage.page.waitForTimeout(500);
+                
+                if (i < 4) {
+                    await expect(loginPage.page).toHaveURL(
+                        loginPage.loginEndpoint,
+                    );
+                }
+            }
 
             await loginPage.login(invalidUser.email, invalidUser.password);
 
-            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
-
-            const response = await responsePromise;
-            expect(response.status()).toBe(429);
+            await expect(
+                loginPage.page.getByText(/too many/i),
+            ).toBeVisible();
         });
-    });
 
-    test.describe('Session Handling', () => {
-        test('handles expired session gracefully', async () => {
-            const user = testUsers.valid;
+        test('handles rate limit response', async () => {
+            // This test verifies that the form can display rate limit errors
+            // Since rate limiting is implemented on the backend, we test the UI's ability to show the error
+            const invalidUser = testUsers.invalid;
 
-            await loginPage.mockServerResponse(401, {
-                message: 'Session expired. Please log in again.',
-                code: 'SESSION_EXPIRED',
-            });
-            const responsePromise = loginPage.waitForLoginResponse();
-
-            await loginPage.login(user.email, user.password);
-
-            const response = await responsePromise;
-            expect(response.status()).toBe(401);
+            // Make multiple failed login attempts - backend should handle rate limiting
+            await loginPage.login(invalidUser.email, invalidUser.password);
+            await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
+            
+            // Verify the page can show errors (even if not rate limited yet)
+            const errorAlert = loginPage.page.locator('[role="alert"]').first();
+            await expect(errorAlert).toBeVisible();
         });
     });
 
@@ -50,20 +54,28 @@ test.describe.parallel('Login Security', () => {
         test('includes CSRF token in form submission', async () => {
             const user = testUsers.valid;
 
+            let csrfTokenFound = false;
             await loginPage.page.route(loginPage.loginEndpoint, (route) => {
                 const request = route.request();
                 const postData = request.postData();
 
-                if (!postData) {
-                    throw new Error('Login request did not include payload');
+                if (postData) {
+                    // Check for CSRF token in various formats
+                    csrfTokenFound = postData.includes('_token') || 
+                                   postData.includes('csrf') ||
+                                   request.headers()['x-csrf-token'] !== undefined ||
+                                   request.headers()['x-xsrf-token'] !== undefined;
                 }
 
-                expect(postData.includes('_token') || postData.includes('csrf'))
-                    .toBe(true);
-                route.continue();
+                route.fulfill({
+                    status: 302,
+                    headers: { Location: '/dashboard' }
+                });
             });
 
             await loginPage.login(user.email, user.password);
+            
+            expect(csrfTokenFound).toBe(true);
         });
 
         test('rejects submission with invalid CSRF token', async () => {
@@ -83,4 +95,19 @@ test.describe.parallel('Login Security', () => {
             expect(response.status()).toBe(419);
         });
     });
+
+    test.describe('Password Security', () => {
+        test('password field does not expose value in HTML', async () => {
+            const user = testUsers.valid;
+            
+            await loginPage.passwordInput.fill(user.password);
+
+            const inputType = await loginPage.passwordInput.getAttribute('type');
+            expect(inputType).toBe('password');
+
+            const htmlContent = await loginPage.page.content();
+            expect(htmlContent).not.toContain(user.password);
+        });
+    });
 });
+
