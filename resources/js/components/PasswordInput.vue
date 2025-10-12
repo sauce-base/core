@@ -45,6 +45,11 @@ const togglePasswordVisibility = () => {
             class="absolute inset-y-0 right-0 h-full px-3 py-2 hover:bg-transparent"
             :title="showPassword ? $t('Hide password') : $t('Show password')"
             tabindex="-1"
+            :data-testid="
+                $attrs['data-testid']
+                    ? `${$attrs['data-testid']}-toggle`
+                    : 'password-toggle'
+            "
         >
             <Eye v-if="!showPassword" class="text-muted-foreground h-4 w-4" />
             <EyeOff v-else class="text-muted-foreground h-4 w-4" />

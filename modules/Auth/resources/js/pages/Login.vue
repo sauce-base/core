@@ -35,12 +35,13 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     id="email"
                     name="email"
                     type="email"
+                    data-testid="email"
                     :placeholder="$t('Enter your email')"
                     :aria-invalid="!!errors?.email"
                     autocomplete="email"
                     required
                 />
-                <FieldError v-if="errors?.email">
+                <FieldError v-if="errors?.email" data-testid="email-error">
                     {{ errors?.email }}
                 </FieldError>
             </Field>
@@ -64,12 +65,16 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                 <PasswordInput
                     id="password"
                     name="password"
-                    :placeholder="$t('Enter your password')"
                     autocomplete="current-password"
+                    data-testid="password"
+                    :placeholder="$t('Enter your password')"
                     :aria-invalid="!!errors?.password"
                     required
                 />
-                <FieldError v-if="errors?.password">
+                <FieldError
+                    v-if="errors?.password"
+                    data-testid="password-error"
+                >
                     {{ errors?.password }}
                 </FieldError>
             </Field>
@@ -77,14 +82,22 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             <!-- Remember-me -->
             <Field>
                 <Field orientation="horizontal">
-                    <Checkbox id="remember" name="remember" />
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        data-testid="remember-me"
+                    />
                     <FieldLabel for="remember" class="font-normal">
                         {{ $t('Remember-me') }}
                     </FieldLabel>
                 </Field>
             </Field>
 
-            <Button type="submit" class="mt-3 w-full">
+            <Button
+                type="submit"
+                class="mt-3 w-full"
+                data-testid="login-button"
+            >
                 {{ $t('Log in') }}
             </Button>
 
