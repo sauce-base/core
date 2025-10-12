@@ -28,7 +28,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         >
             <!-- Email -->
             <Field :data-invalid="!!errors?.email">
-                <FieldLabel for="email">
+                <FieldLabel id="email-label" for="email">
                     {{ $t('Email') }}
                 </FieldLabel>
                 <Input
@@ -37,11 +37,18 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     type="email"
                     data-testid="email"
                     :placeholder="$t('Enter your email')"
-                    :aria-invalid="!!errors?.email"
+                    :aria-invalid="!!errors?.email ? 'true' : 'false'"
+                    aria-labelledby="email-label"
+                    :aria-describedby="errors?.email ? 'email-error' : undefined"
                     autocomplete="email"
                     required
                 />
-                <FieldError v-if="errors?.email" data-testid="email-error">
+                <FieldError
+                    v-if="errors?.email"
+                    id="email-error"
+                    data-testid="email-error"
+                    aria-live="polite"
+                >
                     {{ errors?.email }}
                 </FieldError>
             </Field>
@@ -49,7 +56,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             <!-- Password -->
             <Field :data-invalid="!!errors?.password">
                 <div className="flex items-center">
-                    <FieldLabel for="password">
+                    <FieldLabel id="password-label" for="password">
                         {{ $t('Password') }}
                     </FieldLabel>
                     <Link
@@ -68,12 +75,16 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     autocomplete="current-password"
                     data-testid="password"
                     :placeholder="$t('Enter your password')"
-                    :aria-invalid="!!errors?.password"
+                    :aria-invalid="!!errors?.password ? 'true' : 'false'"
+                    aria-labelledby="password-label"
+                    :aria-describedby="errors?.password ? 'password-error' : undefined"
                     required
                 />
                 <FieldError
                     v-if="errors?.password"
+                    id="password-error"
                     data-testid="password-error"
+                    aria-live="polite"
                 >
                     {{ errors?.password }}
                 </FieldError>
