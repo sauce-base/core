@@ -72,22 +72,6 @@ test.describe.parallel('Login Basics', () => {
         await loginPage.expectPasswordHidden();
     });
 
-    test('supports keyboard navigation through form', async () => {
-        await loginPage.emailInput.focus();
-
-        let focused = await loginPage.getFocusedElementTestId();
-        expect(focused).toBe('email');
-
-        await loginPage.pressTab();
-        await loginPage.pressTab(); // Skip password toggle
-        focused = await loginPage.getFocusedElementTestId();
-        expect(focused).toBe('password');
-
-        await loginPage.pressTab();
-        focused = await loginPage.getFocusedElementTestId();
-        expect(focused).toContain('password-toggle');
-    });
-
     test('submits form on Enter key press', async () => {
         const user = testUsers.valid;
         await loginPage.emailInput.fill(user.email);

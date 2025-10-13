@@ -37,7 +37,7 @@ class LoginAction
             RateLimiter::hit($this->throttleKey($email, $ip));
 
             throw ValidationException::withMessages([
-                'email' => [__('auth.failed')],
+                'status' => [__('auth.failed')],
             ]);
         }
 
@@ -65,7 +65,7 @@ class LoginAction
         $seconds = RateLimiter::availableIn($this->throttleKey($email, $ip));
 
         throw ValidationException::withMessages([
-            'email' => [__('auth.throttle', [
+            'status' => [__('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ])],
