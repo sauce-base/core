@@ -1,51 +1,87 @@
 import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
+import { collectModulePlaywrightConfigs } from './module-loader.js';
 
 const BASE_URL = process.env.APP_URL || 'http://localhost';
 
-/**
- * @see https://playwright.dev/docs/test-configuration
- */
-export default defineConfig({
-    /* Run tests in files in parallel */
-    fullyParallel: true,
-    /* Fail the build on CI if you accidentally left test.only in the source code. */
-    forbidOnly: !!process.env.CI,
-    /* Retry on CI only */
-    retries: process.env.CI ? 2 : 0,
-    /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : undefined,
-    /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
-    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    use: {
-        /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL: BASE_URL,
+async function createConfig() {
 
-        /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry',
+    // Collect Playwright configs from all modules
+    const modules = await collectModulePlaywrightConfigs() || [];
 
-        /* Take screenshot only on failures */
-        screenshot: 'only-on-failure',
+    const testDevices = [
+        'Desktop Chrome',
+        // 'Desktop Firefox',
+        // 'Desktop Safari',
+        // 'iPhone 14', 
+        // Add more devices here if needed
+    ];
 
-        /* Record video only on failures */
-        video: 'retain-on-failure',
-
-        /* Ignore HTTPS errors */
-        ignoreHTTPSErrors: true,
-    },
-
-    /* Configure projects for major browsers */
-    projects: [
+    const projects = [
+        /**
+         * Default project for core E2E tests
+         */
         {
-            name: 'chromium',
-            use: { ...devices['Desktop Chrome'] },
+            name: 'Core',
+            testDir: './tests/e2e',
+            use: {}, // will be extended below
         },
-    ],
+        // Add more projects here if needed
+    ].concat(modules)
+        .map(project => {
+            // Extend each project with the selected devices
+            return testDevices.map(device => {
+                return {
+                    ...project,
+                    name: `${project.name} [${device}]`,
+                    use: { ...devices[device], ...project.use, },
+                };
+            });
+        })
+        .flat();
 
-    webServer: {
-        command: `npx vite --port 5173`,
-        timeout: 10 * 1000,
-        reuseExistingServer: !process.env.CI,
-    },
-});
+    /**
+     * @see https://playwright.dev/docs/test-configuration
+     */
+    return defineConfig({
+        /* Run tests in files in parallel */
+        fullyParallel: true,
+        /* Fail the build on CI if you accidentally left test.only in the source code. */
+        forbidOnly: !!process.env.CI,
+        /* Retry on CI only */
+        retries: process.env.CI ? 2 : 0,
+        /* Opt out of parallel tests on CI. */
+        workers: process.env.CI ? 1 : undefined,
+        /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+        reporter: [['html', { outputFolder: 'playwright-report' }], ['list']],
+        /* Folder for test artifacts such as screenshots, videos, traces, etc. */
+        testDir: './tests/e2e',
+        /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+        use: {
+            /* Base URL to use in actions like `await page.goto('/')`. */
+            baseURL: BASE_URL,
+
+            /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+            trace: 'on-first-retry',
+
+            /* Take screenshot only on failures */
+            screenshot: 'only-on-failure',
+
+            /* Record video only on failures */
+            video: 'retain-on-failure',
+
+            /* Ignore HTTPS errors */
+            ignoreHTTPSErrors: true,
+        },
+
+        /* Configure projects for major browsers */
+        projects: projects,
+        webServer: {
+            command: `npx vite --port 5173`,
+            timeout: 10 * 1000,
+            reuseExistingServer: !process.env.CI,
+        },
+    });
+};
+
+export default createConfig();

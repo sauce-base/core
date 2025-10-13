@@ -55,7 +55,7 @@ faster.
 ├── resources/js/         # Inertia SPA (layouts, pages, Pinia stores, middleware, UI lib)
 ├── database/             # Migrations, factories, seeders (roles & demo users included)
 ├── docker/               # Development Dockerfiles + configs
-└── vite-module-loader.js # Collects enabled module assets automatically for Vite
+└── module-loader.js      # Collects enabled module assets and settings automatically
 ```
 
 - Modules are managed with **nwidart/laravel-modules** and automatically discovered if marked `true` in `modules_statuses.json`.
