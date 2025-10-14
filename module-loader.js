@@ -15,6 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const STATUS_FILE = 'modules_statuses.json';
+const MODULES_PATH = process.env.MODULES_PATH || 'modules';
 
 async function readJsonFile(filePath) {
     try {
@@ -50,14 +51,14 @@ async function listModuleDirectories(modulesDir) {
     }
 }
 
-async function loadEnabledModuleNames(baseDir, modulesPath) {
+async function loadEnabledModuleNames(baseDir) {
     const statuses = await loadModuleStatuses(baseDir);
     if (!statuses) {
         return [];
     }
 
     const directories = await listModuleDirectories(
-        path.join(baseDir, modulesPath),
+        path.join(baseDir, MODULES_PATH),
     );
 
     return directories.filter((name) => statuses[name] === true);
@@ -67,11 +68,15 @@ async function importModuleFile(filePath, moduleName, displayName) {
     try {
         await fs.access(filePath);
     } catch (error) {
-        if (!error.code === 'ENOENT') {
-            console.warn(
-                `Module ${moduleName}: unable to access ${displayName} - ${error.message}`,
-            );
+        if (error?.code === 'ENOENT') {
+            return null;
         }
+
+        console.warn(
+            `Module ${moduleName}: unable to access ${displayName} - ${
+                error && error.message
+            }`,
+        );
         return null;
     }
 
@@ -86,7 +91,13 @@ async function importModuleFile(filePath, moduleName, displayName) {
 }
 
 function extractModuleAssetPaths(moduleConfig, moduleName) {
-    const { paths: modulePaths } = moduleConfig;
+    // Support both named exports and default exports: moduleConfig may be the
+    // namespace object ({ default, ... }) or the default export itself.
+    const config =
+        moduleConfig && moduleConfig.default
+            ? moduleConfig.default
+            : moduleConfig;
+    const modulePaths = config && config.paths;
 
     if (!modulePaths) {
         return [];
@@ -97,8 +108,9 @@ function extractModuleAssetPaths(moduleConfig, moduleName) {
         return [];
     }
 
-    return modulePaths.map(
-        (assetPath) => `modules/${moduleName}/resources/${assetPath}`,
+    // Use posix join so generated paths use forward slashes consistently.
+    return modulePaths.map((assetPath) =>
+        path.posix.join(MODULES_PATH, moduleName, 'resources', assetPath),
     );
 }
 
@@ -109,7 +121,7 @@ function extractModuleAssetPaths(moduleConfig, moduleName) {
  * files to collect asset paths that should be included in the main build.
  *
  * @param {string[]} paths - Initial array of asset paths to extend
- * @param {string} modulesPath - Relative path to modules directory (default: 'modules')
+ *
  * @returns {Promise<string[]>} Array of all asset paths including discovered module assets
  *
  * @example
@@ -117,18 +129,14 @@ function extractModuleAssetPaths(moduleConfig, moduleName) {
  * const allPaths = await collectModuleAssetsPaths(initialPaths, 'modules');
  * // Returns: ['resources/js/app.ts', 'modules/Auth/resources/css/app.css', ...]
  */
-export async function collectModuleAssetsPaths(
-    paths = [],
-    modulesPath = 'modules',
-) {
-    const modulesDir = path.join(__dirname, modulesPath);
-    const enabledModules = await loadEnabledModuleNames(__dirname, modulesPath);
+export async function collectModuleAssetsPaths(paths = []) {
+    const modulesDir = path.join(__dirname, MODULES_PATH);
+    const enabledModules = await loadEnabledModuleNames(__dirname);
     const configFile = 'vite.config.js';
 
     for (const moduleName of enabledModules) {
-        const viteConfigPath = path.join(modulesDir, moduleName, configFile);
         const moduleConfig = await importModuleFile(
-            viteConfigPath,
+            path.join(modulesDir, moduleName, configFile),
             moduleName,
             configFile,
         );
@@ -149,24 +157,24 @@ export async function collectModuleAssetsPaths(
 
 /**
  * Collects Playwright projects from enabled modules
- * @param {string} modulesPath - Path to modules directory
+ *
  * @returns {Promise<Object[]>} Array of Playwright projects
  */
-export async function collectModulePlaywrightConfigs(modulesPath = 'modules') {
+export async function collectModulePlaywrightConfigs() {
     const projects = [];
-    const modulesDir = path.join(__dirname, modulesPath);
-    const enabledModules = await loadEnabledModuleNames(__dirname, modulesPath);
+    const modulesDir = path.join(__dirname, MODULES_PATH);
+    const enabledModules = await loadEnabledModuleNames(__dirname);
     const configFile = 'playwright.config.ts';
 
     for (const moduleName of enabledModules) {
-        const playwrightConfigPath = path.join(
-            modulesDir,
-            moduleName,
-            configFile,
-        );
+        // Add default module project
+        projects.push({
+            name: moduleName,
+            testDir: path.join(MODULES_PATH, moduleName, 'tests', 'e2e'),
+        });
 
         const config = await importModuleFile(
-            playwrightConfigPath,
+            path.join(modulesDir, moduleName, configFile),
             moduleName,
             configFile,
         );

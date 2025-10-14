@@ -4,10 +4,19 @@ import { collectModulePlaywrightConfigs } from './module-loader.js';
 
 const BASE_URL = process.env.APP_URL || 'http://localhost';
 
+type ModulePlaywrightConfig = {
+    name: string;
+    testDir: string;
+    use?: Record<string, unknown>;
+    // allow arbitrary extra properties
+    [key: string]: unknown;
+};
+
 async function createConfig() {
 
     // Collect Playwright configs from all modules
-    const modules = await collectModulePlaywrightConfigs() || [];
+    // cast to ModulePlaywrightConfig[] so modules can include extra keys beyond name/testDir/use
+    const modules = (await collectModulePlaywrightConfigs() || []) as ModulePlaywrightConfig[];
 
     const testDevices = [
         'Desktop Chrome',
@@ -25,16 +34,16 @@ async function createConfig() {
             name: 'Core',
             testDir: './tests/e2e',
             use: {}, // will be extended below
-        },
+        } as ModulePlaywrightConfig,
         // Add more projects here if needed
-    ].concat(modules)
+    ].concat(modules as ModulePlaywrightConfig[])
         .map(project => {
             // Extend each project with the selected devices
             return testDevices.map(device => {
                 return {
                     ...project,
                     name: `${project.name} [${device}]`,
-                    use: { ...devices[device], ...project.use, },
+                    use: { ...devices[device], ...(project.use ?? {}), },
                 };
             });
         })

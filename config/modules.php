@@ -25,7 +25,7 @@ return [
     */
     'stubs' => [
         'enabled' => false,
-        'path' => base_path().'/stubs/module',
+        'path' => base_path() . '/stubs/module',
         'files' => [
             'routes/web' => 'routes/web.php',
             'routes/api' => 'routes/api.php',
@@ -86,7 +86,7 @@ return [
         | This path will also be added automatically to the list of scanned folders.
         |
         */
-        'modules' => base_path('modules'),
+        'modules' => base_path(env('MODULES_PATH', 'modules')),
 
         /*
         |--------------------------------------------------------------------------
