@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { testUsers } from './fixtures/users';
-import { LoginPage } from './pages/LoginPage';
+import { testUsers } from '../../fixtures/users';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe.parallel('Login Error Handling', () => {
     let loginPage: LoginPage;
@@ -66,4 +66,3 @@ test.describe.parallel('Login Error Handling', () => {
         await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
     });
 });
-

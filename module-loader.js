@@ -169,7 +169,7 @@ export async function collectModulePlaywrightConfigs() {
     for (const moduleName of enabledModules) {
         // Add default module project
         projects.push({
-            name: moduleName,
+            name: `@${moduleName}`,
             testDir: path.join(MODULES_PATH, moduleName, 'tests', 'e2e'),
         });
 

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { testUsers } from './fixtures/users';
-import { LoginPage } from './pages/LoginPage';
+import { testUsers } from '../../fixtures/users';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe.parallel('Login Basics', () => {
     let loginPage: LoginPage;
@@ -82,4 +82,3 @@ test.describe.parallel('Login Basics', () => {
         await expectSuccessfulLogin();
     });
 });
-

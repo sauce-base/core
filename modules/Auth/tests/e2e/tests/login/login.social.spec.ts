@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { LoginPage } from './pages/LoginPage';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe('Login Social Authentication', () => {
     let loginPage: LoginPage;
@@ -41,4 +41,3 @@ test.describe('Login Social Authentication', () => {
         expect(href).toContain('/auth/socialite/github');
     });
 });
-

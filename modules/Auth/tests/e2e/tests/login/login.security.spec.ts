@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { testUsers } from './fixtures/users';
-import { LoginPage } from './pages/LoginPage';
+import { testUsers } from '../../fixtures/users';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe('Login Security', () => {
     let loginPage: LoginPage;
@@ -83,4 +83,3 @@ test.describe('Login Security', () => {
         });
     });
 });
-

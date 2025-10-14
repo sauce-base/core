@@ -31,7 +31,7 @@ async function createConfig() {
          * Default project for core E2E tests
          */
         {
-            name: 'Core',
+            name: '@Core',
             testDir: './tests/e2e',
             use: {}, // will be extended below
         } as ModulePlaywrightConfig,
