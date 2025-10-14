@@ -68,7 +68,6 @@ class LoginRequest extends FormRequest
             return;
         }
 
-        // TODO: Increase time as user keep trying.
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
