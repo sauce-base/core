@@ -4,11 +4,11 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-import { collectModuleAssetsPaths } from './module-loader.js';
+import { collectModuleAssetsPaths, MODULES_PATH } from './module-loader.js';
 
 async function createConfig() {
     const paths = ['resources/js/app.ts'];
-    const allPaths = await collectModuleAssetsPaths(paths, 'modules');
+    const allPaths = await collectModuleAssetsPaths(paths);
 
     return defineConfig({
         server: {
@@ -39,7 +39,7 @@ async function createConfig() {
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'resources/js'),
-                '@modules': path.resolve(__dirname, 'modules'),
+                '@modules': path.resolve(__dirname, MODULES_PATH),
                 'ziggy-js': path.resolve(__dirname, 'vendor/tightenco/ziggy'),
             },
         },

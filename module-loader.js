@@ -15,7 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const STATUS_FILE = 'modules_statuses.json';
-const MODULES_PATH = process.env.MODULES_PATH || 'modules';
+const MODULES_PATH = 'modules';
 
 async function readJsonFile(filePath) {
     try {
