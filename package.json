@@ -12,7 +12,7 @@
         "host": "vite --host",
         "format": "prettier --write resources/ modules/**/resources/",
         "format:check": "prettier --check resources/ modules/**/resources/",
-        "test": "echo 'No tests yet' && exit 0",
+        "test": "playwright test",
         "test:e2e": "playwright test",
         "test:e2e:ui": "playwright test --ui",
         "test:e2e:headed": "playwright test --headed",
