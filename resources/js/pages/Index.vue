@@ -7,7 +7,6 @@ import { useAuthStore } from '@modules/Auth/resources/js/stores';
 
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconDashboard from '~icons/heroicons/squares-2x2';
-import IconStar from '~icons/heroicons/star';
 import IconUserPlus from '~icons/heroicons/user-plus';
 
 defineProps<{
@@ -20,7 +19,7 @@ const authStore = useAuthStore();
 
 <template>
     <Head :title="$t('Sauce Base - Modern Laravel SaaS Starter Kit')" />
-    <div class="flex min-h-screen flex-col bg-white dark:bg-black">
+    <div class="flex min-h-screen flex-col">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />
 
@@ -29,14 +28,6 @@ const authStore = useAuthStore();
             class="flex flex-1 flex-col items-center justify-center px-6 py-24 pt-32"
         >
             <div class="mx-auto max-w-4xl text-center">
-                <!-- Free Badge -->
-                <div
-                    class="mb-6 inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-800 dark:bg-green-900/20 dark:text-green-300"
-                >
-                    <IconStar class="mr-2 h-4 w-4" />
-                    100% Free & Open Source
-                </div>
-
                 <!-- Logo -->
                 <div class="mb-12 flex justify-center">
                     <ApplicationLogo
@@ -48,9 +39,7 @@ const authStore = useAuthStore();
                 </div>
 
                 <!-- Main Headline -->
-                <h1
-                    class="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl dark:text-white"
-                >
+                <h1 class="mb-6 text-4xl font-bold tracking-tight sm:text-6xl">
                     {{ $t('Modern Laravel SaaS Starter Kit') }}
                 </h1>
 

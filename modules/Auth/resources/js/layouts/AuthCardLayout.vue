@@ -10,51 +10,42 @@ import {
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import Footer from '@/components/Footer.vue';
 import PageTransition from '@/components/PageTransition.vue';
-
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 
 defineProps<{
     title?: string;
     description?: string;
+    cardClass?: string | object;
 }>();
 </script>
 
 <template>
-    <div class="bg-muted">
-        <div
-            class="flex flex-col items-center justify-center gap-6 p-6 md:p-10"
-        >
-            <div class="flex w-full max-w-md flex-col gap-6">
-                <Link
-                    :href="route('index')"
-                    class="flex items-center gap-2 self-center font-medium"
-                >
-                    <div class="flex h-full w-full items-center justify-center">
-                        <ApplicationLogo
-                            size="lg"
-                            :showText="true"
-                            :centered="true"
-                        />
-                    </div>
-                </Link>
-
-                <div class="flex flex-col gap-6">
-                    <Card class="rounded-xl">
-                        <CardHeader class="px-10 pt-4 text-center">
-                            <CardTitle class="text-2xl">{{ title }}</CardTitle>
-                            <CardDescription>
-                                {{ description }}
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent class="px-10">
-                            <PageTransition>
-                                <slot />
-                            </PageTransition>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
+    <div class="flex h-screen flex-col items-center gap-6">
+        <div class="mt-6">
+            <Head :title="title" />
+            <Link :href="route('index')" class="mt-6 font-medium">
+                <ApplicationLogo size="md" :showText="true" />
+            </Link>
         </div>
-        <Footer />
+
+        <div class="min-w-md flex-grow">
+            <Card>
+                <CardHeader class="px-8 text-center">
+                    <CardTitle class="text-2xl">
+                        {{ title }}
+                    </CardTitle>
+                    <CardDescription>
+                        {{ description }}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent class="px-8">
+                    <PageTransition>
+                        <slot />
+                    </PageTransition>
+                </CardContent>
+            </Card>
+            <slot name="outside" />
+        </div>
+        <Footer class="mt-6 w-full" />
     </div>
 </template>

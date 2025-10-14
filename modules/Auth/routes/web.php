@@ -36,10 +36,10 @@ Route::prefix('auth')->group(function () {
         Route::post('reset-password', [NewPasswordController::class, 'store'])
             ->name('password.store');
 
-        Route::get('social/{provider}', [SocialiteController::class, 'redirect'])
+        Route::get('socialite/{provider}', [SocialiteController::class, 'redirect'])
             ->name('auth.socialite.redirect');
 
-        Route::get('social/{provider}/callback', [SocialiteController::class, 'callback'])
+        Route::get('socialite/{provider}/callback', [SocialiteController::class, 'callback'])
             ->name('auth.socialite.callback');
     });
 
@@ -65,7 +65,7 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
             ->name('logout');
 
-        Route::delete('social/{provider}', [SocialiteController::class, 'disconnect'])
+        Route::delete('socialite/{provider}', [SocialiteController::class, 'disconnect'])
             ->name('auth.social.disconnect');
     });
 });

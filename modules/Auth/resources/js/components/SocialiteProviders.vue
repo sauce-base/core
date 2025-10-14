@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ErrorMessage from '@/components/ErrorMessage.vue';
 import { Button } from '@/components/ui/button';
 import IconGithub from '~icons/mdi/github';
 import IconGoogle from '~icons/mdi/google';
@@ -17,6 +18,7 @@ const providers: Provider[] = [
         v-if="route().has('auth.socialite.redirect') && providers.length"
         class="mb-2 space-y-3"
     >
+        <ErrorMessage field="social" variant="error" />
         <Button
             v-for="{ name, icon } in providers"
             as-child

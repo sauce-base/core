@@ -1,97 +1,61 @@
 <script setup lang="ts">
-import Input from '@/components/Input.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 import { Button } from '@/components/ui/button';
-import FormControl from '@/components/ui/form/FormControl.vue';
-import FormField from '@/components/ui/form/FormField.vue';
-import FormItem from '@/components/ui/form/FormItem.vue';
-import FormLabel from '@/components/ui/form/FormLabel.vue';
-import FormMessage from '@/components/ui/form/FormMessage.vue';
-import GuestLayout from '@/layouts/GuestLayout.vue';
-import {
-    forgotPasswordSchema,
-    type ForgotPasswordFormData,
-} from '@/validation';
-import { Head, Link, useForm as useInertiaForm } from '@inertiajs/vue3';
-import { toTypedSchema } from '@vee-validate/zod';
-import { useForm } from 'vee-validate';
-
-defineProps<{
-    status?: string;
-}>();
-
-const formSchema = toTypedSchema(forgotPasswordSchema);
-
-const form = useForm({
-    validationSchema: formSchema,
-    initialValues: {
-        email: '',
-    },
-});
-
-const inertiaForm = useInertiaForm<ForgotPasswordFormData>({
-    email: '',
-});
-
-const onSubmit = form.handleSubmit((values: ForgotPasswordFormData) => {
-    Object.assign(inertiaForm, values);
-    inertiaForm.post(route('password.email'));
-});
+import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Form, Link } from '@inertiajs/vue3';
+import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 </script>
 
 <template>
-    <GuestLayout>
-        <Head :title="$t('Forgot Password')" />
+    <AuthCardLayout
+        :title="$t('Forgot Password')"
+        :description="
+            $t(
+                'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
+            )
+        "
+    >
+        <ErrorMessage field="status" variant="error" class="mt-4" />
 
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            {{
-                $t(
-                    'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
-                )
-            }}
-        </div>
-
-        <div
-            v-if="status"
-            class="mb-4 text-sm font-medium text-green-600 dark:text-green-400"
+        <Form
+            :action="route('password.email')"
+            method="post"
+            class="space-y-3"
+            data-testid="forgot-password-form"
+            disable-while-processing
+            #default="{ errors }"
         >
-            {{ status }}
-        </div>
+            <!-- Email -->
+            <Field :data-invalid="!!errors?.email">
+                <FieldLabel for="email">
+                    {{ $t('Email') }}
+                </FieldLabel>
+                <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    :placeholder="$t('Enter your email address')"
+                    :aria-invalid="!!errors?.email"
+                    autocomplete="email"
+                    required
+                />
+                <FieldError v-if="errors?.email">
+                    {{ errors?.email }}
+                </FieldError>
+            </Field>
 
-        <form @submit.prevent="onSubmit" class="space-y-4">
-            <FormField name="email" v-slot="{ componentField }">
-                <FormItem>
-                    <FormLabel>{{ $t('Email') }}</FormLabel>
-                    <FormControl>
-                        <Input
-                            v-bind="componentField"
-                            type="email"
-                            :placeholder="$t('Enter your email address')"
-                        />
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
-
-            <div class="flex items-center justify-end">
-                <Button
-                    type="submit"
-                    :class="{ 'opacity-25': inertiaForm.processing }"
-                    :disabled="inertiaForm.processing"
-                >
-                    {{ $t('Email Password Reset Link') }}
-                </Button>
-            </div>
-        </form>
-
-        <template #outside>
-            <div class="mt-6 text-center">
+            <div class="flex items-center justify-between pt-1">
                 <Link
                     :href="route('login')"
                     class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
                 >
-                    {{ $t('← Back to login') }}
+                    {{ $t('Back to login') }}
                 </Link>
+                <Button type="submit">
+                    {{ $t('Email Password Reset Link') }}
+                </Button>
             </div>
-        </template>
-    </GuestLayout>
+        </Form>
+    </AuthCardLayout>
 </template>

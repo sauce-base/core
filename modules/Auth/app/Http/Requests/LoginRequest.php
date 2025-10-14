@@ -48,7 +48,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'status' => trans('auth.failed'),
             ]);
         }
 
@@ -68,12 +68,13 @@ class LoginRequest extends FormRequest
             return;
         }
 
+        // TODO: Increase time as user keep trying.
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'status' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),

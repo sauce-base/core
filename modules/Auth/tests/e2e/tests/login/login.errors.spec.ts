@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { testUsers } from './fixtures/users';
-import { LoginPage } from './pages/LoginPage';
+import { testUsers } from '../../fixtures/users';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe.parallel('Login Error Handling', () => {
     let loginPage: LoginPage;
@@ -8,6 +8,17 @@ test.describe.parallel('Login Error Handling', () => {
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         await loginPage.goto();
+    });
+
+    test('shows error for invalid credentials', async ({ page }) => {
+        const user = testUsers.invalid;
+
+        await loginPage.login(user.email, user.password);
+
+        await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
+
+        const errorAlert = page.locator('[role="alert"]').first();
+        await expect(errorAlert).toBeVisible();
     });
 
     test('handles network failure gracefully', async () => {
@@ -40,4 +51,18 @@ test.describe.parallel('Login Error Handling', () => {
         expect(response.status()).toBe(500);
     });
 
+    test('handles request timeout', async () => {
+        const user = testUsers.valid;
+
+        await loginPage.page.route(loginPage.loginEndpoint, async (route) => {
+            // Simulate a timeout by delaying beyond Playwright's default
+            await new Promise((resolve) => setTimeout(resolve, 35000));
+            await route.abort('timedout');
+        });
+
+        await loginPage.login(user.email, user.password);
+
+        // After timeout, form should still be on login page
+        await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
+    });
 });
