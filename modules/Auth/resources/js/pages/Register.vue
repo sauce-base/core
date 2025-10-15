@@ -36,6 +36,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     type="text"
                     :placeholder="$t('Enter your full name')"
                     :aria-invalid="!!errors?.name"
+                    data-testid="name"
                     autocomplete="name"
                     required
                 />
@@ -53,12 +54,22 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     id="email"
                     name="email"
                     type="email"
-                    :placeholder="$t('Enter your email address')"
-                    :aria-invalid="!!errors?.email"
+                    data-testid="email"
+                    :placeholder="$t('Enter your email')"
+                    :aria-invalid="!!errors.email"
+                    aria-labelledby="email-label"
+                    :aria-describedby="
+                        errors?.email ? 'email-error' : undefined
+                    "
                     autocomplete="email"
                     required
                 />
-                <FieldError v-if="errors?.email">
+                <FieldError
+                    v-if="errors?.email"
+                    id="email-error"
+                    data-testid="email-error"
+                    aria-live="polite"
+                >
                     {{ errors?.email }}
                 </FieldError>
             </Field>
@@ -71,17 +82,31 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                 <PasswordInput
                     id="password"
                     name="password"
-                    :placeholder="$t('Create a password')"
-                    autocomplete="new-password"
-                    :aria-invalid="!!errors?.password"
+                    autocomplete="current-password"
+                    data-testid="password"
+                    :placeholder="$t('Enter your password')"
+                    :aria-invalid="!!errors.password"
+                    aria-labelledby="password-label"
+                    :aria-describedby="
+                        errors?.password ? 'password-error' : undefined
+                    "
                     required
                 />
-                <FieldError v-if="errors?.password">
+                <FieldError
+                    v-if="errors?.password"
+                    id="password-error"
+                    data-testid="password-error"
+                    aria-live="polite"
+                >
                     {{ errors?.password }}
                 </FieldError>
             </Field>
 
-            <Button type="submit" class="mt-3 w-full">
+            <Button
+                type="submit"
+                class="mt-3 w-full"
+                data-testid="register-button"
+            >
                 {{ $t('Register') }}
             </Button>
 
