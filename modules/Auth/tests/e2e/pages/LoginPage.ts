@@ -73,7 +73,6 @@ export class LoginPage {
         await expect(this.passwordInput).toHaveAttribute('type', 'password');
     }
 
-
     async waitForLoginResponse() {
         return this.page.waitForResponse((response: Response) =>
             response.url().includes(this.loginEndpoint),

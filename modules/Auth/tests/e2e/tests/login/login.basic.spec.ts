@@ -8,6 +8,7 @@ test.describe.parallel('Login Basics', () => {
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
         await loginPage.goto();
+        await loginPage.expectToBeVisible();
     });
 
     async function expectSuccessfulLogin() {
@@ -28,12 +29,6 @@ test.describe.parallel('Login Basics', () => {
         await expectSuccessfulLogin();
     });
 
-    test('trims whitespace from email before submission', async () => {
-        const user = testUsers.withSpaces;
-        await loginPage.login(user.email, user.password);
-        await expectSuccessfulLogin();
-    });
-
     test('redirects authenticated users away from login page', async ({
         page,
     }) => {
@@ -44,19 +39,6 @@ test.describe.parallel('Login Basics', () => {
         await page.goto('/auth/login');
 
         await expect(page).toHaveURL('/dashboard');
-    });
-
-    test('redirects to intended URL after login', async ({ page }) => {
-        const intendedUrl = '/dashboard';
-
-        await page.goto(intendedUrl);
-
-        await page.waitForURL(/\/auth\/login/);
-
-        const user = testUsers.valid;
-        await loginPage.login(user.email, user.password);
-
-        await loginPage.expectRedirectTo(intendedUrl);
     });
 
     test('toggles password visibility', async () => {

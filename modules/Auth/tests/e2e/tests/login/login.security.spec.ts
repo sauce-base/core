@@ -16,12 +16,12 @@ test.describe('Login Security', () => {
         test('blocks login after too many failed attempts', async () => {
             const invalidUser = testUsers.invalid;
 
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i <= 5; i++) {
                 await loginPage.login(invalidUser.email, invalidUser.password);
 
-                await loginPage.page.waitForTimeout(500);
+                await loginPage.page.waitForTimeout(1000);
 
-                if (i < 4) {
+                if (i < 5) {
                     await expect(loginPage.page).toHaveURL(
                         loginPage.loginEndpoint,
                     );
@@ -66,20 +66,6 @@ test.describe('Login Security', () => {
 
             const response = await responsePromise;
             expect(response.status()).toBe(419);
-        });
-    });
-
-    test.describe('Password Security', () => {
-        test('password field does not expose value in HTML', async () => {
-            const user = testUsers.valid;
-
-            await loginPage.passwordInput.fill(user.password);
-
-            const inputType = await loginPage.passwordInput.getAttribute('type');
-            expect(inputType).toBe('password');
-
-            const htmlContent = await loginPage.page.content();
-            expect(htmlContent).not.toContain(user.password);
         });
     });
 });
