@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import AlertMessage from '@/components/AlertMessage.vue';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,11 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             )
         "
     >
-        <ErrorMessage field="status" variant="error" class="mt-4" />
+        <AlertMessage
+            :message="$page.props.status"
+            variant="success"
+            class="mt-4"
+        />
 
         <Form
             :action="route('password.email')"
@@ -35,12 +39,17 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     id="email"
                     name="email"
                     type="email"
+                    data-testid="email"
                     :placeholder="$t('Enter your email address')"
                     :aria-invalid="!!errors?.email"
                     autocomplete="email"
                     required
                 />
-                <FieldError v-if="errors?.email">
+                <FieldError
+                    v-if="errors?.email"
+                    data-testid="email-error"
+                    aria-live="polite"
+                >
                     {{ errors?.email }}
                 </FieldError>
             </Field>
@@ -49,10 +58,11 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                 <Link
                     :href="route('login')"
                     class="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    data-testid="back-to-login-link"
                 >
                     {{ $t('Back to login') }}
                 </Link>
-                <Button type="submit">
+                <Button type="submit" data-testid="reset-button">
                     {{ $t('Email Password Reset Link') }}
                 </Button>
             </div>

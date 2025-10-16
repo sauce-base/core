@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { usePage } from '@inertiajs/vue3';
+
 import {
     AlertCircle,
     AlertTriangle,
@@ -11,7 +11,7 @@ import {
 import { computed, type Component } from 'vue';
 
 interface Props {
-    field: string;
+    message: string | unknown;
     variant?: 'success' | 'info' | 'warning' | 'error' | 'default';
     appearance?: 'filled' | 'bordered' | 'outlined';
     icon?: Component;
@@ -23,9 +23,6 @@ const props = withDefaults(defineProps<Props>(), {
     appearance: 'filled',
     hideIcon: false,
 });
-
-const page = usePage();
-const message = computed(() => page.props.errors?.[props.field]);
 
 const defaultIcons: Record<string, LucideIcon> = {
     success: CheckCircle,

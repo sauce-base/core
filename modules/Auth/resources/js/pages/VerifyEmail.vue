@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import AlertMessage from '@/components/AlertMessage.vue';
 import { Button } from '@/components/ui/button';
 import { Form, Link } from '@inertiajs/vue3';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
@@ -14,7 +14,11 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             )
         "
     >
-        <ErrorMessage field="status" variant="success" class="mt-4" />
+        <AlertMessage
+            :message="$page.props.status"
+            variant="error"
+            class="mt-4"
+        />
 
         <Form
             :action="route('verification.send')"
