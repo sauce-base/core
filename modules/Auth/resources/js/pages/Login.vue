@@ -6,8 +6,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Form, Link } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
+
+const emailRef = ref('');
+
+// compute forgot password url so the link updates as user types
+const forgotUrl = computed(() => {
+    // if route helper is available at runtime, use it; otherwise return '#'
+    try {
+        return route('password.request', { email: emailRef.value });
+    } catch {
+        return '#';
+    }
+});
 </script>
 
 <template>
@@ -49,6 +62,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                         errors?.email ? 'email-error' : undefined
                     "
                     autocomplete="email"
+                    v-model="emailRef"
                     required
                 />
                 <FieldError
@@ -69,7 +83,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     </FieldLabel>
                     <Link
                         v-if="route().has('password.request')"
-                        :href="route('password.request')"
+                        :href="forgotUrl"
                         class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                         data-testid="forgot-password-link"
                         :data-invalid="false"

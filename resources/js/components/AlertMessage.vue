@@ -46,11 +46,11 @@ const baseVariant = computed(() => {
 
 const variantStyles = {
     success: {
-        filled: 'border-green-500 bg-green-500 text-white [&>svg]:text-white *:data-[slot=alert-description]:text-white',
+        filled: 'border-green-700 bg-green-700 text-white [&>svg]:text-white *:data-[slot=alert-description]:text-white',
         bordered:
             'bg-green-50 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-200 [&>svg]:text-green-800 dark:[&>svg]:text-green-200',
         outlined:
-            'bg-transparent border-2 border-green-500 text-green-600 dark:text-green-400 [&>svg]:text-green-600 dark:[&>svg]:text-green-400',
+            'bg-transparent border-2 border-green-700 text-green-600 dark:text-green-400 [&>svg]:text-green-600 dark:[&>svg]:text-green-400',
     },
     info: {
         filled: 'border-blue-500 bg-blue-500 text-white [&>svg]:text-white *:data-[slot=alert-description]:text-white',

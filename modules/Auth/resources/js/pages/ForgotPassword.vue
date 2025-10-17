@@ -25,9 +25,10 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         <Form
             :action="route('password.email')"
             method="post"
-            class="space-y-3"
+            class="min-w-sm space-y-3"
             data-testid="forgot-password-form"
             disable-while-processing
+            :reset-on-success="['email']"
             #default="{ errors }"
         >
             <!-- Email -->
@@ -40,6 +41,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     name="email"
                     type="email"
                     data-testid="email"
+                    :model-value="String($page.props.email)"
                     :placeholder="$t('Enter your email address')"
                     :aria-invalid="!!errors?.email"
                     autocomplete="email"

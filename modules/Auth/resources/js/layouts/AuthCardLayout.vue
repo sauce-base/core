@@ -28,7 +28,7 @@ defineProps<{
             </Link>
         </div>
 
-        <div class="min-w-md flex-grow">
+        <div class="flex-grow">
             <Card>
                 <CardHeader class="px-8 text-center">
                     <CardTitle class="text-2xl">

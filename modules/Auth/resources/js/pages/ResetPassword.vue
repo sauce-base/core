@@ -19,7 +19,7 @@ defineProps<{
         :description="$t('Enter your new password below')"
     >
         <AlertMessage
-            :message="$page.props.status"
+            :message="$page.props.errors.status"
             variant="error"
             class="mt-4"
         />
@@ -27,16 +27,21 @@ defineProps<{
         <Form
             :action="route('password.store')"
             method="post"
-            class="space-y-3"
+            class="min-w-sm space-y-3"
             data-testid="reset-password-form"
             disable-while-processing
             :reset-on-error="['password', 'password_confirmation']"
             #default="{ errors }"
         >
-            <input type="hidden" name="token" :value="token" />
+            <input
+                type="hidden"
+                name="token"
+                :value="token"
+                data-testid="token"
+            />
 
             <!-- Email -->
-            <Field :data-invalid="!!errors?.email">
+            <Field>
                 <FieldLabel for="email">
                     {{ $t('Email') }}
                 </FieldLabel>
@@ -44,16 +49,11 @@ defineProps<{
                     id="email"
                     name="email"
                     type="email"
-                    :value="email"
-                    :placeholder="$t('Enter your email')"
-                    :aria-invalid="!!errors?.email"
-                    autocomplete="email"
+                    :model-value="email"
                     readonly
                     required
+                    data-testid="email"
                 />
-                <FieldError v-if="errors?.email">
-                    {{ errors?.email }}
-                </FieldError>
             </Field>
 
             <!-- Password -->
@@ -65,11 +65,16 @@ defineProps<{
                     id="password"
                     name="password"
                     :placeholder="$t('Enter your new password')"
-                    autocomplete="new-password"
                     :aria-invalid="!!errors?.password"
+                    autocomplete="new-password"
                     required
+                    data-testid="password"
                 />
-                <FieldError v-if="errors?.password">
+                <FieldError
+                    v-if="errors?.password"
+                    data-testid="password-error"
+                    aria-live="polite"
+                >
                     {{ errors?.password }}
                 </FieldError>
             </Field>
@@ -83,11 +88,16 @@ defineProps<{
                     id="password_confirmation"
                     name="password_confirmation"
                     :placeholder="$t('Confirm your new password')"
-                    autocomplete="new-password"
                     :aria-invalid="!!errors?.password_confirmation"
+                    autocomplete="new-password"
                     required
+                    data-testid="password_confirmation"
                 />
-                <FieldError v-if="errors?.password_confirmation">
+                <FieldError
+                    v-if="errors?.password_confirmation"
+                    data-testid="password-confirmation-error"
+                    aria-live="polite"
+                >
                     {{ errors?.password_confirmation }}
                 </FieldError>
             </Field>
