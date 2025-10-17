@@ -26,6 +26,7 @@
         "@commitlint/cli": "^19.8.1",
         "@commitlint/config-conventional": "^19.8.1",
         "@eslint/js": "^9.19.0",
+        "@faker-js/faker": "^10.1.0",
         "@iconify/json": "^2.2.357",
         "@inertiajs/vue3": "^2.2.7",
         "@playwright/test": "^1.54.1",

@@ -6,49 +6,43 @@ import {
     type Response,
 } from '@playwright/test';
 
-export class LoginPage {
+export class RegisterPage {
     readonly page: Page;
+    readonly nameInput: Locator;
     readonly emailInput: Locator;
     readonly passwordInput: Locator;
     readonly passwordToggle: Locator;
-    readonly rememberCheckbox: Locator;
-    readonly loginButton: Locator;
-    readonly forgotPasswordLink: Locator;
-    readonly signUpLink: Locator;
-    readonly loginEndpoint: string;
+    readonly registerButton: Locator;
+    readonly signupEndpoint: string;
 
     constructor(page: Page) {
         this.page = page;
-        this.loginEndpoint = '/auth/login';
+        this.signupEndpoint = '/auth/register';
+        this.nameInput = page.getByTestId('name');
         this.emailInput = page.getByTestId('email');
         this.passwordInput = page.getByTestId('password');
         this.passwordToggle = page.getByTestId('password-toggle');
-        this.rememberCheckbox = page.getByTestId('remember-me');
-        this.loginButton = page.getByTestId('login-button');
-        this.forgotPasswordLink = page.getByTestId('forgot-password-link');
-        this.signUpLink = page.getByTestId('sign-up-link');
+        this.registerButton = page.getByTestId('register-button');
     }
 
     async goto() {
-        await this.page.goto(this.loginEndpoint);
+        await this.page.goto(this.signupEndpoint);
     }
 
-    async login(email: string, password: string, remember = false) {
+    async register(name: string, email: string, password: string) {
+        await this.nameInput.fill(name);
         await this.emailInput.fill(email);
         await this.passwordInput.fill(password);
 
-        if (remember) {
-            await this.rememberCheckbox.check();
-        }
-
-        await this.loginButton.click();
+        await this.registerButton.click();
     }
 
     async expectToBeVisible() {
-        await expect(this.page.getByTestId('login-form')).toBeVisible();
+        await expect(this.page.getByTestId('register-form')).toBeVisible();
+        await expect(this.nameInput).toBeVisible();
         await expect(this.emailInput).toBeVisible();
         await expect(this.passwordInput).toBeVisible();
-        await expect(this.loginButton).toBeVisible();
+        await expect(this.registerButton).toBeVisible();
     }
 
     async expectEmailError() {
@@ -73,27 +67,28 @@ export class LoginPage {
         await expect(this.passwordInput).toHaveAttribute('type', 'password');
     }
 
+
     async waitForLoginResponse() {
         return this.page.waitForResponse((response: Response) =>
-            response.url().includes(this.loginEndpoint),
+            response.url().includes(this.signupEndpoint),
         );
     }
 
     async waitForFailedLoginRequest() {
         return this.page.waitForEvent('requestfailed', (request: Request) =>
-            request.url().includes(this.loginEndpoint),
+            request.url().includes(this.signupEndpoint),
         );
     }
 
     async mockNetworkFailure() {
-        await this.page.route(this.loginEndpoint, (route) => route.abort());
+        await this.page.route(this.signupEndpoint, (route) => route.abort());
     }
 
     async mockServerResponse(
         status: number,
         body: Record<string, unknown> = {},
     ) {
-        await this.page.route(this.loginEndpoint, (route) => {
+        await this.page.route(this.signupEndpoint, (route) => {
             route.fulfill({
                 status,
                 contentType: 'application/json',
@@ -103,7 +98,7 @@ export class LoginPage {
     }
 
     async mockDelayedResponse(delayMs: number) {
-        await this.page.route(this.loginEndpoint, async (route) => {
+        await this.page.route(this.signupEndpoint, async (route) => {
             await new Promise((resolve) => setTimeout(resolve, delayMs));
             await route.continue();
         });

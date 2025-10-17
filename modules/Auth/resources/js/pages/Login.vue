@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ErrorMessage from '@/components/ErrorMessage.vue';
+import AlertMessage from '@/components/AlertMessage.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -16,7 +16,13 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         :description="$t('Login to your Sauce Base account to continue')"
     >
         <SocialiteProviders />
-        <ErrorMessage field="status" variant="error" class="mt-4" />
+
+        <AlertMessage
+            :message="$page.props.errors?.status"
+            variant="error"
+            class="mt-4"
+        />
+
         <Form
             :action="route('login')"
             method="post"
@@ -37,7 +43,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     type="email"
                     data-testid="email"
                     :placeholder="$t('Enter your email')"
-                    :aria-invalid="!!errors?.email ? 'true' : 'false'"
+                    :aria-invalid="!!errors?.email"
                     aria-labelledby="email-label"
                     :aria-describedby="
                         errors?.email ? 'email-error' : undefined
@@ -77,7 +83,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     autocomplete="current-password"
                     data-testid="password"
                     :placeholder="$t('Enter your password')"
-                    :aria-invalid="!!errors?.password ? 'true' : 'false'"
+                    :aria-invalid="!!errors?.password"
                     aria-labelledby="password-label"
                     :aria-describedby="
                         errors?.password ? 'password-error' : undefined
