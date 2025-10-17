@@ -88,7 +88,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                 <PasswordInput
                     id="password"
                     name="password"
-                    autocomplete="current-password"
+                    autocomplete="new-password"
                     data-testid="password"
                     :placeholder="$t('Enter your password')"
                     :aria-invalid="!!errors.password"
