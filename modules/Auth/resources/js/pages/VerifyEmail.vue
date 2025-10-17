@@ -16,7 +16,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
     >
         <AlertMessage
             :message="$page.props.status"
-            variant="error"
+            variant="success"
             class="mt-4"
         />
 
