@@ -41,7 +41,11 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     name="email"
                     type="email"
                     data-testid="email"
-                    :model-value="String($page.props.email)"
+                    :model-value="
+                        $page.props.email
+                            ? String($page.props.email)
+                            : undefined
+                    "
                     :placeholder="$t('Enter your email address')"
                     :aria-invalid="!!errors?.email"
                     autocomplete="email"
