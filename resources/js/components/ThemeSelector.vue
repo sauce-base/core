@@ -23,6 +23,10 @@ interface Props {
      * Custom trigger class for standalone mode
      */
     triggerClass?: string;
+    /**
+     * Enable animated theme transitions using View Transitions API
+     */
+    disableAnimation?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -46,6 +50,7 @@ const themes = [
 const switchTheme = async (themeCode: 'light' | 'dark' | 'auto') => {
     // Check if browser supports View Transitions API
     if (
+        props.disableAnimation ||
         !document.startViewTransition ||
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
@@ -132,8 +137,9 @@ const currentTheme = computed(
     </DropdownMenu>
 
     <!-- Submenu Mode (NavUser) -->
-    <DropdownMenuSub v-else ref="triggerRef">
+    <DropdownMenuSub v-else>
         <DropdownMenuSubTrigger
+            ref="triggerRef"
             class="[&>svg]:text-muted-foreground [&>svg]:mr-2"
         >
             <slot name="submenu-trigger" :current-theme="currentTheme">
