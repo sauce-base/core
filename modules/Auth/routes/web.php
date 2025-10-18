@@ -1,14 +1,15 @@
 <?php
 
+use Modules\Auth\Http\Controllers\LoginController;
+use Modules\Auth\Http\Controllers\RegisterController;
+
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\ConfirmablePasswordController;
 use Modules\Auth\Http\Controllers\EmailVerificationNotificationController;
 use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
-use Modules\Auth\Http\Controllers\LoginController;
 use Modules\Auth\Http\Controllers\NewPasswordController;
 use Modules\Auth\Http\Controllers\PasswordController;
 use Modules\Auth\Http\Controllers\PasswordResetLinkController;
-use Modules\Auth\Http\Controllers\RegisteredUserController;
 use Modules\Auth\Http\Controllers\SocialiteController;
 use Modules\Auth\Http\Controllers\VerifyEmailController;
 
@@ -20,10 +21,10 @@ Route::prefix('auth')->group(function () {
 
         Route::post('login', [LoginController::class, 'store']);
 
-        Route::get('register', [RegisteredUserController::class, 'create'])
+        Route::get('register', [RegisterController::class, 'create'])
             ->name('register');
 
-        Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::post('register', [RegisterController::class, 'store']);
 
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
             ->name('password.request');
