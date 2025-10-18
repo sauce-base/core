@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Auth\Http\Controllers\AuthenticatedSessionController;
 use Modules\Auth\Http\Controllers\ConfirmablePasswordController;
 use Modules\Auth\Http\Controllers\EmailVerificationNotificationController;
 use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
@@ -25,8 +24,6 @@ Route::prefix('auth')->group(function () {
             ->name('register');
 
         Route::post('register', [RegisteredUserController::class, 'store']);
-
-
 
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
             ->name('password.request');
@@ -69,7 +66,6 @@ Route::prefix('auth')->group(function () {
         Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
         Route::put('password', [PasswordController::class, 'update'])->name('password.update');
-
 
         Route::delete('socialite/{provider}', [SocialiteController::class, 'disconnect'])
             ->name('auth.social.disconnect');
