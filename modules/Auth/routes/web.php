@@ -7,7 +7,7 @@ use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
 use Modules\Auth\Http\Controllers\LoginController;
 use Modules\Auth\Http\Controllers\NewPasswordController;
 use Modules\Auth\Http\Controllers\PasswordController;
-use Modules\Auth\Http\Controllers\PasswordResetLinkController;
+use Modules\Auth\Http\Controllers\ForgotPasswordController;
 use Modules\Auth\Http\Controllers\RegisterController;
 use Modules\Auth\Http\Controllers\SocialiteController;
 use Modules\Auth\Http\Controllers\VerifyEmailController;
@@ -25,10 +25,10 @@ Route::prefix('auth')->group(function () {
 
         Route::post('register', [RegisterController::class, 'store']);
 
-        Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        Route::get('forgot-password', [ForgotPasswordController::class, 'create'])
             ->name('password.request');
 
-        Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        Route::post('forgot-password', [ForgotPasswordController::class, 'store'])
             ->name('password.email');
 
         Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
