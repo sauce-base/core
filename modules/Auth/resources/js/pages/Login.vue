@@ -31,8 +31,8 @@ const forgotUrl = computed(() => {
         <SocialiteProviders />
 
         <AlertMessage
-            :message="$page.props.errors?.status"
-            variant="error"
+            :message="$page.props.status || $page.props.error"
+            :variant="$page.props.status ? 'success' : 'error'"
             class="mt-4"
         />
 
