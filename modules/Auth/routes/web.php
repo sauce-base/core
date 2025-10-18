@@ -6,9 +6,9 @@ use Modules\Auth\Http\Controllers\EmailVerificationNotificationController;
 use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
 use Modules\Auth\Http\Controllers\ForgotPasswordController;
 use Modules\Auth\Http\Controllers\LoginController;
-use Modules\Auth\Http\Controllers\NewPasswordController;
 use Modules\Auth\Http\Controllers\PasswordController;
 use Modules\Auth\Http\Controllers\RegisterController;
+use Modules\Auth\Http\Controllers\ResetPasswordController;
 use Modules\Auth\Http\Controllers\SocialiteController;
 use Modules\Auth\Http\Controllers\VerifyEmailController;
 
@@ -31,10 +31,10 @@ Route::prefix('auth')->group(function () {
         Route::post('forgot-password', [ForgotPasswordController::class, 'store'])
             ->name('password.email');
 
-        Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+        Route::get('reset-password/{token}', [ResetPasswordController::class, 'create'])
             ->name('password.reset');
 
-        Route::post('reset-password', [NewPasswordController::class, 'store'])
+        Route::post('reset-password', [ResetPasswordController::class, 'store'])
             ->name('password.store');
 
         Route::get('socialite/{provider}', [SocialiteController::class, 'redirect'])
