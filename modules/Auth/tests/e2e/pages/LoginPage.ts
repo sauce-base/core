@@ -16,6 +16,7 @@ export class LoginPage {
     readonly forgotPasswordLink: Locator;
     readonly signUpLink: Locator;
     readonly loginEndpoint: string;
+    readonly alertMessage: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -27,6 +28,7 @@ export class LoginPage {
         this.loginButton = page.getByTestId('login-button');
         this.forgotPasswordLink = page.getByTestId('forgot-password-link');
         this.signUpLink = page.getByTestId('sign-up-link');
+        this.alertMessage = page.getByTestId('alert');
     }
 
     async goto() {
@@ -139,5 +141,9 @@ export class LoginPage {
             const focused = document.activeElement;
             return focused?.getAttribute('data-testid') || null;
         });
+    }
+
+    async expectAlertToBeVisible() {
+        await expect(this.alertMessage).toBeVisible();
     }
 }
