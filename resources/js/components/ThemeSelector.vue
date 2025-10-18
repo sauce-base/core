@@ -54,11 +54,13 @@ const switchTheme = async (themeCode: 'light' | 'dark' | 'auto') => {
         return;
     }
 
-    // Get the theme icon button position from the trigger element
-    let x = innerWidth / 2;
-    let y = innerHeight / 2;
+    let x = 0;
+    let y = 0;
 
-    if (triggerRef.value) {
+    if (
+        triggerRef.value &&
+        typeof triggerRef.value.getBoundingClientRect === 'function'
+    ) {
         const rect = triggerRef.value.getBoundingClientRect();
         x = rect.left + rect.width / 2;
         y = rect.top + rect.height / 2;
@@ -103,9 +105,13 @@ const currentTheme = computed(
     <!-- Standalone Mode (Landing Page) -->
     <DropdownMenu v-if="mode === 'standalone'">
         <DropdownMenuTrigger as-child>
-            <button ref="triggerRef" :class="props.triggerClass">
+            <button
+                ref="triggerRef"
+                :class="props.triggerClass"
+                :aria-label="$t('Toggle theme')"
+            >
                 <slot name="trigger" :current-theme="currentTheme">
-                    <component :is="currentTheme.icon" class="h-5 w-5" />
+                    <component :is="currentTheme.icon" class="size-5" />
                 </slot>
             </button>
         </DropdownMenuTrigger>
@@ -119,16 +125,15 @@ const currentTheme = computed(
                         colorMode === theme.code,
                 }"
             >
-                <component :is="theme.icon" class="h-4 w-4" />
+                <component :is="theme.icon" class="size-4" />
                 {{ $t(theme.name) }}
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
 
     <!-- Submenu Mode (NavUser) -->
-    <DropdownMenuSub v-else>
+    <DropdownMenuSub v-else ref="triggerRef">
         <DropdownMenuSubTrigger
-            ref="triggerRef"
             class="[&>svg]:text-muted-foreground [&>svg]:mr-2"
         >
             <slot name="submenu-trigger" :current-theme="currentTheme">
@@ -143,7 +148,7 @@ const currentTheme = computed(
                 @click="switchTheme(theme.code)"
                 :class="{ 'bg-accent': colorMode === theme.code }"
             >
-                <component :is="theme.icon" class="h-4 w-4" />
+                <component :is="theme.icon" class="size-4" />
                 {{ $t(theme.name) }}
             </DropdownMenuItem>
         </DropdownMenuSubContent>
