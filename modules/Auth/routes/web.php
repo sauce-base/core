@@ -1,15 +1,14 @@
 <?php
 
-use Modules\Auth\Http\Controllers\LoginController;
-use Modules\Auth\Http\Controllers\RegisterController;
-
 use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\ConfirmablePasswordController;
 use Modules\Auth\Http\Controllers\EmailVerificationNotificationController;
 use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
+use Modules\Auth\Http\Controllers\LoginController;
 use Modules\Auth\Http\Controllers\NewPasswordController;
 use Modules\Auth\Http\Controllers\PasswordController;
 use Modules\Auth\Http\Controllers\PasswordResetLinkController;
+use Modules\Auth\Http\Controllers\RegisterController;
 use Modules\Auth\Http\Controllers\SocialiteController;
 use Modules\Auth\Http\Controllers\VerifyEmailController;
 
