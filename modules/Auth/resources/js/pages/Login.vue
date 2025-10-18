@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AlertMessage from '@/components/AlertMessage.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -29,12 +28,6 @@ const forgotUrl = computed(() => {
         :description="$t('Login to your Sauce Base account to continue')"
     >
         <SocialiteProviders />
-
-        <AlertMessage
-            :message="$page.props.status || $page.props.error"
-            :variant="$page.props.status ? 'success' : 'error'"
-            class="mt-4"
-        />
 
         <Form
             :action="route('login')"

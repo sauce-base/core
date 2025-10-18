@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AlertMessage from '@/components/AlertMessage.vue';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -16,12 +15,6 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             )
         "
     >
-        <AlertMessage
-            :message="$page.props.status"
-            variant="success"
-            class="mt-4"
-        />
-
         <Form
             :action="route('password.email')"
             method="post"

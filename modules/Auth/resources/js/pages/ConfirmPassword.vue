@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AlertMessage from '@/components/AlertMessage.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
@@ -12,12 +11,6 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         :title="$t('Confirm Password')"
         :description="$t('Confirm your password before continuing.')"
     >
-        <AlertMessage
-            :message="$page.props.status"
-            variant="error"
-            class="mt-4"
-        />
-
         <Form
             :action="route('password.confirm')"
             method="post"

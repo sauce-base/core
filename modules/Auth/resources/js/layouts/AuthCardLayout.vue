@@ -7,6 +7,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 
+import AlertMessage from '@/components/AlertMessage.vue';
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import Footer from '@/components/Footer.vue';
 import PageTransition from '@/components/PageTransition.vue';
@@ -40,6 +41,12 @@ defineProps<{
                 </CardHeader>
                 <CardContent class="px-8">
                     <PageTransition>
+                        <AlertMessage
+                            :message="$page.props.status || $page.props.error"
+                            :variant="$page.props.status ? 'success' : 'error'"
+                            class="mt-4"
+                            data-testid="alert"
+                        />
                         <slot />
                     </PageTransition>
                 </CardContent>
