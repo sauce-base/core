@@ -14,7 +14,6 @@ use Exception;
  */
 class AuthException extends Exception
 {
-
     /**
      * Create a new AuthException.
      *
@@ -22,7 +21,7 @@ class AuthException extends Exception
      * HTTP status handling is left to the caller (for example an exception
      * handler that maps exceptions to responses).
      *
-     * @param string $message Human-friendly error message.
+     * @param  string  $message  Human-friendly error message.
      */
     public function __construct(string $message = 'Authentication error.')
     {
@@ -34,8 +33,6 @@ class AuthException extends Exception
      *
      * Returns an exception with a localized message for failed authentication
      * and a 401 HTTP status code.
-     *
-     * @return self
      */
     public static function invalidCredentials(): self
     {
@@ -48,8 +45,7 @@ class AuthException extends Exception
      * Builds an exception with a localized throttle message and a 429
      * (Too Many Requests) HTTP status code.
      *
-     * @param int $seconds Number of seconds until the client may retry.
-     * @return self
+     * @param  int  $seconds  Number of seconds until the client may retry.
      */
     public static function throttle(int $seconds = 60): self
     {

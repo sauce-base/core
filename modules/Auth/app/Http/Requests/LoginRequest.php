@@ -3,11 +3,11 @@
 namespace Modules\Auth\Http\Requests;
 
 use App\Models\User;
-use Modules\Auth\Exceptions\AuthException;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Modules\Auth\Exceptions\AuthException;
 
 class LoginRequest extends FormRequest
 {
@@ -37,7 +37,7 @@ class LoginRequest extends FormRequest
      *
      * @throws \Modules\Auth\Exceptions\AuthException
      */
-    public function validateCredentials(): User | Bool
+    public function validateCredentials(): User|bool
     {
         $this->ensureIsNotRateLimited();
 
@@ -80,7 +80,7 @@ class LoginRequest extends FormRequest
     {
         return $this->string('email')
             ->lower()
-            ->append('|' . $this->ip())
+            ->append('|'.$this->ip())
             ->transliterate()
             ->value();
     }

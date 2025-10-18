@@ -2,12 +2,12 @@
 
 namespace Modules\Auth\Http\Controllers;
 
-use Modules\Auth\Exceptions\AuthException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Modules\Auth\Exceptions\AuthException;
 use Modules\Auth\Http\Requests\LoginRequest;
 
 class LoginController extends Controller
