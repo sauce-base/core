@@ -22,6 +22,7 @@ class ResetPasswordController extends Controller
         return Inertia::render('Auth::ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'error' => session('error'),
         ]);
     }
 
@@ -60,6 +61,6 @@ class ResetPasswordController extends Controller
             return redirect()->route('login')->with('status', trans($status));
         }
 
-        return back()->with('error', [trans($status)]);
+        return back()->with('error', trans($status));
     }
 }

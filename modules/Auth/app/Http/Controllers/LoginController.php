@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Http\Controllers;
 
+use Modules\Auth\Exceptions\AuthException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,11 @@ class LoginController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $user = $request->validateCredentials();
+        try {
+            $user = $request->validateCredentials();
+        } catch (AuthException $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
 
         Auth::login($user, request()->boolean('remember'));
 
