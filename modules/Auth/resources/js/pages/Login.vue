@@ -72,7 +72,7 @@ const forgotUrl = computed(() => {
             <!-- Password -->
             <Field :data-invalid="!!errors?.password">
                 <!-- Forgot password -->
-                <div className="flex items-center">
+                <div class="flex items-center">
                     <FieldLabel id="password-label" for="password">
                         {{ $t('Password') }}
                     </FieldLabel>
