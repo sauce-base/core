@@ -7,7 +7,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Validation\ValidationException;
+use Modules\Auth\Exceptions\AuthException;
 
 class LoginRequest extends FormRequest
 {
@@ -35,7 +35,7 @@ class LoginRequest extends FormRequest
     /**
      * Validate the request's credentials and return the user without logging them in.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Modules\Auth\Exceptions\AuthException
      */
     public function validateCredentials(): User
     {
@@ -47,9 +47,7 @@ class LoginRequest extends FormRequest
         if (! $user || ! Auth::getProvider()->validateCredentials($user, $this->only('password'))) {
             RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
-                'status' => trans('auth.failed'),
-            ]);
+            throw AuthException::invalidCredentials();
         }
 
         RateLimiter::clear($this->throttleKey());
@@ -72,12 +70,7 @@ class LoginRequest extends FormRequest
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'status' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
+        throw AuthException::throttle($seconds);
     }
 
     /**

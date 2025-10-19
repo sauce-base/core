@@ -10,15 +10,14 @@ test.describe.parallel('Login Error Handling', () => {
         await loginPage.goto();
     });
 
-    test('shows error for invalid credentials', async ({ page }) => {
+    test('shows error for invalid credentials', async () => {
         const user = testUsers.invalid;
 
         await loginPage.login(user.email, user.password);
 
         await expect(loginPage.page).toHaveURL(loginPage.loginEndpoint);
 
-        const errorAlert = page.locator('[role="alert"]').first();
-        await expect(errorAlert).toBeVisible();
+        await loginPage.expectAlertToBeVisible();
     });
 
     test('handles network failure gracefully', async () => {

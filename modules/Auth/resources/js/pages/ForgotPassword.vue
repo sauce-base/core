@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AlertMessage from '@/components/AlertMessage.vue';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -16,18 +15,13 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             )
         "
     >
-        <AlertMessage
-            :message="$page.props.status"
-            variant="success"
-            class="mt-4"
-        />
-
         <Form
             :action="route('password.email')"
             method="post"
-            class="space-y-3"
+            class="min-w-sm space-y-3"
             data-testid="forgot-password-form"
             disable-while-processing
+            :reset-on-success="['email']"
             #default="{ errors }"
         >
             <!-- Email -->
@@ -40,6 +34,11 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                     name="email"
                     type="email"
                     data-testid="email"
+                    :model-value="
+                        $page.props.email
+                            ? String($page.props.email)
+                            : undefined
+                    "
                     :placeholder="$t('Enter your email address')"
                     :aria-invalid="!!errors?.email"
                     autocomplete="email"

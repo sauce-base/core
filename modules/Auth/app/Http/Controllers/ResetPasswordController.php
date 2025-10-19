@@ -9,11 +9,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class NewPasswordController extends Controller
+class ResetPasswordController extends Controller
 {
     /**
      * Display the password reset view.
@@ -23,6 +22,7 @@ class NewPasswordController extends Controller
         return Inertia::render('Auth::ResetPassword', [
             'email' => $request->email,
             'token' => $request->route('token'),
+            'error' => session('error'),
         ]);
     }
 
@@ -58,11 +58,9 @@ class NewPasswordController extends Controller
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
         if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+            return redirect()->route('login')->with('status', trans($status));
         }
 
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
+        return back()->with('error', trans($status));
     }
 }

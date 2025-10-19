@@ -7,16 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Modules\Auth\Exceptions\AuthException;
 use Modules\Auth\Http\Requests\LoginRequest;
 
-class AuthenticatedSessionController extends Controller
+class LoginController extends Controller
 {
     /**
      * Display the login view.
      */
     public function create(): Response
     {
-        return Inertia::render('Auth::Login');
+        return Inertia::render('Auth::Login', [
+            'status' => session('status'),
+            'error' => session('error'),
+        ]);
     }
 
     /**
@@ -25,11 +29,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $user = $request->validateCredentials();
-
-        /*
-        TODO: ADD multi factor
-        */
+        try {
+            $user = $request->validateCredentials();
+        } catch (AuthException $e) {
+            return back()->with(['error' => $e->getMessage()]);
+        }
 
         Auth::login($user, request()->boolean('remember'));
 

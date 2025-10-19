@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Modules\Auth\Http\Requests\RegisterRequest;
 
-class RegisteredUserController extends Controller
+class RegisterController extends Controller
 {
     /**
      * Display the registration view.

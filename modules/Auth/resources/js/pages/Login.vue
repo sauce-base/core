@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import AlertMessage from '@/components/AlertMessage.vue';
 import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Form, Link } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
+
+const emailRef = ref('');
+
+// compute forgot password url so the link updates as user types
+const forgotUrl = computed(() => {
+    // if route helper is available at runtime, use it; otherwise return '#'
+    try {
+        return route('password.request', { email: emailRef.value });
+    } catch {
+        return '#';
+    }
+});
 </script>
 
 <template>
@@ -16,12 +28,6 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         :description="$t('Login to your Sauce Base account to continue')"
     >
         <SocialiteProviders />
-
-        <AlertMessage
-            :message="$page.props.errors?.status"
-            variant="error"
-            class="mt-4"
-        />
 
         <Form
             :action="route('login')"
@@ -49,6 +55,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
                         errors?.email ? 'email-error' : undefined
                     "
                     autocomplete="email"
+                    v-model="emailRef"
                     required
                 />
                 <FieldError
@@ -63,20 +70,23 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 
             <!-- Password -->
             <Field :data-invalid="!!errors?.password">
-                <div className="flex items-center">
+                <!-- Forgot password -->
+                <div class="flex items-center">
                     <FieldLabel id="password-label" for="password">
                         {{ $t('Password') }}
                     </FieldLabel>
                     <Link
                         v-if="route().has('password.request')"
-                        :href="route('password.request')"
+                        :href="forgotUrl"
                         class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                         data-testid="forgot-password-link"
                         :data-invalid="false"
+                        tabindex="-1"
                     >
                         {{ $t('Forgot your password?') }}
                     </Link>
                 </div>
+
                 <PasswordInput
                     id="password"
                     name="password"
