@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Auth\Http\Controllers\ConfirmablePasswordController;
 use Modules\Auth\Http\Controllers\EmailVerificationNotificationController;
 use Modules\Auth\Http\Controllers\EmailVerificationPromptController;
 use Modules\Auth\Http\Controllers\ForgotPasswordController;
@@ -59,11 +58,6 @@ Route::prefix('auth')->group(function () {
         Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
             ->middleware('throttle:6,1')
             ->name('verification.send');
-
-        Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-            ->name('password.confirm');
-
-        Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
         Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
