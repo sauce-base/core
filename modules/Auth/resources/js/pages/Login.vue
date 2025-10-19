@@ -57,7 +57,6 @@ const forgotUrl = computed(() => {
                     autocomplete="email"
                     v-model="emailRef"
                     required
-                    tabindex="1"
                 />
                 <FieldError
                     v-if="errors?.email"
@@ -82,7 +81,7 @@ const forgotUrl = computed(() => {
                         class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                         data-testid="forgot-password-link"
                         :data-invalid="false"
-                        tabindex="5"
+                        tabindex="-1"
                     >
                         {{ $t('Forgot your password?') }}
                     </Link>
@@ -100,7 +99,6 @@ const forgotUrl = computed(() => {
                         errors?.password ? 'password-error' : undefined
                     "
                     required
-                    tabindex="2"
                 />
                 <FieldError
                     v-if="errors?.password"
@@ -119,7 +117,6 @@ const forgotUrl = computed(() => {
                         id="remember"
                         name="remember"
                         data-testid="remember-me"
-                        tabindex="3"
                     />
                     <FieldLabel for="remember" class="font-normal">
                         {{ $t('Remember-me') }}
@@ -131,7 +128,6 @@ const forgotUrl = computed(() => {
                 type="submit"
                 class="mt-3 w-full"
                 data-testid="login-button"
-                tabindex="4"
             >
                 {{ $t('Log in') }}
             </Button>
