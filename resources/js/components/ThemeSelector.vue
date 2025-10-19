@@ -24,7 +24,7 @@ interface Props {
      */
     triggerClass?: string;
     /**
-     * Enable animated theme transitions using View Transitions API
+     * Disable animated theme transitions using View Transitions API
      */
     disableAnimation?: boolean;
 }
