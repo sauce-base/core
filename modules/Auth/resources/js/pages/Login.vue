@@ -1,25 +1,19 @@
 <script setup lang="ts">
-import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Field, FieldLabel } from '@/components/ui/field';
 import { Form, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import InputField from '../components/InputField.vue';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 
 const emailRef = ref('');
 
 // compute forgot password url so the link updates as user types
-const forgotUrl = computed(() => {
-    // if route helper is available at runtime, use it; otherwise return '#'
-    try {
-        return route('password.request', { email: emailRef.value });
-    } catch {
-        return '#';
-    }
-});
+const forgotUrl = computed(() =>
+    route('password.request', { email: emailRef.value }),
+);
 </script>
 
 <template>
@@ -36,93 +30,55 @@ const forgotUrl = computed(() => {
             data-testid="login-form"
             disable-while-processing
             :reset-on-error="['password']"
-            #default="{ errors }"
         >
             <!-- Email -->
-            <Field :data-invalid="!!errors?.email">
-                <FieldLabel id="email-label" for="email">
-                    {{ $t('Email') }}
-                </FieldLabel>
-                <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    data-testid="email"
-                    :placeholder="$t('Enter your email')"
-                    :aria-invalid="!!errors?.email"
-                    aria-labelledby="email-label"
-                    :aria-describedby="
-                        errors?.email ? 'email-error' : undefined
-                    "
-                    autocomplete="email"
-                    v-model="emailRef"
-                    required
-                />
-                <FieldError
-                    v-if="errors?.email"
-                    id="email-error"
-                    data-testid="email-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.email }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="email"
+                type="email"
+                :label="$t('Email')"
+                :placeholder="$t('Enter your email')"
+                autocomplete="email"
+                required
+            />
 
             <!-- Password -->
-            <Field :data-invalid="!!errors?.password">
-                <!-- Forgot password -->
-                <div class="flex items-center">
-                    <FieldLabel id="password-label" for="password">
-                        {{ $t('Password') }}
-                    </FieldLabel>
-                    <Link
-                        v-if="route().has('password.request')"
-                        :href="forgotUrl"
-                        class="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                        data-testid="forgot-password-link"
-                        :data-invalid="false"
-                        tabindex="-1"
-                    >
-                        {{ $t('Forgot your password?') }}
-                    </Link>
+            <InputField
+                name="password"
+                type="password"
+                :label="$t('Password')"
+                :placeholder="$t('Enter your password')"
+                autocomplete="current-password"
+                required
+            />
+
+            <div class="flex items-center justify-between">
+                <!-- Remember-me -->
+                <div>
+                    <Field>
+                        <Field orientation="horizontal">
+                            <Checkbox
+                                id="remember"
+                                name="remember"
+                                data-testid="remember-me"
+                            />
+                            <FieldLabel for="remember" class="font-normal">
+                                {{ $t('Remember-me') }}
+                            </FieldLabel>
+                        </Field>
+                    </Field>
                 </div>
 
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    autocomplete="current-password"
-                    data-testid="password"
-                    :placeholder="$t('Enter your password')"
-                    :aria-invalid="!!errors?.password"
-                    aria-labelledby="password-label"
-                    :aria-describedby="
-                        errors?.password ? 'password-error' : undefined
-                    "
-                    required
-                />
-                <FieldError
-                    v-if="errors?.password"
-                    id="password-error"
-                    data-testid="password-error"
-                    aria-live="polite"
+                <!-- Forgot password link -->
+                <Link
+                    v-if="route().has('password.request')"
+                    :href="forgotUrl"
+                    class="ml-auto inline-block text-sm underline-offset-4 hover:text-indigo-500 hover:underline dark:hover:text-indigo-300"
+                    data-testid="forgot-password-link"
+                    :data-invalid="false"
                 >
-                    {{ errors?.password }}
-                </FieldError>
-            </Field>
-
-            <!-- Remember-me -->
-            <Field>
-                <Field orientation="horizontal">
-                    <Checkbox
-                        id="remember"
-                        name="remember"
-                        data-testid="remember-me"
-                    />
-                    <FieldLabel for="remember" class="font-normal">
-                        {{ $t('Remember-me') }}
-                    </FieldLabel>
-                </Field>
-            </Field>
+                    {{ $t('Forgot your password?') }}
+                </Link>
+            </div>
 
             <Button
                 type="submit"
@@ -144,6 +100,7 @@ const forgotUrl = computed(() => {
                     {{ $t('Sign up') }}
                 </Link>
             </p>
+            <p class="mt-2 text-center text-sm"></p>
         </Form>
     </AuthCardLayout>
 </template>

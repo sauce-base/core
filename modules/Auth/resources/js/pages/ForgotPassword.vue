@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Form, Link } from '@inertiajs/vue3';
+import { Form, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import InputField from '../components/InputField.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
+
+const page = usePage();
+const email = computed(() =>
+    page.props.email ? String(page.props.email) : undefined,
+);
 </script>
 
 <template>
@@ -22,36 +27,14 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             data-testid="forgot-password-form"
             disable-while-processing
             :reset-on-success="['email']"
-            #default="{ errors }"
         >
-            <!-- Email -->
-            <Field :data-invalid="!!errors?.email">
-                <FieldLabel for="email">
-                    {{ $t('Email') }}
-                </FieldLabel>
-                <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    data-testid="email"
-                    :model-value="
-                        $page.props.email
-                            ? String($page.props.email)
-                            : undefined
-                    "
-                    :placeholder="$t('Enter your email address')"
-                    :aria-invalid="!!errors?.email"
-                    autocomplete="email"
-                    required
-                />
-                <FieldError
-                    v-if="errors?.email"
-                    data-testid="email-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.email }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="email"
+                type="email"
+                :label="$t('Email')"
+                :placeholder="$t('Enter your email')"
+                :model-value="email"
+            />
 
             <div class="flex items-center justify-between pt-1">
                 <Link
