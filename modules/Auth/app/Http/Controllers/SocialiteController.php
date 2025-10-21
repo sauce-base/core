@@ -3,6 +3,7 @@
 namespace Modules\Auth\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Actions\Socialite\DisconnectSocialAccountAction;
 use Modules\Auth\Actions\Socialite\LinkSocialiteUser;
@@ -40,7 +41,7 @@ class SocialiteController extends Controller
      */
     public function disconnect(string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
     {
-        //TODO: REFACTOR
+        // TODO: REFACTOR
         $user = Auth::user();
 
         try {
