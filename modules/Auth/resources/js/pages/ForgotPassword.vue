@@ -34,6 +34,8 @@ const email = computed(() =>
                 :label="$t('Email')"
                 :placeholder="$t('Enter your email')"
                 :model-value="email"
+                required
+                autocomplete="email"
             />
 
             <div class="flex items-center justify-between pt-1">
