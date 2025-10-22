@@ -100,7 +100,6 @@ const forgotUrl = computed(() =>
                     {{ $t('Sign up') }}
                 </Link>
             </p>
-            <p class="mt-2 text-center text-sm"></p>
         </Form>
     </AuthCardLayout>
 </template>
