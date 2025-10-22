@@ -39,6 +39,7 @@ const forgotUrl = computed(() =>
                 :placeholder="$t('Enter your email')"
                 autocomplete="email"
                 required
+                v-model="emailRef"
             />
 
             <!-- Password -->
