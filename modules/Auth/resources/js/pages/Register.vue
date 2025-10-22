@@ -24,7 +24,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             <!-- Name -->
             <InputField
                 name="name"
-                type="name"
+                type="text"
                 :label="$t('Name')"
                 :placeholder="$t('Enter your full name')"
                 autocomplete="name"
