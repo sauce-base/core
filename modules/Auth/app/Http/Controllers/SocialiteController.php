@@ -3,9 +3,10 @@
 namespace Modules\Auth\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Actions\Socialite\DisconnectSocialAccountAction;
-use Modules\Auth\Actions\Socialite\HandleProviderCallbackAction;
+use Modules\Auth\Actions\Socialite\LinkSocialiteUser;
 use Modules\Auth\Exceptions\SocialiteException;
 use Symfony\Component\HttpFoundation\Response as RedirectResponse;
 
@@ -16,9 +17,19 @@ class SocialiteController extends Controller
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback(string $provider, HandleProviderCallbackAction $providerCallbackAction): RedirectResponse
+    public function callback(string $provider, LinkSocialiteUser $linkSocialiteUser): RedirectResponse
     {
-        $user = $providerCallbackAction->execute($provider);
+        $validator = Validator::make(['provider' => $provider], [
+            'provider' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->with('error', trans('auth.socialite.error'));
+        }
+
+        $socialiteUser = Socialite::driver($provider)->user();
+
+        $user = $linkSocialiteUser->execute($provider, $socialiteUser);
 
         Auth::login($user);
 
@@ -30,16 +41,15 @@ class SocialiteController extends Controller
      */
     public function disconnect(string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
     {
+        // TODO: REFACTOR
         $user = Auth::user();
 
         try {
             $disconnectAction->execute($user, $provider);
 
-            return back()->with('status', 'social_account_disconnected');
+            return back()->with('status', trans('auth.socialite.account_disconnected'));
         } catch (SocialiteException $e) {
-            return back()->withErrors([
-                'social' => $e->getMessage(),
-            ]);
+            return back()->with(['error' => $e->getMessage()]);
         }
     }
 }

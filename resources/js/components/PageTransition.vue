@@ -1,7 +1,3 @@
-<script setup lang="ts">
-// Simple page transition wrapper
-</script>
-
 <template>
     <Transition name="page" mode="out-in" appear>
         <div :key="$page.url" class="page-transition-wrapper">

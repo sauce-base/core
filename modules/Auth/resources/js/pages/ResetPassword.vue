@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Form } from '@inertiajs/vue3';
+import InputField from '../components/InputField.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 
 defineProps<{
@@ -24,7 +22,6 @@ defineProps<{
             data-testid="reset-password-form"
             disable-while-processing
             :reset-on-error="['password', 'password_confirmation']"
-            #default="{ errors }"
         >
             <input
                 type="hidden"
@@ -34,66 +31,34 @@ defineProps<{
             />
 
             <!-- Email -->
-            <Field>
-                <FieldLabel for="email">
-                    {{ $t('Email') }}
-                </FieldLabel>
-                <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    :model-value="email"
-                    readonly
-                    required
-                    data-testid="email"
-                />
-            </Field>
+            <InputField
+                name="email"
+                type="email"
+                :label="$t('Email')"
+                :model-value="email"
+                required
+                readonly
+            />
 
             <!-- Password -->
-            <Field :data-invalid="!!errors?.password">
-                <FieldLabel for="password">
-                    {{ $t('New Password') }}
-                </FieldLabel>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    :placeholder="$t('Enter your new password')"
-                    :aria-invalid="!!errors?.password"
-                    autocomplete="new-password"
-                    required
-                    data-testid="password"
-                />
-                <FieldError
-                    v-if="errors?.password"
-                    data-testid="password-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.password }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="password"
+                type="password"
+                :label="$t('Password')"
+                :placeholder="$t('Enter your password')"
+                autocomplete="new-password"
+                required
+            />
 
             <!-- Password Confirmation -->
-            <Field :data-invalid="!!errors?.password_confirmation">
-                <FieldLabel for="password_confirmation">
-                    {{ $t('Confirm Password') }}
-                </FieldLabel>
-                <PasswordInput
-                    id="password_confirmation"
-                    name="password_confirmation"
-                    :placeholder="$t('Confirm your new password')"
-                    :aria-invalid="!!errors?.password_confirmation"
-                    autocomplete="new-password"
-                    required
-                    data-testid="password_confirmation"
-                />
-                <FieldError
-                    v-if="errors?.password_confirmation"
-                    data-testid="password-confirmation-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.password_confirmation }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="password_confirmation"
+                type="password"
+                :label="$t('Confirm Password')"
+                :placeholder="$t('Confirm your new password')"
+                autocomplete="new-password"
+                required
+            />
 
             <Button type="submit" class="mt-3 w-full">
                 {{ $t('Reset Password') }}

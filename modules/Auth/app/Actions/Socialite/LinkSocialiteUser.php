@@ -9,7 +9,7 @@ use Modules\Auth\Actions\UpdateUserAvatarAction;
 use Modules\Auth\Exceptions\SocialiteException;
 use Modules\Auth\Models\SocialAccount;
 
-class LinkSocialAccountAction
+class LinkSocialiteUser
 {
     public function __construct(
         private UpdateUserAvatarAction $updateAvatarAction

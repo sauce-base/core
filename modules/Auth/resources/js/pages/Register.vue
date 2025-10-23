@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import PasswordInput from '@/components/PasswordInput.vue';
 import { Button } from '@/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import { Form, Link } from '@inertiajs/vue3';
+import InputField from '../components/InputField.vue';
 import SocialiteProviders from '../components/SocialiteProviders.vue';
 import AuthCardLayout from '../layouts/AuthCardLayout.vue';
 </script>
@@ -22,84 +20,34 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             data-testid="register-form"
             disable-while-processing
             :reset-on-error="['password']"
-            #default="{ errors }"
         >
             <!-- Name -->
-            <Field :data-invalid="!!errors?.name">
-                <FieldLabel for="name">
-                    {{ $t('Name') }}
-                </FieldLabel>
-                <Input
-                    id="name"
-                    name="name"
-                    type="text"
-                    :placeholder="$t('Enter your full name')"
-                    :aria-invalid="!!errors?.name"
-                    data-testid="name"
-                    autocomplete="name"
-                    required
-                />
-                <FieldError v-if="errors?.name">
-                    {{ errors?.name }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="name"
+                type="text"
+                :label="$t('Name')"
+                :placeholder="$t('Enter your full name')"
+                autocomplete="name"
+            />
 
             <!-- Email -->
-            <Field :data-invalid="!!errors?.email">
-                <FieldLabel for="email">
-                    {{ $t('Email') }}
-                </FieldLabel>
-                <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    data-testid="email"
-                    :placeholder="$t('Enter your email')"
-                    :aria-invalid="!!errors.email"
-                    aria-labelledby="email-label"
-                    :aria-describedby="
-                        errors?.email ? 'email-error' : undefined
-                    "
-                    autocomplete="email"
-                    required
-                />
-                <FieldError
-                    v-if="errors?.email"
-                    id="email-error"
-                    data-testid="email-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.email }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="email"
+                type="email"
+                :label="$t('Email')"
+                :placeholder="$t('Enter your email')"
+                autocomplete="email"
+            />
 
             <!-- Password -->
-            <Field :data-invalid="!!errors?.password">
-                <FieldLabel for="password">
-                    {{ $t('Password') }}
-                </FieldLabel>
-                <PasswordInput
-                    id="password"
-                    name="password"
-                    autocomplete="new-password"
-                    data-testid="password"
-                    :placeholder="$t('Enter your password')"
-                    :aria-invalid="!!errors.password"
-                    aria-labelledby="password-label"
-                    :aria-describedby="
-                        errors?.password ? 'password-error' : undefined
-                    "
-                    required
-                />
-                <FieldError
-                    v-if="errors?.password"
-                    id="password-error"
-                    data-testid="password-error"
-                    aria-live="polite"
-                >
-                    {{ errors?.password }}
-                </FieldError>
-            </Field>
+            <InputField
+                name="password"
+                type="password"
+                :label="$t('Password')"
+                :placeholder="$t('Enter your password')"
+                autocomplete="new-password"
+                required
+            />
 
             <Button
                 type="submit"

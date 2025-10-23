@@ -30,12 +30,12 @@ const togglePasswordVisibility = () => {
 <template>
     <div class="relative">
         <Input
+            v-bind="$attrs"
             :model-value="modelValue"
             :default-value="defaultValue"
             :type="showPassword ? 'text' : 'password'"
             :class="cn('pr-10', props.class)"
             @update:model-value="emits('update:modelValue', $event)"
-            v-bind="$attrs"
         />
         <Button
             type="button"

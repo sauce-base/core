@@ -34,6 +34,7 @@ Route::prefix('auth')->group(function () {
             ->name('password.reset');
 
         Route::post('reset-password', [ResetPasswordController::class, 'store'])
+            ->middleware('throttle:6,1')
             ->name('password.store');
 
         Route::get('socialite/{provider}', [SocialiteController::class, 'redirect'])
