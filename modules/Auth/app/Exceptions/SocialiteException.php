@@ -21,7 +21,7 @@ class SocialiteException extends Exception
         return new self(trans('auth.socialite.error'));
     }
 
-    public static function providerNotConnected($provider): self
+    public static function providerNotConnected(string $provider): self
     {
         return new self(trans('auth.socialite.not_connected', ['Provider' => $provider]));
     }
