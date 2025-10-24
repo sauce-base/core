@@ -2,22 +2,29 @@
 
 namespace Modules\Auth\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
-use Modules\Auth\Actions\Socialite\DisconnectSocialAccountAction;
-use Modules\Auth\Actions\Socialite\LinkSocialiteUser;
 use Modules\Auth\Exceptions\SocialiteException;
+use Modules\Auth\Services\SocialiteService;
 use Symfony\Component\HttpFoundation\Response as RedirectResponse;
 
 class SocialiteController extends Controller
 {
+    private SocialiteService $socialiteService;
+
+    public function __construct(SocialiteService $socialiteService)
+    {
+        $this->socialiteService = $socialiteService;
+    }
+
     public function redirect(string $provider): RedirectResponse
     {
         return Socialite::driver($provider)->redirect();
     }
 
-    public function callback(string $provider, LinkSocialiteUser $linkSocialiteUser): RedirectResponse
+    public function callback(string $provider): RedirectResponse
     {
         $validator = Validator::make(['provider' => $provider], [
             'provider' => 'required|string',
@@ -27,9 +34,7 @@ class SocialiteController extends Controller
             return back()->with('error', trans('auth.socialite.error'));
         }
 
-        $socialiteUser = Socialite::driver($provider)->user();
-
-        $user = $linkSocialiteUser->execute($provider, $socialiteUser);
+        $user = $this->socialiteService->handleCallback($provider);
 
         Auth::login($user);
 
@@ -39,13 +44,12 @@ class SocialiteController extends Controller
     /**
      * Disconnect a social provider from user account
      */
-    public function disconnect(string $provider, DisconnectSocialAccountAction $disconnectAction): RedirectResponse
+    public function disconnect(string $provider): RedirectResponse
     {
-        // TODO: REFACTOR
         $user = Auth::user();
 
         try {
-            $disconnectAction->execute($user, $provider);
+            $this->socialiteService->disconnectProvider($user, $provider);
 
             return back()->with('status', trans('auth.socialite.account_disconnected'));
         } catch (SocialiteException $e) {
