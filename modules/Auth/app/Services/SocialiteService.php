@@ -5,10 +5,10 @@ namespace Modules\Auth\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Modules\Auth\Exceptions\SocialiteException;
-use Modules\Auth\Models\SocialAccount;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Modules\Auth\Exceptions\SocialiteException;
+use Modules\Auth\Models\SocialAccount;
 
 class SocialiteService
 {
