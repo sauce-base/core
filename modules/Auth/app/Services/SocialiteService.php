@@ -61,12 +61,13 @@ class SocialiteService
      */
     public function disconnectProvider(User $user, string $provider): void
     {
-        if (($user->socialAccounts()->count() === 0)) {
-            throw SocialiteException::providerNotConnected($provider);
-        }
 
         if ($user->socialAccounts()->count() === 1 && ! $user->password) {
             throw SocialiteException::cannotDisconnectOnlyMethod();
+        }
+
+        if (($user->socialAccounts()->where('provider', $provider)->count() === 0)) {
+            throw SocialiteException::providerNotConnected($provider);
         }
 
         $user->socialAccounts()->where('provider', $provider)->delete();
