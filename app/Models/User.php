@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+// TODO: test MustVerifyEmail
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Modules\Auth\Traits\HasSocialAccounts;
+use Modules\Auth\Traits\useSocialite;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 // TODO: add to auth module install doc
@@ -17,9 +18,9 @@ class User extends Authenticatable implements HasMedia
 {
     use HasFactory,
         HasRoles,
-        HasSocialAccounts,
         InteractsWithMedia,
-        Notifiable;
+        Notifiable,
+        useSocialite;
 
     /**
      * The attributes that are mass assignable.

@@ -8,16 +8,21 @@ class SocialiteException extends Exception
 {
     public static function invalidSocialUser(): self
     {
-        return new self('Invalid social account data received.');
+        return new self(trans('auth.socialite.invalid_user'));
     }
 
     public static function cannotDisconnectOnlyMethod(): self
     {
-        return new self('Cannot disconnect your only login method. Set a password first.');
+        return new self(trans('auth.socialite.cannot_disconnect_only_method'));
     }
 
     public static function authenticationFailed(): self
     {
-        return new self('Authentication failed. Please try again.');
+        return new self(trans('auth.socialite.error'));
+    }
+
+    public static function providerNotConnected(string $provider): self
+    {
+        return new self(trans('auth.socialite.not_connected', ['Provider' => $provider]));
     }
 }
