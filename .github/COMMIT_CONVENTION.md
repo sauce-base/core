@@ -6,16 +6,12 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 
 ```
 <type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
 ```
 
 ## Types
 
 - **feat**: A new feature
-- **fix**: A bug fix  
+- **fix**: A bug fix
 - **docs**: Documentation only changes
 - **style**: Changes that do not affect the meaning of the code (white-space, formatting, etc)
 - **refactor**: A code change that neither fixes a bug nor adds a feature
@@ -54,12 +50,15 @@ docs(api): update endpoint documentation
 ## How to Commit
 
 ### Option 1: Interactive Mode (Recommended)
+
 ```bash
 npm run commit
 ```
+
 This will guide you through creating a proper commit message.
 
 ### Option 2: Manual Mode
+
 ```bash
 git commit -m "feat: add user authentication"
 ```
