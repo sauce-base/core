@@ -2,7 +2,6 @@
 
 namespace Modules\Auth\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
@@ -31,7 +30,7 @@ class SocialiteController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()->with('error', trans('auth.socialite.error'));
+            return back()->with('error', trans('socialite.error'));
         }
 
         $user = $this->socialiteService->handleCallback($provider);
@@ -51,7 +50,7 @@ class SocialiteController extends Controller
         try {
             $this->socialiteService->disconnectProvider($user, $provider);
 
-            return back()->with('status', trans('auth.socialite.account_disconnected'));
+            return back()->with('status', trans('socialite.account_disconnected'));
         } catch (SocialiteException $e) {
             return back()->with(['error' => $e->getMessage()]);
         }
