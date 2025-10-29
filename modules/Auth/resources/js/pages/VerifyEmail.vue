@@ -16,7 +16,7 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
         <Form
             :action="route('verification.send')"
             method="post"
-            class="space-y-3"
+            class="min-w-sm space-y-3"
             data-testid="verify-email-form"
             disable-while-processing
         >
@@ -25,13 +25,13 @@ import AuthCardLayout from '../layouts/AuthCardLayout.vue';
             </Button>
 
             <p
-                class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400"
+                class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400"
             >
                 <Link
                     :href="route('logout')"
                     method="post"
                     as="button"
-                    class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
+                    class="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500 hover:underline dark:text-indigo-400 dark:hover:text-indigo-300"
                     data-testid="logout-link"
                 >
                     {{ $t('Log Out') }}

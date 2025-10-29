@@ -12,7 +12,7 @@ test.describe.parallel('Register Basics', () => {
     });
 
     async function expectSuccessfulRegistration() {
-        await expect(registerPage.page).toHaveURL('/dashboard');
+        await expect(registerPage.page).toHaveURL('/auth/verify-email');
     }
 
     function newUser() {

@@ -2,19 +2,16 @@
 
 namespace App\Models;
 
-// TODO: test MustVerifyEmail
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Auth\Traits\useSocialite;
-use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-// TODO: add to auth module install doc
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory,
         HasRoles,
