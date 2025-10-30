@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Modules\Auth\Traits\useSocialite;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -16,8 +15,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasFactory,
         HasRoles,
         InteractsWithMedia,
-        Notifiable,
-        useSocialite;
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
