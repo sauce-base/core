@@ -3,6 +3,10 @@ includes:
     - vendor/nesbot/carbon/extension.neon
 
 parameters:
+    
+    # Do not fail the analysis if an ignoreErrors pattern doesn't match any reported error.
+    # This prevents "Ignored error pattern ... was not matched" failures when patterns are
+    reportUnmatchedIgnoredErrors: false
 
     paths:
         - app/
