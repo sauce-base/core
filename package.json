@@ -20,7 +20,7 @@
         "test:e2e:report": "playwright show-report",
         "prepare": "husky",
         "commitlint": "commitlint --edit",
-        "lint": "eslint ./resources ./modules/*/resources --fix"
+        "lint": "eslint ./resources ./modules/*/resources --fix --no-error-on-unmatched-pattern"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",
