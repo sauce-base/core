@@ -46,3 +46,5 @@ Thumbs.db
 # SSL Certificates (generated locally, not tracked)
 /docker/development/ssl/
 
+# Git submodules
+modules/Auth
