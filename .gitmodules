@@ -1,8 +1,0 @@
-[submodule "modules/Auth"]
-	path = modules/Auth
-	url = https://github.com/sauce-base/auth.git
-	ignore = dirty
-[submodule "modules/Localization"]
-	path = modules/Localization
-	url = https://github.com/sauce-base/localization.git
-	ignore = dirty
