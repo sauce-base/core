@@ -19,8 +19,9 @@
 [![Node.js](https://img.shields.io/badge/Node.js-22.0%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Inertia.js](https://img.shields.io/badge/Inertia.js-2.0-9553E9?logo=inertia&logoColor=white)](https://inertiajs.com)
 [![Filament](https://img.shields.io/badge/Filament-4.0-10B981?logo=filament&logoColor=white)](https://filamentphp.com)
-[![Pest](https://img.shields.io/badge/Pest-2.0-FF4785?logo=pest&logoColor=white)](https://pestphp.com)
 [![Playwright](https://img.shields.io/badge/Playwright-1.40-000000?logo=playwright&logoColor=white)](https://playwright.dev)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg?style=flat)](https://phpstan.org)
+[![Commitlint](https://img.shields.io/badge/commitlint-enabled-brightgreen.svg?style=flat)](https://commitlint.js.org)
 
 Sauce Base is a batteries-included Laravel starter kit built around the **VILT stack** (Vue, Inertia, Laravel, Tailwind). It embraces a modular architecture so you can
 **install, copy, and own** feature packs—just like shadcn/ui—without inheriting hidden dependencies. Start from a solid core, pick the modules you need, and ship your SaaS
@@ -66,10 +67,11 @@ faster.
 
 ## 📦 Included Modules
 
-| Module           | Highlights                                                                                          |
-| ---------------- | --------------------------------------------------------------------------------------------------- |
-| **Auth**         | Inertia auth pages, Socialite (Google/GitHub/Facebook-ready), Pinia auth store, Social connections. |
-| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI.    |
+| Module           | Highlights                                                                                                       |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Auth**         | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI.                 |
+| **Settings**     | Application settings management with persistent configuration.                                                   |
 
 Upcoming modules will follow the same copy-and-own philosophy—pull the files you need, keep them in your repo, iterate freely.
 

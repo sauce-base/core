@@ -31,6 +31,9 @@ modules/*/coverage/
 modules/*/*-lock.json
 modules/*/.turbo/
 modules/*/.cache/
+modules/*.diff
+modules/*.patch
+
 Homestead.json
 Homestead.yaml
 Thumbs.db
@@ -42,3 +45,6 @@ Thumbs.db
 
 # SSL Certificates (generated locally, not tracked)
 /docker/development/ssl/
+
+# Git submodules
+modules/Auth
