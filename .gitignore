@@ -42,3 +42,6 @@ Thumbs.db
 
 # SSL Certificates (generated locally, not tracked)
 /docker/development/ssl/
+
+# Development modules (installed via submodules for dev, via Composer for users)
+modules/Auth/

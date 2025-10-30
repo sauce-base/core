@@ -48,6 +48,37 @@ npm run dev
 - Modules live in `modules/<ModuleName>/`. Update `modules_statuses.json` when adding/removing modules.
 - All user-facing strings must use the i18n system (`$t('key')`). Add Portuguese translations to `lang/pt_BR.json` when adding UI text.
 
+**Working with Modules:**
+
+For module development (maintainers):
+```bash
+# Initialize submodules (first time only)
+git submodule update --init --recursive
+
+# Work on a module
+cd modules/Auth
+git checkout -b feature/new-feature
+# make changes
+git add .
+git commit -m "feat: add new feature"
+git push origin feature/new-feature
+
+# Update submodule reference in core (optional)
+cd ../..
+git add modules/Auth
+git commit -m "chore: update Auth submodule reference"
+```
+
+For users/production:
+```bash
+# Install modules via Composer
+composer require saucebase/auth
+php artisan module:enable Auth
+```
+
+Available modules:
+- `saucebase/auth` - Authentication module with social login support
+
 6. Security
 
 - Never commit secrets or `.env` files. Use environment/CI secrets instead.
