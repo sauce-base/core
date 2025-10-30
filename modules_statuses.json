@@ -1,5 +1,4 @@
 {
     "Auth": true,
-    "Localization": true,
-    "Settings": true
+    "Localization": true
 }
