@@ -67,11 +67,10 @@ faster.
 
 ## 📦 Included Modules
 
-| Module           | Highlights                                                                                                       |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Auth**         | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
-| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI.                 |
-| **Settings**     | Application settings management with persistent configuration.                                                   |
+| Module           | Highlights                                                                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **Auth**         | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth)                       |
+| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI. [View module →](https://github.com/sauce-base/localization) |
 
 Upcoming modules will follow the same copy-and-own philosophy—pull the files you need, keep them in your repo, iterate freely.
 
