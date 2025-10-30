@@ -1,3 +1,4 @@
 [submodule "modules/Auth"]
 	path = modules/Auth
 	url = https://github.com/sauce-base/auth.git
+	ignore = dirty
