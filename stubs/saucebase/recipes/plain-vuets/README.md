@@ -7,7 +7,7 @@ A Laravel module that extends Saucebase core functionality. Designed for seamles
 To install the {Module} module, run the following commands:
 
 ```bash
-composer require saucebase/{module}
+composer require saucebase/{module_}
 composer dump-autoload
 php artisan module:enable {Module}
 ```
