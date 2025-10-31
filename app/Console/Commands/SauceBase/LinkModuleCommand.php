@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 class LinkModuleCommand extends Command
 {
-    protected $signature = 'saucebase:module:link {path : Path to the external module directory}';
+    protected $signature = 'module:link {path : Path to the external module directory}';
 
     protected $description = 'Link an external module for local development';
 
@@ -54,7 +54,7 @@ class LinkModuleCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->addToComposerJson($moduleNameStudly);
+        $this->addToComposerJson($modulePath);
         $this->addToGitignore($moduleNameStudly);
 
         $this->newLine();
@@ -107,11 +107,10 @@ class LinkModuleCommand extends Command
         return true;
     }
 
-    private function addToComposerJson(string $moduleNameStudly): void
+    private function addToComposerJson(string $repositoryPath): void
     {
         $composerJsonPath = base_path('composer.json');
         $composerJson = json_decode(File::get($composerJsonPath), true);
-        $repositoryPath = "./modules/{$moduleNameStudly}";
 
         foreach ($composerJson['repositories'] ?? [] as $repo) {
             if (($repo['url'] ?? '') === $repositoryPath) {
