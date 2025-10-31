@@ -60,6 +60,9 @@ class LinkModuleCommand extends Command
         $this->newLine();
         $this->info('🎉 Module linked successfully!');
         $this->newLine();
+        $this->info('Next, run: composer dump-autoload');
+        $this->line('  <fg=green>composer dump-autoload</>');
+        $this->newLine();
         $this->info('To install the module, run:');
         $this->line("  <fg=green>composer require {$packageName}@dev</>");
 
@@ -130,7 +133,7 @@ class LinkModuleCommand extends Command
 
         File::put(
             $composerJsonPath,
-            json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n"
+            json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
         );
 
         $this->info('✅ Added repository to composer.json');
@@ -180,7 +183,7 @@ class LinkModuleCommand extends Command
             } else {
                 $remaining = count($from) - $depth;
                 if ($remaining > 0) {
-                    $relPath = array_pad($relPath, -(count($relPath) + $remaining), '..');
+                    $relPath = array_pad($relPath, - (count($relPath) + $remaining), '..');
                     break;
                 }
             }
