@@ -34,6 +34,9 @@ RUN apk add --no-cache --virtual .build-deps \
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Configure Git to trust the mounted volume directory
+RUN git config --global --add safe.directory /var/www
+
 # PHP configuration files will be mounted as volumes in docker-compose.yml
 
 # Set working directory
