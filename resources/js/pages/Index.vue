@@ -2,8 +2,9 @@
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
-import { Head, Link } from '@inertiajs/vue3';
-import { useAuthStore } from '@modules/Auth/resources/js/stores';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+// import { useAuthStore } from '@modules/Auth/resources/js/stores';
 
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconDashboard from '~icons/heroicons/squares-2x2';
@@ -14,7 +15,8 @@ defineProps<{
     canRegister?: boolean;
 }>();
 
-const authStore = useAuthStore();
+const page = usePage();
+const user = computed(() => page.props.auth?.user);
 </script>
 
 <template>
@@ -58,7 +60,7 @@ const authStore = useAuthStore();
                 >
                     <!-- Primary CTA -->
                     <Link
-                        v-if="canRegister && !authStore.isAuthenticated"
+                        v-if="canRegister && !user"
                         :href="route('register')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
@@ -68,7 +70,7 @@ const authStore = useAuthStore();
 
                     <!-- Dashboard Button (if logged in) -->
                     <Link
-                        v-if="authStore.isAuthenticated"
+                        v-if="user"
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
@@ -89,7 +91,7 @@ const authStore = useAuthStore();
 
                     <!-- Sign In Button -->
                     <Link
-                        v-if="canLogin && !authStore.isAuthenticated"
+                        v-if="canLogin && !user"
                         :href="route('login')"
                         class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
                     >

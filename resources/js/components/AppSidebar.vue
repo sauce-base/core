@@ -4,7 +4,7 @@ import type { SidebarProps } from '@/components/ui/sidebar';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import TeamSwitcher from '@/components/TeamSwitcher.vue';
-import { GalleryVerticalEnd, SquareTerminal, Users } from 'lucide-vue-next';
+import { GalleryVerticalEnd, SquareTerminal } from 'lucide-vue-next';
 
 import {
     Sidebar,
@@ -14,7 +14,8 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 
-import { useAuthStore } from '@modules/Auth/resources/js/stores';
+// import { useAuthStore } from '@modules/Auth/resources/js/stores'; //TODO: remove this link
+import { usePage } from '@inertiajs/vue3';
 import { trans } from 'laravel-vue-i18n';
 import { computed } from 'vue';
 
@@ -22,14 +23,12 @@ const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 });
 
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 // Reactive user data that updates when auth store changes
-const userData = computed(() => ({
-    name: authStore.user?.name || '',
-    email: authStore.user?.email || '',
-    avatar: authStore.user?.avatar || '',
-}));
+const page = usePage();
+
+const user = computed(() => page.props.auth.user);
 
 // Application data with real user context - using computed for reactivity with translations
 const data = computed(() => ({
@@ -47,17 +46,6 @@ const data = computed(() => ({
             icon: SquareTerminal,
             isActive: route().current('dashboard'),
         },
-        // Only show User Management for admins
-        ...(authStore.isAdmin
-            ? [
-                  {
-                      title: trans('User Management'),
-                      url: '/admin/users',
-                      icon: Users,
-                      isActive: route().current('admin.users'),
-                  },
-              ]
-            : []),
     ],
 }));
 </script>
@@ -71,7 +59,7 @@ const data = computed(() => ({
             <NavMain :items="data.navMain" />
         </SidebarContent>
         <SidebarFooter>
-            <NavUser :user="userData" />
+            <NavUser :user="user" />
         </SidebarFooter>
         <SidebarRail />
     </Sidebar>

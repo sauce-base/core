@@ -1,12 +1,14 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
-import { useLocalizationStore } from '@modules/Localization/resources/js/stores';
 import { useColorMode } from '@vueuse/core';
-import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
+import { i18nVue } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
-import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
+import {
+    resolveLanguage,
+    resolveModularPageComponent
+} from './lib/utils';
 import { setupMiddleware } from './middleware';
 import { pinia } from './stores';
 
@@ -27,14 +29,18 @@ createInertiaApp({
         // Initialize middleware after app setup
         setupMiddleware();
 
+        /**
+         * Uncomment the lines below if you have the localization module installed
+         * and want to initialize the language from the store
+         */
         // Initialize language from store after app is mounted
-        const localizationStore = useLocalizationStore();
-        if (localizationStore.language !== 'en') {
-            loadLanguageAsync(localizationStore.language);
-        }
+        // const { language } = useLocalizationStore();
+        // if (language !== 'en') {
+        //     loadLanguageAsync(language);
+        // }
 
         // Initialize global theme persistence after mount for proper Vue reactivity
-        useColorMode({ emitAuto: true });
+        useColorMode();
 
         // Mount the app
         app.mount(el);

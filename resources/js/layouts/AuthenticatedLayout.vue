@@ -70,9 +70,9 @@ const props = defineProps<{
                                 </template>
                             </template>
                             <BreadcrumbItem v-else-if="props.title">
-                                <BreadcrumbPage>{{
-                                    props.title
-                                }}</BreadcrumbPage>
+                                <BreadcrumbPage>
+                                    {{ props.title }}
+                                </BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

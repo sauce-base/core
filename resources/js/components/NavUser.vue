@@ -26,8 +26,8 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { Link, router } from '@inertiajs/vue3';
-import { useAuthStore } from '@modules/Auth/resources/js/stores';
-import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
+// import { useAuthStore } from '@modules/Auth/resources/js/stores';
+// import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -39,7 +39,7 @@ const props = defineProps<{
 }>();
 
 const { isMobile } = useSidebar();
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 const userInitials = computed(() => {
     return props.user.name
@@ -51,7 +51,7 @@ const userInitials = computed(() => {
 
 const handleLogout = () => {
     // Clear the auth store first to ensure immediate UI update
-    authStore.clearUser();
+    // authStore.clearUser();
 
     // Then make the logout request
     router.post(route('logout'));
@@ -144,7 +144,7 @@ const handleLogout = () => {
                             <Bell />
                             Notifications
                         </DropdownMenuItem>
-                        <LanguageSelector mode="submenu" />
+                        <!-- <LanguageSelector mode="submenu" /> -->
                         <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
