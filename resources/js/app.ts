@@ -1,16 +1,19 @@
-import '../css/app.css';
-
 import { createInertiaApp } from '@inertiajs/vue3';
-import { useLocalizationStore } from '@modules/Localization/resources/js/stores';
 import { useColorMode } from '@vueuse/core';
-import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
-import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
-import { setupMiddleware } from './middleware';
+import {
+    discoverModuleSetups,
+    executeAfterMountCallbacks,
+    executeModuleSetups,
+} from './lib/moduleSetup';
+import { resolveModularPageComponent } from './lib/utils';
 import { pinia } from './stores';
 
+import '../css/app.css';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
+const moduleSetups = discoverModuleSetups();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -19,25 +22,19 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
-            .use(i18nVue, {
-                resolve: resolveLanguage,
-            })
             .use(ZiggyVue);
 
-        // Initialize middleware after app setup
-        setupMiddleware();
+        // Execute module setup functions and collect afterMount callbacks
+        executeModuleSetups(app, moduleSetups).then((afterMountCallbacks) => {
+            // Initialize global theme persistence after mount for proper Vue reactivity
+            useColorMode();
 
-        // Initialize language from store after app is mounted
-        const localizationStore = useLocalizationStore();
-        if (localizationStore.language !== 'en') {
-            loadLanguageAsync(localizationStore.language);
-        }
+            // Mount the app
+            app.mount(el);
 
-        // Initialize global theme persistence after mount for proper Vue reactivity
-        useColorMode({ emitAuto: true });
-
-        // Mount the app
-        app.mount(el);
+            // Execute module afterMount callbacks
+            executeAfterMountCallbacks(afterMountCallbacks);
+        });
     },
     progress: {
         color: '#4B5563',

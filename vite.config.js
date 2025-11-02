@@ -4,12 +4,8 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
-import { collectModuleAssetsPaths } from './module-loader.js';
 
 async function createConfig() {
-    const paths = ['resources/js/app.ts'];
-    const allPaths = await collectModuleAssetsPaths(paths);
-
     return defineConfig({
         server: {
             https: {
@@ -19,7 +15,7 @@ async function createConfig() {
         },
         plugins: [
             laravel({
-                input: allPaths,
+                input: 'resources/js/app.ts',
                 refresh: true,
                 ssr: 'resources/js/ssr.ts', //TODO: make SSR compatible with the modular application.
             }),

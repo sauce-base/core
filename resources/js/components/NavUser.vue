@@ -26,20 +26,16 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { Link, router } from '@inertiajs/vue3';
-import { useAuthStore } from '@modules/Auth/resources/js/stores';
-import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
+// import { useAuthStore } from '@modules/Auth/resources/js/stores';
+import { User } from '@/types';
 import { computed } from 'vue';
 
 const props = defineProps<{
-    user: {
-        name: string;
-        email: string;
-        avatar: string;
-    };
+    user: User;
 }>();
 
 const { isMobile } = useSidebar();
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 const userInitials = computed(() => {
     return props.user.name
@@ -51,7 +47,7 @@ const userInitials = computed(() => {
 
 const handleLogout = () => {
     // Clear the auth store first to ensure immediate UI update
-    authStore.clearUser();
+    // authStore.clearUser();
 
     // Then make the logout request
     router.post(route('logout'));
@@ -76,12 +72,12 @@ const handleLogout = () => {
                         <div
                             class="grid flex-1 text-left text-sm leading-tight"
                         >
-                            <span class="truncate font-medium">{{
-                                user.name
-                            }}</span>
-                            <span class="truncate text-xs">{{
-                                user.email
-                            }}</span>
+                            <span class="truncate font-medium">
+                                {{ user.name }}
+                            </span>
+                            <span class="truncate text-xs">
+                                {{ user.email }}
+                            </span>
                         </div>
                         <ChevronsUpDown class="ml-auto size-4" />
                     </SidebarMenuButton>
@@ -144,7 +140,6 @@ const handleLogout = () => {
                             <Bell />
                             Notifications
                         </DropdownMenuItem>
-                        <LanguageSelector mode="submenu" />
                         <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

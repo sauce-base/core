@@ -105,7 +105,7 @@ class SocialiteServiceTest extends TestCase
 
         $this->assertEquals($email, $user->email);
         $this->assertEquals($name, $user->name);
-        $this->assertEquals($avatar, $user->avatar_url);
+        $this->assertEquals($avatar, $user->avatar);
         $this->assertNotNull($user->email_verified_at);
         $this->assertNotNull($user->password);
 
@@ -156,7 +156,7 @@ class SocialiteServiceTest extends TestCase
         $this->assertEquals($newAvatar, $socialAccount->provider_avatar_url);
 
         $returnedUser->refresh();
-        $this->assertEquals($newAvatar, $returnedUser->avatar_url);
+        $this->assertEquals($newAvatar, $returnedUser->avatar);
     }
 
     public function test_links_social_account_to_existing_user_with_matching_email(): void
@@ -220,7 +220,7 @@ class SocialiteServiceTest extends TestCase
 
         $user = $this->service->handleCallback('google');
 
-        $this->assertNull($user->avatar_url);
+        $this->assertNull($user->avatar);
     }
 
     public function test_handles_invalid_avatar_url(): void
@@ -230,7 +230,7 @@ class SocialiteServiceTest extends TestCase
 
         $user = $this->service->handleCallback('google');
 
-        $this->assertNull($user->avatar_url);
+        $this->assertNull($user->avatar);
     }
 
     public function test_validates_and_sets_valid_avatar_url(): void
@@ -242,7 +242,7 @@ class SocialiteServiceTest extends TestCase
 
         $user = $this->service->handleCallback('google');
 
-        $this->assertEquals($validAvatar, $user->avatar_url);
+        $this->assertEquals($validAvatar, $user->avatar);
     }
 
     public function test_uses_nickname_when_name_is_null(): void

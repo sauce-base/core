@@ -2,38 +2,12 @@
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
-import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { ref } from 'vue';
 import IconMenu from '~icons/heroicons/bars-3';
 import IconX from '~icons/heroicons/x-mark';
 
 const isScrolled = ref(false);
 const mobileMenuOpen = ref(false);
-const activeSection = ref('');
-
-const handleScroll = () => {
-    isScrolled.value = window.scrollY > 10;
-
-    // Update active section based on scroll position
-    const sections = ['features', 'pricing', 'faq'];
-    const currentSection = sections.find((section) => {
-        const element = document.getElementById(section);
-        if (element) {
-            const rect = element.getBoundingClientRect();
-            return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-    });
-    activeSection.value = currentSection || '';
-};
-
-onMounted(() => {
-    window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll);
-});
 
 defineProps<{
     canLogin?: boolean;
@@ -63,7 +37,6 @@ defineProps<{
                 <!-- Desktop Actions - Better hierarchy -->
                 <div class="hidden items-center space-x-3 lg:flex">
                     <div class="flex items-center space-x-1">
-                        <LanguageSelector mode="standalone" />
                         <ThemeSelector mode="standalone" />
                     </div>
 
@@ -94,7 +67,6 @@ defineProps<{
 
                 <!-- Mobile Menu Button - Better positioning -->
                 <div class="flex items-center space-x-3 lg:hidden">
-                    <LanguageSelector mode="standalone" />
                     <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"

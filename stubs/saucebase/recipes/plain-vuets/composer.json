@@ -1,10 +1,11 @@
 {
     "name": "saucebase/{module_}",
     "description": "",
+    "type": "saucebase-module",
     "authors": [
         {
             "name": "Sauce Base",
-            "email": "contact@saucebase.dev"
+            "email": "hello@saucebase.dev"
         }
     ],
     "extra": {

@@ -21,12 +21,13 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "nwidart/laravel-modules": "^12.0",
-        "spatie/laravel-permission": "^6.21",
         "tightenco/ziggy": "^2.0"
     },
     "suggest": {
-        "saucebase/auth": "Authentication module with social login support"
+        "saucebase/auth": "Authentication module with social login support",
+        "saucebase/localization": "Localization module with multi-language support"
     },
+    "repositories": [],
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3.6",
@@ -102,7 +103,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "saucebase/module-installer": true,
             "wikimedia/composer-merge-plugin": true
