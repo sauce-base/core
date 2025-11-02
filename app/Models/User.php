@@ -25,7 +25,7 @@ class User extends Authenticatable implements HasMedia
         'name',
         'email',
         'password',
-        'avatar_url',
+        'avatar',
         'email_verified_at',
     ];
 
@@ -38,8 +38,6 @@ class User extends Authenticatable implements HasMedia
         'password',
         'remember_token',
     ];
-
-    protected $appends = ['avatar'];
 
     /**
      * Get the attributes that should be cast.
@@ -85,8 +83,8 @@ class User extends Authenticatable implements HasMedia
         }
 
         // Second priority: Social login avatar URL from database
-        if ($this->avatar_url) {
-            return $this->avatar_url;
+        if ($this->avatar) {
+            return $this->avatar;
         }
 
         // Final fallback: Default avatar

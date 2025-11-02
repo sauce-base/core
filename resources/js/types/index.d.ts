@@ -2,8 +2,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    avatar_url?: string;
-    avatar: string;
+    avatar?: string;
     last_login_at: string | null;
 }
 
