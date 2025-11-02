@@ -397,16 +397,7 @@ docker compose exec -T workspace php artisan storage:link
 echo "🧹 Clearing caches..."
 docker compose exec -T workspace php artisan optimize:clear
 
-# Run quality checks
-echo "🔍 Running code quality checks..."
-docker compose exec -T workspace ./vendor/bin/pint
-docker compose exec -T workspace npm run lint
-
-# Build frontend assets
-echo "🎨 Building frontend assets..."
-npm install & npm run build
-
-# Setup SSL certificates (only if SSL is enabled)
+# Setup SSL certificates (only if SSL is enabled) - MUST BE BEFORE npm build
 if [ "$USE_SSL" = true ]; then
     echo "🔒 Setting up SSL certificates..."
     # Always regenerate certificates for custom domains, or if certificates don't exist
@@ -445,7 +436,20 @@ if [ "$USE_SSL" = true ]; then
     fi
 else
     echo "⏭️  Skipping SSL setup (HTTP mode selected)"
+    echo "⚠️  Note: Creating placeholder SSL files for Vite config compatibility..."
+    mkdir -p docker/development/ssl
+    touch docker/development/ssl/app.key.pem
+    touch docker/development/ssl/app.pem
 fi
+
+# Run quality checks
+echo "🔍 Running code quality checks..."
+docker compose exec -T workspace ./vendor/bin/pint
+docker compose exec -T workspace npm run lint
+
+# Build frontend assets
+echo "🎨 Building frontend assets..."
+npm install & npm run build
 
 # Setup hosts file (only for custom domains, not localhost)
 if [ "$APP_HOST" != "localhost" ]; then
