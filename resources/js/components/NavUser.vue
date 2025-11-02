@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import {
-    BadgeCheck,
-    Bell,
-    ChevronsUpDown,
-    CreditCard,
-    LogOut,
-    Sparkles,
-} from 'lucide-vue-next';
+import { ChevronsUpDown, LogOut } from 'lucide-vue-next';
 
+import LanguageSelector from '@/components/LanguageSelector.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -25,9 +19,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { Link, router } from '@inertiajs/vue3';
-// import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import { User } from '@/types';
+import { router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -35,7 +28,6 @@ const props = defineProps<{
 }>();
 
 const { isMobile } = useSidebar();
-// const authStore = useAuthStore();
 
 const userInitials = computed(() => {
     return props.user.name
@@ -46,10 +38,6 @@ const userInitials = computed(() => {
 });
 
 const handleLogout = () => {
-    // Clear the auth store first to ensure immediate UI update
-    // authStore.clearUser();
-
-    // Then make the logout request
     router.post(route('logout'));
 };
 </script>
@@ -104,48 +92,24 @@ const handleLogout = () => {
                             <div
                                 class="grid flex-1 text-left text-sm leading-tight"
                             >
-                                <span class="truncate font-semibold">{{
-                                    user.name
-                                }}</span>
-                                <span class="truncate text-xs">{{
-                                    user.email
-                                }}</span>
+                                <span class="truncate font-semibold">
+                                    {{ user.name }}
+                                </span>
+                                <span class="truncate text-xs">
+                                    {{ user.email }}
+                                </span>
                             </div>
                         </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                            <Sparkles />
-                            Upgrade to Pro
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem as-child>
-                            <Link
-                                v-if="route().has('profile.edit')"
-                                :href="route('profile.edit')"
-                                class="flex w-full items-center"
-                            >
-                                <BadgeCheck />
-                                Profile
-                            </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <CreditCard />
-                            Billing
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Bell />
-                            Notifications
-                        </DropdownMenuItem>
+                        <LanguageSelector mode="submenu" />
                         <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem @click="handleLogout">
                         <LogOut />
-                        Log out
+                        {{ $t('Log out') }}
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
