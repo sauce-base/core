@@ -28,7 +28,6 @@ import {
 import { Link, router } from '@inertiajs/vue3';
 // import { useAuthStore } from '@modules/Auth/resources/js/stores';
 import { User } from '@/types';
-import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -141,7 +140,6 @@ const handleLogout = () => {
                             <Bell />
                             Notifications
                         </DropdownMenuItem>
-                        <LanguageSelector mode="submenu" />
                         <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

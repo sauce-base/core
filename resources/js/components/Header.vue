@@ -2,7 +2,6 @@
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
-import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
 import { ref } from 'vue';
 import IconMenu from '~icons/heroicons/bars-3';
 import IconX from '~icons/heroicons/x-mark';
@@ -38,7 +37,6 @@ defineProps<{
                 <!-- Desktop Actions - Better hierarchy -->
                 <div class="hidden items-center space-x-3 lg:flex">
                     <div class="flex items-center space-x-1">
-                        <LanguageSelector mode="standalone" />
                         <ThemeSelector mode="standalone" />
                     </div>
 
@@ -69,7 +67,6 @@ defineProps<{
 
                 <!-- Mobile Menu Button - Better positioning -->
                 <div class="flex items-center space-x-3 lg:hidden">
-                    <LanguageSelector mode="standalone" />
                     <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
