@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import LanguageSelector from '@/components/LanguageSelector.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -8,6 +9,10 @@ import IconX from '~icons/heroicons/x-mark';
 
 const isScrolled = ref(false);
 const mobileMenuOpen = ref(false);
+
+window.addEventListener('scroll', () => {
+    isScrolled.value = window.scrollY > 10;
+});
 
 defineProps<{
     canLogin?: boolean;
@@ -26,7 +31,6 @@ defineProps<{
     >
         <nav class="mx-auto max-w-7xl px-6 py-3">
             <div class="flex items-center justify-between">
-                <!-- Logo - Enhanced prominence -->
                 <Link
                     href="/"
                     class="flex items-center transition-opacity hover:opacity-80"
@@ -34,9 +38,9 @@ defineProps<{
                     <ApplicationLogo size="md" :showText="true" />
                 </Link>
 
-                <!-- Desktop Actions - Better hierarchy -->
                 <div class="hidden items-center space-x-3 lg:flex">
                     <div class="flex items-center space-x-1">
+                        <LanguageSelector mode="standalone" />
                         <ThemeSelector mode="standalone" />
                     </div>
 
@@ -67,6 +71,7 @@ defineProps<{
 
                 <!-- Mobile Menu Button - Better positioning -->
                 <div class="flex items-center space-x-3 lg:hidden">
+                    <LanguageSelector mode="standalone" />
                     <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
