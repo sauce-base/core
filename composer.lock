@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1e9704fd4b6cf5f2de3446b886d6cab",
+    "content-hash": "04b88b9a34e1f9a5139373ecfe59c095",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -11389,91 +11389,6 @@
                 }
             ],
             "time": "2025-10-30T08:41:39+00:00"
-        },
-        {
-            "name": "saucebase/auth",
-            "version": "v1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sauce-base/auth.git",
-                "reference": "98a61a5e92a1b23c21165b87a6f71baffc5360bd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sauce-base/auth/zipball/98a61a5e92a1b23c21165b87a6f71baffc5360bd",
-                "reference": "98a61a5e92a1b23c21165b87a6f71baffc5360bd",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/socialite": "^5.21"
-            },
-            "type": "saucebase-module",
-            "extra": {
-                "laravel": {
-                    "aliases": [],
-                    "providers": []
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Modules\\Auth\\": "app/",
-                    "Modules\\Auth\\Database\\Seeders\\": "database/seeders/",
-                    "Modules\\Auth\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Sauce Base",
-                    "email": "hello@saucebase.dev"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/sauce-base/auth/issues",
-                "source": "https://github.com/sauce-base/auth/tree/v1.1"
-            },
-            "time": "2025-10-30T20:28:37+00:00"
-        },
-        {
-            "name": "saucebase/localization",
-            "version": "v1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sauce-base/localization.git",
-                "reference": "7aa08a2699436fbb1038fab0a6a09d31d94a6ea6"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sauce-base/localization/zipball/7aa08a2699436fbb1038fab0a6a09d31d94a6ea6",
-                "reference": "7aa08a2699436fbb1038fab0a6a09d31d94a6ea6",
-                "shasum": ""
-            },
-            "type": "saucebase-module",
-            "extra": {
-                "laravel": {
-                    "aliases": [],
-                    "providers": []
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Modules\\Localization\\": "app/",
-                    "Modules\\Localization\\Database\\Seeders\\": "database/seeders/",
-                    "Modules\\Localization\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Sauce Base",
-                    "email": "hello@saucebase.dev"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/sauce-base/localization/issues",
-                "source": "https://github.com/sauce-base/localization/tree/v1.1"
-            },
-            "time": "2025-10-30T20:28:50+00:00"
         },
         {
             "name": "saucebase/module-installer",
