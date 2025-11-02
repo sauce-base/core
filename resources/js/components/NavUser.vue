@@ -27,15 +27,12 @@ import {
 } from '@/components/ui/sidebar';
 import { Link, router } from '@inertiajs/vue3';
 // import { useAuthStore } from '@modules/Auth/resources/js/stores';
-// import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
+import { User } from '@/types';
+import LanguageSelector from '@modules/Localization/resources/js/components/LanguageSelector.vue';
 import { computed } from 'vue';
 
 const props = defineProps<{
-    user: {
-        name: string;
-        email: string;
-        avatar: string;
-    };
+    user: User;
 }>();
 
 const { isMobile } = useSidebar();
@@ -144,7 +141,7 @@ const handleLogout = () => {
                             <Bell />
                             Notifications
                         </DropdownMenuItem>
-                        <!-- <LanguageSelector mode="submenu" /> -->
+                        <LanguageSelector mode="submenu" />
                         <ThemeSelector mode="submenu" />
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
