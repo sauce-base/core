@@ -18,7 +18,6 @@ class HandleLocalization
     public function handle(Request $request, Closure $next): Response
     {
         if ($locale = Session::get('locale')) {
-
             $availableLocales = array_keys(config('app.available_locales', []));
 
             if (in_array($locale, $availableLocales)) {
