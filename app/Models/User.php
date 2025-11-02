@@ -39,6 +39,8 @@ class User extends Authenticatable implements HasMedia
         'remember_token',
     ];
 
+    protected $appends = ['avatar'];
+
     /**
      * Get the attributes that should be cast.
      *

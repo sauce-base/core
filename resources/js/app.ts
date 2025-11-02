@@ -1,18 +1,19 @@
-import '../css/app.css';
-
 import { createInertiaApp } from '@inertiajs/vue3';
 import { useColorMode } from '@vueuse/core';
-import { i18nVue } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import {
-    resolveLanguage,
-    resolveModularPageComponent
-} from './lib/utils';
-import { setupMiddleware } from './middleware';
+    discoverModuleSetups,
+    executeAfterMountCallbacks,
+    executeModuleSetups,
+} from './lib/moduleSetup';
+import { resolveModularPageComponent } from './lib/utils';
 import { pinia } from './stores';
 
+import '../css/app.css';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
+const moduleSetups = discoverModuleSetups();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -21,29 +22,19 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
-            .use(i18nVue, {
-                resolve: resolveLanguage,
-            })
             .use(ZiggyVue);
 
-        // Initialize middleware after app setup
-        setupMiddleware();
+        // Execute module setup functions and collect afterMount callbacks
+        executeModuleSetups(app, moduleSetups).then((afterMountCallbacks) => {
+            // Initialize global theme persistence after mount for proper Vue reactivity
+            useColorMode();
 
-        /**
-         * Uncomment the lines below if you have the localization module installed
-         * and want to initialize the language from the store
-         */
-        // Initialize language from store after app is mounted
-        // const { language } = useLocalizationStore();
-        // if (language !== 'en') {
-        //     loadLanguageAsync(language);
-        // }
+            // Mount the app
+            app.mount(el);
 
-        // Initialize global theme persistence after mount for proper Vue reactivity
-        useColorMode();
-
-        // Mount the app
-        app.mount(el);
+            // Execute module afterMount callbacks
+            executeAfterMountCallbacks(afterMountCallbacks);
+        });
     },
     progress: {
         color: '#4B5563',
