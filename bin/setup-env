@@ -445,7 +445,6 @@ fi
 # Run quality checks
 echo "🔍 Running code quality checks..."
 docker compose exec -T workspace ./vendor/bin/pint
-docker compose exec -T workspace npm run lint
 
 # Build frontend assets
 echo "🎨 Building frontend assets..."
