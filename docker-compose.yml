@@ -1,148 +1,158 @@
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - '${APP_PORT:-80}:80'
-      - '${APP_HTTPS_PORT:-443}:443'
-    volumes:
-      - './:/var/www'
-      - './docker/development/nginx/default.conf:/etc/nginx/conf.d/default.conf.template'
-      - './docker/development/ssl:/etc/nginx/ssl:ro'
-    environment:
-      - APP_HOST=${APP_HOST:-localhost}
-    command: /bin/sh -c "envsubst '$$APP_HOST' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-    depends_on:
-      - php-fpm
-    networks:
-      - laravel-dev
+    nginx:
+        image: nginx:alpine
+        ports:
+            - '${APP_PORT:-80}:80'
+            - '${APP_HTTPS_PORT:-443}:443'
+        volumes:
+            - './:/var/www'
+            - './docker/development/nginx/default.conf:/etc/nginx/conf.d/default.conf.template'
+            - './docker/development/ssl:/etc/nginx/ssl:ro'
+        environment:
+            - APP_HOST=${APP_HOST:-localhost}
+        command: /bin/sh -c "envsubst '$$APP_HOST' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+        depends_on:
+            php-fpm:
+                condition: service_started
+        networks:
+            - laravel-dev
 
-  php-fpm:
-    build:
-      context: .
-      dockerfile: ./docker/development/php-fpm/Dockerfile
-    volumes:
-      - './:/var/www'
-      - './docker/development/php-fpm/php.ini:/usr/local/etc/php/php.ini'
-      - './docker/development/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
-    networks:
-      - laravel-dev
-    environment:
-      - APP_ENV=${APP_ENV:-local}
-      - APP_KEY=${APP_KEY}
-      - APP_DEBUG=${APP_DEBUG:-true}
-      - DB_CONNECTION=${DB_CONNECTION:-mysql}
-      - DB_HOST=mysql
-      - DB_PORT=${DB_PORT:-3306}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
-      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
-      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
-      - XDEBUG_MODE=${XDEBUG_MODE:-debug}
-      - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
-    depends_on:
-      - mysql
-      - redis
+    php-fpm:
+        build:
+            context: .
+            dockerfile: ./docker/development/php-fpm/Dockerfile
+        volumes:
+            - './:/var/www'
+            - './docker/development/php-fpm/php.ini:/usr/local/etc/php/php.ini'
+            - './docker/development/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
+        networks:
+            - laravel-dev
+        environment:
+            - APP_ENV=${APP_ENV:-local}
+            - APP_KEY=${APP_KEY}
+            - APP_DEBUG=${APP_DEBUG:-true}
+            - DB_CONNECTION=${DB_CONNECTION:-mysql}
+            - DB_HOST=mysql
+            - DB_PORT=${DB_PORT:-3306}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - REDIS_HOST=redis
+            - REDIS_PORT=${REDIS_PORT:-6379}
+            - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+            - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+            - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+            - XDEBUG_MODE=${XDEBUG_MODE:-debug}
+            - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
+        depends_on:
+            - mysql
+            - redis
 
-  workspace:
-    build:
-      context: .
-      dockerfile: ./docker/development/workspace/Dockerfile
-    volumes:
-      - './:/var/www'
-      - './docker/development/php-fpm/php.ini:/usr/local/etc/php/php.ini'
-      - './docker/development/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
-    networks:
-      - laravel-dev
-    environment:
-      - APP_ENV=${APP_ENV:-local}
-      - APP_KEY=${APP_KEY}
-      - APP_DEBUG=${APP_DEBUG:-true}
-      - DB_CONNECTION=${DB_CONNECTION:-mysql}
-      - DB_HOST=mysql
-      - DB_PORT=${DB_PORT:-3306}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - CACHE_DRIVER=${CACHE_DRIVER:-redis}
-      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
-      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
-      - XDEBUG_MODE=${XDEBUG_MODE:-debug}
-      - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
-    depends_on:
-      - mysql
-      - redis
-    tty: true
+    workspace:
+        build:
+            context: .
+            dockerfile: ./docker/development/workspace/Dockerfile
+        volumes:
+            - './:/var/www'
+            - './docker/development/php-fpm/php.ini:/usr/local/etc/php/php.ini'
+            - './docker/development/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
+        networks:
+            - laravel-dev
+        environment:
+            - APP_ENV=${APP_ENV:-local}
+            - APP_KEY=${APP_KEY}
+            - APP_DEBUG=${APP_DEBUG:-true}
+            - DB_CONNECTION=${DB_CONNECTION:-mysql}
+            - DB_HOST=mysql
+            - DB_PORT=${DB_PORT:-3306}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - REDIS_HOST=redis
+            - REDIS_PORT=${REDIS_PORT:-6379}
+            - CACHE_DRIVER=${CACHE_DRIVER:-redis}
+            - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+            - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+            - XDEBUG_MODE=${XDEBUG_MODE:-debug}
+            - XDEBUG_CONFIG=${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
+        depends_on:
+            - mysql
+            - redis
+        tty: true
 
-  mysql:
-    image: 'mysql:8.0'
-    restart: unless-stopped
-    ports:
-      - '${FORWARD_DB_PORT:-3306}:3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-      MYSQL_DATABASE: '${DB_DATABASE}'
-      MYSQL_USER: '${DB_USERNAME}'
-      MYSQL_PASSWORD: '${DB_PASSWORD}'
-    volumes:
-      - 'laravel-mysql-dev:/var/lib/mysql'
-    networks:
-      - laravel-dev
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
-      retries: 3
-      timeout: 5s
+    mysql:
+        image: 'mysql:8.0'
+        restart: unless-stopped
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+        volumes:
+            - 'laravel-mysql-dev:/var/lib/mysql'
+        networks:
+            - laravel-dev
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'mysqladmin',
+                    'ping',
+                    '-h',
+                    'localhost',
+                    '-u',
+                    '${DB_USERNAME}',
+                    '-p${DB_PASSWORD}',
+                ]
+            retries: 3
+            timeout: 5s
 
-  redis:
-    image: 'redis:alpine'
-    restart: unless-stopped
-    ports:
-      - '${FORWARD_REDIS_PORT:-6379}:6379'
-    volumes:
-      - 'laravel-redis-dev:/data'
-    networks:
-      - laravel-dev
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      retries: 3
-      timeout: 5s
+    redis:
+        image: 'redis:alpine'
+        restart: unless-stopped
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'laravel-redis-dev:/data'
+        networks:
+            - laravel-dev
+        healthcheck:
+            test: ['CMD', 'redis-cli', 'ping']
+            retries: 3
+            timeout: 5s
 
+    mailpit:
+        image: 'axllent/mailpit:latest'
+        restart: unless-stopped
+        ports:
+            - '${FORWARD_MAILPIT_PORT:-1025}:1025'
+            - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - laravel-dev
 
-  mailpit:
-    image: 'axllent/mailpit:latest'
-    restart: unless-stopped
-    ports:
-      - '${FORWARD_MAILPIT_PORT:-1025}:1025'
-      - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
-    networks:
-      - laravel-dev
-
-  soketi:
-    image: 'quay.io/soketi/soketi:latest-16-alpine'
-    restart: unless-stopped
-    environment:
-      SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
-      SOKETI_METRICS_SERVER_PORT: '${PUSHER_METRICS_PORT:-9601}'
-      SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
-      SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
-      SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
-    ports:
-      - '${PUSHER_PORT:-6001}:6001'
-      - '${PUSHER_METRICS_PORT:-9601}:9601'
-    networks:
-      - laravel-dev
+    soketi:
+        image: 'quay.io/soketi/soketi:latest-16-alpine'
+        restart: unless-stopped
+        environment:
+            SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
+            SOKETI_METRICS_SERVER_PORT: '${PUSHER_METRICS_PORT:-9601}'
+            SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
+            SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
+            SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
+        ports:
+            - '${PUSHER_PORT:-6001}:6001'
+            - '${PUSHER_METRICS_PORT:-9601}:9601'
+        networks:
+            - laravel-dev
 
 networks:
-  laravel-dev:
-    driver: bridge
+    laravel-dev:
+        driver: bridge
 
 volumes:
-  laravel-mysql-dev:
-    driver: local
-  laravel-redis-dev:
-    driver: local
+    laravel-mysql-dev:
+        driver: local
+    laravel-redis-dev:
+        driver: local

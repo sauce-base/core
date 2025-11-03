@@ -343,6 +343,51 @@ docker compose down --remove-orphans
 echo "🗑️  Removing volumes for clean reset..."
 docker compose down -v
 
+# Setup SSL certificates (only if SSL is enabled) - MUST BE BEFORE npm build
+if [ "$USE_SSL" = true ]; then
+    echo "🔒 Setting up SSL certificates..."
+    # Always regenerate certificates for custom domains, or if certificates don't exist
+    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ] || [ "$APP_HOST" != "localhost" ]; then
+        echo "🔧 Generating SSL certificates..."
+        
+        # Check if mkcert is installed
+        if ! command -v mkcert > /dev/null 2>&1; then
+            echo "❌ mkcert is not installed!"
+            echo ""
+            echo "Please install mkcert first:"
+            echo "• macOS: brew install mkcert"
+            echo "• Windows: choco install mkcert"
+            echo "• Linux: see https://github.com/FiloSottile/mkcert#installation"
+            echo ""
+            echo "Then run: mkcert -install"
+            echo "And re-run this setup script."
+            exit 1
+        fi
+        
+        # Ensure SSL directory exists
+        mkdir -p docker/development/ssl
+        
+        # Install mkcert CA to system trust store (reduces browser warnings)
+        echo "🔧 Installing mkcert CA in system trust store..."
+        mkcert -install
+        
+        # Generate SSL certificates
+        cd docker/development/ssl
+        mkcert -key-file app.key.pem -cert-file app.pem $APP_HOST *.$APP_HOST localhost 127.0.0.1 ::1
+        cd ../../..
+        
+        echo "✅ SSL certificates generated successfully for $APP_HOST!"
+    else
+        echo "✅ SSL certificates already exist!"
+    fi
+else
+    echo "⏭️  Skipping SSL setup (HTTP mode selected)"
+    echo "⚠️  Note: Creating placeholder SSL files for Vite config compatibility..."
+    mkdir -p docker/development/ssl
+    touch docker/development/ssl/app.key.pem
+    touch docker/development/ssl/app.pem
+fi
+
 # Pull latest images and build containers (if forced)
 if [ "$FORCE_BUILD" = true ]; then
     echo "📥 Pulling latest Docker images..."
@@ -396,51 +441,6 @@ docker compose exec -T workspace php artisan storage:link
 # Clear all caches
 echo "🧹 Clearing caches..."
 docker compose exec -T workspace php artisan optimize:clear
-
-# Setup SSL certificates (only if SSL is enabled) - MUST BE BEFORE npm build
-if [ "$USE_SSL" = true ]; then
-    echo "🔒 Setting up SSL certificates..."
-    # Always regenerate certificates for custom domains, or if certificates don't exist
-    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ] || [ "$APP_HOST" != "localhost" ]; then
-        echo "🔧 Generating SSL certificates..."
-        
-        # Check if mkcert is installed
-        if ! command -v mkcert > /dev/null 2>&1; then
-            echo "❌ mkcert is not installed!"
-            echo ""
-            echo "Please install mkcert first:"
-            echo "• macOS: brew install mkcert"
-            echo "• Windows: choco install mkcert"
-            echo "• Linux: see https://github.com/FiloSottile/mkcert#installation"
-            echo ""
-            echo "Then run: mkcert -install"
-            echo "And re-run this setup script."
-            exit 1
-        fi
-        
-        # Ensure SSL directory exists
-        mkdir -p docker/development/ssl
-        
-        # Install mkcert CA to system trust store (reduces browser warnings)
-        echo "🔧 Installing mkcert CA in system trust store..."
-        mkcert -install
-        
-        # Generate SSL certificates
-        cd docker/development/ssl
-        mkcert -key-file app.key.pem -cert-file app.pem $APP_HOST *.$APP_HOST localhost 127.0.0.1 ::1
-        cd ../../..
-        
-        echo "✅ SSL certificates generated successfully for $APP_HOST!"
-    else
-        echo "✅ SSL certificates already exist!"
-    fi
-else
-    echo "⏭️  Skipping SSL setup (HTTP mode selected)"
-    echo "⚠️  Note: Creating placeholder SSL files for Vite config compatibility..."
-    mkdir -p docker/development/ssl
-    touch docker/development/ssl/app.key.pem
-    touch docker/development/ssl/app.pem
-fi
 
 # Build frontend assets
 echo "🎨 Building frontend assets..."
