@@ -442,13 +442,10 @@ else
     touch docker/development/ssl/app.pem
 fi
 
-# Run quality checks
-echo "🔍 Running code quality checks..."
-docker compose exec -T workspace ./vendor/bin/pint
-
 # Build frontend assets
 echo "🎨 Building frontend assets..."
-npm install & npm run build
+npm install 
+npm run build
 
 # Setup hosts file (only for custom domains, not localhost)
 if [ "$APP_HOST" != "localhost" ]; then
