@@ -24,8 +24,7 @@
         "tightenco/ziggy": "^2.0"
     },
     "suggest": {
-        "saucebase/auth": "Authentication module with social login support",
-        "saucebase/localization": "Localization module with multi-language support"
+        "saucebase/auth": "Authentication module with social login support"
     },
     "repositories": [],
     "require-dev": {
