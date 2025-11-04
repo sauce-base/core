@@ -12,14 +12,12 @@ import IconHeart from '~icons/heroicons/heart';
                     <span>© 2025 Sauce Base</span>
                     <a
                         href="https://github.com/sauce-base/core"
-                        target="_blank"
-                        rel="noopener noreferrer"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ $t('GitHub') }}
                     </a>
                     <a
-                        href="#"
+                        href="https://github.com/sauce-base/core?tab=readme-ov-file#saucebase"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ $t('Documentation') }}
