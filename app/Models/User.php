@@ -10,7 +10,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements HasMedia
-// , MustVerifyEmail
+    // , MustVerifyEmail
 {
     use HasFactory,
         InteractsWithMedia,
@@ -83,7 +83,7 @@ class User extends Authenticatable implements HasMedia
         }
 
         // Second priority: Social login avatar URL from database
-        if (!empty($this->attributes['avatar'])) {
+        if (! empty($this->attributes['avatar'])) {
             return $this->attributes['avatar'];
         }
 
