@@ -9,6 +9,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useLocalizationStore } from '@/stores/localization';
+import { usePage } from '@inertiajs/vue3';
 import { loadLanguageAsync } from 'laravel-vue-i18n';
 import { Globe } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -33,22 +34,39 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const store = useLocalizationStore();
+const page = usePage();
+const locales = computed(() => page.props.locales || {});
 
-//TODO: get this list from BE
-const languages = [
-    { code: 'en', name: 'English', icon: IconUS },
-    { code: 'pt_BR', name: 'Português', icon: IconBR },
-];
+// Icon mapping for different locales
+const iconMap: Record<string, any> = {
+    en: IconUS,
+    pt_BR: IconBR,
+};
+
+// Map backend locales to language objects with icons
+const languages = computed(() => {
+    const localesData = locales.value;
+    return Object.entries(localesData).map(([code, name]) => ({
+        code,
+        name: name as string,
+        icon: iconMap[code] || Globe, // Fallback to Globe icon if not found
+    }));
+});
 
 const switchLanguage = async (langCode: string) => {
     await store.setLanguage(langCode);
     await loadLanguageAsync(langCode);
 };
 
-const currentLanguage = computed(
-    () =>
-        languages.find((lang) => lang.code === store.language) || languages[0],
-);
+const currentLanguage = computed(() => {
+    const langs = languages.value;
+
+    if (!langs || langs.length === 0) {
+        return { code: 'en', name: 'English', icon: iconMap.en };
+    }
+
+    return langs.find((lang) => lang.code === store.language) || langs[0];
+});
 </script>
 
 <template>
