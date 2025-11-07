@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useLocalizationStore = defineStore(
-    'modules/localization',
+    'localization',
     () => {
         const language = ref('en');
 
