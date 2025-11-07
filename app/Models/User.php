@@ -10,7 +10,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class User extends Authenticatable implements HasMedia
-// , MustVerifyEmail
+    // , MustVerifyEmail
 {
     use HasFactory,
         InteractsWithMedia,
@@ -27,7 +27,7 @@ class User extends Authenticatable implements HasMedia
         'password',
         'avatar',
         'email_verified_at',
-        'last_login_at'
+        'last_login_at',
     ];
 
     /**
