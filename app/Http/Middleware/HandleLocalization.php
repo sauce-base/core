@@ -24,7 +24,7 @@ class HandleLocalization
 
         if ($locale = Session::get('locale')) {
 
-            if (in_array($locale, $availableLocales)) {
+            if (in_array($locale, array_keys($availableLocales))) {
                 App::setLocale($locale);
             }
         }
