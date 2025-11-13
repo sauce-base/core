@@ -34,8 +34,7 @@ faster.
 - **Modern Foundations**: Laravel 12, PHP 8.4+, Vue 3, TypeScript, Tailwind CSS 4, Vite 6.
 - **First-Class Modules**: Installable feature modules (Auth, Localization, …) that you can copy, customize, and own forever.
 - **Full-Stack DX**: Inertia.js SPA experience, Pinia stores, Ziggy routes, persistent state, i18n, built-in dark/light mode and theme management.
-- **Production Ready**: Dockerized stack (Nginx, PHP-FPM, MySQL, Redis, Mailpit, Soketi), seeded roles/users, Playwright E2E tests, Pest unit tests.
-- **Headless Admin**: Filament 4 panel already wired with module discovery via `Coolsam/Modules`.
+- **Headless Admin**: Filament 4 panel already wired.
 
 ---
 
@@ -67,14 +66,13 @@ faster.
 
 ## 📦 Included Modules
 
-| Module           | Highlights                                                                                                                             |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **Auth**         | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth)                       |
-| **Localization** | Language switcher (EN / PT-BR out of the box), session middleware, persisted store, dropdown UI. [View module →](https://github.com/sauce-base/localization) |
+| Module   | Highlights                                                                                                       |
+| -------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Auth** | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+
+### Copy-and-Own Philosophy
 
 Upcoming modules will follow the same copy-and-own philosophy—pull the files you need, keep them in your repo, iterate freely.
-
-- The modules will be moved to a separate repo soon, along with a catalog of add-ons.
 
 ---
 
@@ -91,14 +89,7 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 
     The script checks prerequisites, prepares SSL certs (if mkcert is present), spins up Docker, runs migrations/seeds, installs JS/PHP deps.
 
-2. **Run development services**
-
-    ```bash
-    docker compose up -d
-    npm run dev
-    ```
-
-3. **Visit the app**
+2. **Visit the app**
     - Site: https://localhost (self-signed cert) or http://localhost
     - Filament Admin: https://localhost/admin
 
