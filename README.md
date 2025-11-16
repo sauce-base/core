@@ -109,9 +109,9 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
     - Site: https://localhost (self-signed cert) or http://localhost
     - Filament Admin: https://localhost/admin
 
-3. **Add Auth Module**§
+3. **Add Auth Module**
 
-Install the Auth module for authentication features:\*\*\*
+Install the Auth module for authentication features:
 
 `composer require saucebase/auth`
 
