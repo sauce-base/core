@@ -38,6 +38,22 @@ faster.
 
 ---
 
+Screenshots
+_Sign in_
+![Sign In](public/images/screenshots/signin.png)
+
+_Home page with light theme_
+![Home](public/images/screenshots/home.png)
+
+_Home page with dark theme_
+![Home Dark](public/images/screenshots/home-dark.png)
+
+_Dashboard_
+![Dashboard](public/images/screenshots/dashboard.png)
+
+_Filament Admin Panel_
+![Filament Admin](public/images/screenshots/filament-admin.png)
+
 ### Prerequisites
 
 - Docker
@@ -92,6 +108,30 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 2. **Visit the app**
     - Site: https://localhost (self-signed cert) or http://localhost
     - Filament Admin: https://localhost/admin
+
+3. **Add Auth Module**§
+
+Install the Auth module for authentication features:\*\*\*
+
+`composer require saucebase/auth`
+
+Run composer dump-autoload:
+
+`composer dump-autoload`
+
+Enable the module:
+
+`docker compose exec workspace php artisan module:enable Auth`
+
+Run migrations for the module:
+
+`docker compose exec workspace php artisan module:migrate Auth`
+
+Build the frontend assets:
+
+`npm run build`
+
+Check out the [Auth Module README](https://github.com/sauce-base/auth) for configuration details.
 
 Complete documentation coming soon!
 
