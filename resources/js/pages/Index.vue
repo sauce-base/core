@@ -70,12 +70,12 @@ const user = computed(() => page.props.auth?.user);
 
                     <!-- Dashboard Button (if logged in) -->
                     <Link
-                        v-if="user"
+                        v-if="route().has('dashboard') && user"
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
                         <IconDashboard class="mr-2 h-5 w-5" />
-                        Go to Dashboard
+                        {{ $t('Go to Dashboard') }}
                     </Link>
 
                     <!-- GitHub Button -->

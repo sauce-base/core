@@ -61,7 +61,9 @@ defineProps<{
                     </Link>
 
                     <Link
-                        v-if="$page.props.auth?.user"
+                        v-if="
+                            route().has('dashboard') && $page.props.auth?.user
+                        "
                         :href="route('dashboard')"
                         class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                     >
@@ -117,7 +119,10 @@ defineProps<{
                             </Link>
 
                             <Link
-                                v-if="$page.props.auth?.user"
+                                v-if="
+                                    route().has('dashboard') &&
+                                    $page.props.auth?.user
+                                "
                                 :href="route('dashboard')"
                                 class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                                 @click="mobileMenuOpen = false"
