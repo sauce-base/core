@@ -80,11 +80,12 @@ _Filament Admin Panel_
 
 ---
 
-## 📦 Included Modules
+## 📦 Modules to be installed (Recommended)
 
-| Module   | Highlights                                                                                                       |
-| -------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Auth** | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+| Module        | Highlights                                                                                                       |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Auth**      | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+| **Dashboard** | Dashboard basic structure [View module →](https://github.com/sauce-base/dashboard)                               |
 
 ### Copy-and-Own Philosophy
 
