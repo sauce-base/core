@@ -80,10 +80,11 @@ _Filament Admin Panel_
 
 ---
 
-## 📦 Modules to be installed (Recommended)
+## 📦 Modules to be installed
 
 | Module        | Highlights                                                                                                       |
 | ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Roles**     | Role management with Spatie permissions integration. [View module →](https://github.com/sauce-base/roles)        |
 | **Auth**      | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
 | **Dashboard** | Dashboard basic structure [View module →](https://github.com/sauce-base/dashboard)                               |
 
