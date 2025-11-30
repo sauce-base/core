@@ -34,12 +34,12 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
                 Action::make('site')
                     ->label('Ver site')
-                    ->url(fn(): string => route('index'))
+                    ->url(fn (): string => route('index'))
                     ->icon('heroicon-o-globe-alt')
                     ->openUrlInNewTab(),
                 Action::make('dashboard')
                     ->label('Ver Dashboard')
-                    ->url(fn(): string => route('dashboard'))
+                    ->url(fn (): string => route('dashboard'))
                     ->icon('heroicon-o-home')
                     ->openUrlInNewTab(),
             ])
