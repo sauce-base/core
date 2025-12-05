@@ -4,7 +4,6 @@ import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-// import { useAuthStore } from '@modules/Auth/resources/js/stores';
 
 import IconGitHub from '~icons/heroicons/code-bracket';
 import IconDashboard from '~icons/heroicons/squares-2x2';
