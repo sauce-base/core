@@ -20,13 +20,14 @@ Developer workflows (authoritative commands)
     - `./bin/setup-env` — prepares Docker, SSL certs (if mkcert present), installs deps, seeds DB.
 - Dev services:
     - `docker compose up -d` — spin Docker services (DB, Redis, Mailpit, etc.).
-    - Composer full-stack dev: `composer dev` — runs php server, queue worker, pail, and `npm run dev` concurrently.
+    - Composer full-stack dev: `docker compose exec workspace composer dev` — runs php server, queue worker, pail, and `npm run dev` concurrently.
+    - For php artisan commands: `docker compose exec workspace php artisan <command>`.
 - Frontend dev & build:
     - `npm install`
     - `npm run dev` — Vite dev server (hot reload)
     - `npm run build` — production build (includes SSR build)
 - Testing:
-    - Backend/unit: `composer test` (runs `php artisan test`)
+    - Backend/unit: `docker compose exec workspace composer test` (runs `php artisan test`)
     - E2E: `npm run test` (Playwright)
 
 Lint / format / static analysis
