@@ -6,6 +6,9 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
 import { pinia } from './stores';
+import { createVfm } from 'vue-final-modal'
+
+import App from './components/App.vue';
 
 import {
     discoverModuleSetups,
@@ -14,6 +17,7 @@ import {
 } from './lib/moduleSetup';
 
 import '../css/app.css';
+import 'vue-final-modal/style.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 const moduleSetups = discoverModuleSetups();
@@ -21,11 +25,12 @@ const moduleSetups = discoverModuleSetups();
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: resolveModularPageComponent,
-    setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+    setup({ el, App: InertiaApp, props, plugin }) {
+        const app = createApp({ render: () => h(App, {}, () => h(InertiaApp, props)) })
             .use(plugin)
             .use(pinia)
             .use(ZiggyVue)
+            .use(createVfm())
             .use(i18nVue, {
                 resolve: resolveLanguage,
             });
@@ -44,7 +49,7 @@ createInertiaApp({
             app.mount(el);
 
             // Execute module afterMount callbacks
-            executeAfterMountCallbacks(afterMountCallbacks);
+            executeAfterMountCallbacks(afterMountCallbacks, app);
         });
     },
     progress: {
