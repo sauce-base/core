@@ -3,10 +3,10 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { useColorMode } from '@vueuse/core';
 import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
+import { createVfm } from 'vue-final-modal';
 import { ZiggyVue } from 'ziggy-js';
 import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
 import { pinia } from './stores';
-import { createVfm } from 'vue-final-modal'
 
 import App from './components/App.vue';
 
@@ -16,8 +16,8 @@ import {
     executeModuleSetups,
 } from './lib/moduleSetup';
 
-import '../css/app.css';
 import 'vue-final-modal/style.css';
+import '../css/app.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 const moduleSetups = discoverModuleSetups();
@@ -26,7 +26,9 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: resolveModularPageComponent,
     setup({ el, App: InertiaApp, props, plugin }) {
-        const app = createApp({ render: () => h(App, {}, () => h(InertiaApp, props)) })
+        const app = createApp({
+            render: () => h(App, {}, () => h(InertiaApp, props)),
+        })
             .use(plugin)
             .use(pinia)
             .use(ZiggyVue)
