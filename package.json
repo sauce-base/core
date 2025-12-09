@@ -29,6 +29,7 @@
         "@faker-js/faker": "^10.1.0",
         "@iconify/json": "^2.2.357",
         "@inertiajs/vue3": "^2.2.7",
+        "@pinia/testing": "^1.0.3",
         "@playwright/test": "^1.54.1",
         "@tailwindcss/forms": "^0.5.3",
         "@tailwindcss/postcss": "^4.1.11",
@@ -72,5 +73,12 @@
     "engines": {
         "node": ">=22.0.0",
         "npm": ">=10.5.1"
+    },
+    "lint-staged": {
+        "**/*.{js,ts,vue}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*": "prettier --write --ignore-unknown"
     }
 }
