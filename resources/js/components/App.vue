@@ -1,9 +1,7 @@
-<script setup lang="ts">
-import { ModalsContainer } from 'vue-final-modal';
-</script>
+<script setup lang="ts"></script>
 <template>
     <div>
         <slot />
-        <ModalsContainer />
+        <!-- Global components can be added here -->
     </div>
 </template>
