@@ -23,12 +23,14 @@ Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 
 
 ### Development Server
 ```bash
-# Option 1: Full-stack dev with Docker
+# Start Docker services (DB, Redis, Mailpit, etc.)
 docker compose up -d
+
+# Start Vite dev server (frontend hot reload)
 npm run dev
 
-# Option 2: All services via Composer (server, queue, logs, vite)
-composer dev
+# Start full-stack dev environment (server, queue, logs, vite) inside Docker workspace
+docker compose exec workspace composer dev
 ```
 
 ### Backend
