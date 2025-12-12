@@ -38,21 +38,57 @@ faster.
 
 ---
 
-Screenshots
-_Sign in_
-![Sign In](public/images/screenshots/signin.png)
+## 📸 Screenshots
 
-_Home page with light theme_
-![Home](public/images/screenshots/home.png)
+### Home Page
 
-_Home page with dark theme_
-![Home Dark](public/images/screenshots/home-dark.png)
+**Light Theme**
 
-_Dashboard_
-![Dashboard](public/images/screenshots/dashboard.png)
+![Home - Light Theme](public/images/screenshots/home-light.png)
 
-_Filament Admin Panel_
-![Filament Admin](public/images/screenshots/filament-admin.png)
+**Dark Theme**
+
+![Home - Dark Theme](public/images/screenshots/home-dark.png)
+
+### Authentication
+
+**Login Page - Light Theme**
+
+![Login - Light Theme](public/images/screenshots/login-light.png)
+
+**Login Page - Dark Theme**
+
+![Login - Dark Theme](public/images/screenshots/login-dark.png)
+
+**Register Page - Light Theme**
+
+![Register - Light Theme](public/images/screenshots/register-light.png)
+
+**Register Page - Dark Theme**
+
+![Register - Dark Theme](public/images/screenshots/register-dark.png)
+
+### Dashboard
+
+**Light Theme**
+
+![Dashboard - Light Theme](public/images/screenshots/dashboard-light.png)
+
+**Dark Theme**
+
+![Dashboard - Dark Theme](public/images/screenshots/dashboard-dark.png)
+
+### Settings
+
+**Light Theme**
+
+![Settings - Light Theme](public/images/screenshots/settings-light.png)
+
+**Dark Theme**
+
+![Settings - Dark Theme](public/images/screenshots/settings-dark.png)
+
+---
 
 ### Prerequisites
 
