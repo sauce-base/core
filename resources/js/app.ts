@@ -55,8 +55,9 @@ createInertiaApp({
         });
     },
     progress: {
-        color: getComputedStyle(document.documentElement)
-            .getPropertyValue('--primary')
-            .trim(),
+        color:
+            getComputedStyle(document.documentElement)
+                .getPropertyValue('--primary')
+                .trim() || '#4B5563',
     },
 });

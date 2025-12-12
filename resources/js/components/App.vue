@@ -1,7 +1,5 @@
 <script setup lang="ts"></script>
 <template>
-    <div>
-        <slot />
-        <!-- Global components can be added here -->
-    </div>
+    <slot />
+    <!-- Global components can be added here -->
 </template>

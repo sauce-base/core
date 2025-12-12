@@ -78,6 +78,6 @@
             "eslint --fix",
             "prettier --write"
         ],
-        "*": "prettier --write --ignore-unknown"
+        "!(*.{js,ts,vue})": "prettier --write --ignore-unknown"
     }
 }
