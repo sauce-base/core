@@ -32,6 +32,6 @@ export const use___Module___Store = defineStore(
     },
     {
         // Enable/Disable persistence for this store
-        persist: true,
+        persist: false,
     },
 );
