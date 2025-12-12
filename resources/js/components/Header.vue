@@ -47,7 +47,7 @@ defineProps<{
                     <Link
                         v-if="canLogin && !$page.props.auth?.user"
                         :href="route('login')"
-                        class="px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                        class="rounded-full px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
                     >
                         {{ $t('Sign In') }}
                     </Link>
@@ -55,7 +55,7 @@ defineProps<{
                     <Link
                         v-if="canRegister && !$page.props.auth?.user"
                         :href="route('register')"
-                        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                        class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                     >
                         {{ $t('Get Started') }}
                     </Link>
@@ -65,7 +65,7 @@ defineProps<{
                             route().has('dashboard') && $page.props.auth?.user
                         "
                         :href="route('dashboard')"
-                        class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                        class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                     >
                         {{ $t('Dashboard') }}
                     </Link>
@@ -77,7 +77,7 @@ defineProps<{
                     <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="rounded-lg p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                        class="rounded-full p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                         <IconMenu v-if="!mobileMenuOpen" class="h-6 w-6" />
                         <IconX v-else class="h-6 w-6" />
@@ -103,7 +103,7 @@ defineProps<{
                             <Link
                                 v-if="canLogin && !$page.props.auth?.user"
                                 :href="route('login')"
-                                class="rounded-lg px-4 py-3 text-base font-medium text-gray-900 transition-colors duration-200 hover:bg-gray-50 hover:text-blue-600 dark:text-gray-100 dark:hover:bg-gray-800/50 dark:hover:text-blue-400"
+                                class="hover:text-primary dark:hover:text-primary rounded-full px-4 py-3 text-base font-medium text-gray-900 transition-all duration-200 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800/50"
                                 @click="mobileMenuOpen = false"
                             >
                                 {{ $t('Sign In') }}
@@ -112,7 +112,7 @@ defineProps<{
                             <Link
                                 v-if="canRegister && !$page.props.auth?.user"
                                 :href="route('register')"
-                                class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                                class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-4 py-3 text-base font-semibold transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                                 @click="mobileMenuOpen = false"
                             >
                                 {{ $t('Get Started') }}
@@ -124,7 +124,7 @@ defineProps<{
                                     $page.props.auth?.user
                                 "
                                 :href="route('dashboard')"
-                                class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
+                                class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-4 py-3 text-base font-semibold transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                                 @click="mobileMenuOpen = false"
                             >
                                 {{ $t('Dashboard') }}

@@ -2,7 +2,7 @@ import type { App } from 'vue';
 
 export interface ModuleSetup {
     setup?: (app?: App) => void | Promise<void>;
-    afterMount?: () => void | Promise<void>;
+    afterMount?: (app?: App) => void | Promise<void>;
 }
 
 /**
@@ -26,8 +26,8 @@ export function discoverModuleSetups() {
 export async function executeModuleSetups(
     app: App,
     moduleSetups: Record<string, ModuleSetup>,
-): Promise<(() => void | Promise<void>)[]> {
-    const afterMountCallbacks: (() => void | Promise<void>)[] = [];
+): Promise<((app?: App) => void | Promise<void>)[]> {
+    const afterMountCallbacks: ((app?: App) => void | Promise<void>)[] = [];
 
     for (const module of Object.values(moduleSetups)) {
         if (module.setup) {
@@ -47,9 +47,10 @@ export async function executeModuleSetups(
  * @param callbacks - Array of afterMount callbacks
  */
 export async function executeAfterMountCallbacks(
-    callbacks: (() => void | Promise<void>)[],
+    callbacks: ((app?: App) => void | Promise<void>)[],
+    app?: App,
 ): Promise<void> {
     for (const callback of callbacks) {
-        await callback();
+        await callback(app);
     }
 }

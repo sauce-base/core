@@ -15,14 +15,21 @@ import {
 
 import '../css/app.css';
 
+/**
+ * Used as a wrapper to global components
+ */
+import App from '@/components/App.vue';
+
 const appName = import.meta.env.VITE_APP_NAME || 'Sauce Base';
 const moduleSetups = discoverModuleSetups();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: resolveModularPageComponent,
-    setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+    setup({ el, App: InertiaApp, props, plugin }) {
+        const app = createApp({
+            render: () => h(App, {}, () => h(InertiaApp, props)),
+        })
             .use(plugin)
             .use(pinia)
             .use(ZiggyVue)
@@ -44,10 +51,13 @@ createInertiaApp({
             app.mount(el);
 
             // Execute module afterMount callbacks
-            executeAfterMountCallbacks(afterMountCallbacks);
+            executeAfterMountCallbacks(afterMountCallbacks, app);
         });
     },
     progress: {
-        color: '#4B5563',
+        color:
+            getComputedStyle(document.documentElement)
+                .getPropertyValue('--primary')
+                .trim() || '#4B5563',
     },
 });

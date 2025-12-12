@@ -1,2 +1,15 @@
+#!/usr/bin/env sh
+
+# --------------------------------
+# Husky pre-commit hook
+# --------------------------------
+
+# Run PHP and JS linters
 composer lint
-npm run lint
+
+# Run lint-staged if npx is available
+if command -v npx &> /dev/null; then
+    npx lint-staged
+else
+    echo "Warning: npx not found, skipping lint-staged"
+fi

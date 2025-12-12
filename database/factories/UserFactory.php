@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -44,25 +43,5 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
-    }
-
-    /**
-     * Create a user with admin role.
-     */
-    public function admin(): static
-    {
-        return $this->afterCreating(function ($user) {
-            $user->syncRoles([Role::ADMIN]);
-        });
-    }
-
-    /**
-     * Create a user with regular user role.
-     */
-    public function user(): static
-    {
-        return $this->afterCreating(function ($user) {
-            $user->syncRoles([Role::USER]);
-        });
     }
 }
