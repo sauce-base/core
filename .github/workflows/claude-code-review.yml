@@ -1,57 +1,76 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+    pull_request:
+        types: [opened, synchronize]
+        paths:
+            # PHP application code
+            - 'app/**/*.php'
+            - 'modules/**/app/**/*.php'
+            - 'bootstrap/app.php'
+            # Frontend code
+            - 'resources/js/**/*.{ts,tsx,vue}'
+            - 'resources/css/**/*.css'
+            - 'modules/**/resources/js/**/*.{ts,tsx,vue}'
+            - 'modules/**/resources/css/**/*.css'
+            # Routes and configs (exclude module configs to avoid PHPStan noise)
+            - 'routes/**/*.php'
+            - 'modules/**/routes/**/*.php'
+            - 'config/**/*.php'
+            # Tests
+            - 'tests/**/*.php'
+            - 'tests/e2e/**/*.{ts,spec.ts}'
+            - 'modules/**/tests/**/*.{php,ts,spec.ts}'
+            # Exclude lock files, migrations, generated code
+            - '!composer.lock'
+            - '!package-lock.json'
+            - '!**/database/migrations/**'
+            - '!public/build/**'
+            - '!vendor/**'
+            - '!node_modules/**'
 
 jobs:
-  claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    claude-review:
+        # Skip review if PR has skip-review label or is from bots
+        if: |
+            !contains(github.event.pull_request.labels.*.name, 'skip-review') &&
+            github.event.pull_request.user.login != 'dependabot[bot]' &&
+            github.event.pull_request.user.login != 'renovate[bot]'
 
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-      issues: read
-      id-token: write
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            pull-requests: read
+            issues: read
+            id-token: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1
 
-      - name: Run Claude Code Review
-        id: claude-review
-        uses: anthropics/claude-code-action@v1
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: |
-            REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
+            - name: Run Claude Code Review
+              id: claude-review
+              uses: anthropics/claude-code-action@v1
+              with:
+                  claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+                  prompt: |
+                      REPO: ${{ github.repository }}
+                      PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+                      Review this PR focusing on critical issues only:
+                      - Security vulnerabilities (XSS, SQL injection, auth bypass, secrets in code)
+                      - Obvious bugs or logic errors
+                      - Breaking changes or API contract violations
+                      - Missing critical error handling
 
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+                      Refer to CLAUDE.md for project conventions. Keep feedback concise and actionable.
+                      Skip minor style issues (Pint/ESLint will catch those).
 
-            Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
+                      ONLY leave a comment if you find issues. Use `gh pr comment` with your Bash tool.
+                      If the code looks good, exit silently without commenting.
 
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
-          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
-
+                  # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
+                  # or https://code.claude.com/docs/en/cli-reference for available options
+                  claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
