@@ -2,7 +2,7 @@
 
 namespace App\Providers\Filament;
 
-use Coolsam\Modules\ModulesPlugin;
+use App\Filament\ModulesPlugin;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
