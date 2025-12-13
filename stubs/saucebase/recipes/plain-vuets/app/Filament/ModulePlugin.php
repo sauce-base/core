@@ -2,13 +2,12 @@
 
 namespace ___MODULE_NAMESPACE___\___Module___\Filament;
 
-use Coolsam\Modules\Concerns\ModuleFilamentPlugin;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
 class ___Module___Plugin implements Plugin
 {
-    use ModuleFilamentPlugin;
+    use ModulePlugin;
 
     public function getModuleName(): string
     {

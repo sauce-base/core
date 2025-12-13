@@ -116,4 +116,17 @@ return [
     */
 
     'system_route_prefix' => 'filament',
+
+    /*|--------------------------------------------------------------------------
+    | Modules
+    |--------------------------------------------------------------------------
+    | Here you may configure settings for Filament's module system.
+
+    |*/
+    'modules' => [
+        'clusters' => [
+            'enabled' => true,
+            'use-top-navigation' => false,
+        ],
+    ],
 ];
