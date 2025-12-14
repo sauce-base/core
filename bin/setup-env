@@ -403,13 +403,17 @@ fi
 echo "🚀 Starting services..."
 docker compose up -d
 
-# Wait for services to be ready
-echo "⏳ Waiting for services to be ready..."
-sleep 10
+# Wait for services to be healthy
+echo "⏳ Waiting for services to be healthy..."
+docker compose up -d --wait
 
 # Install PHP dependencies
 echo "📦 Installing PHP dependencies..."
-docker compose exec -T workspace composer install
+if ! docker compose exec -T workspace composer install; then
+    echo "❌ Failed to install PHP dependencies!"
+    echo "   Try running manually: docker compose exec workspace composer install"
+    exit 1
+fi
 
 # Generate app key if not exists
 echo "🔑 Generating application key..."
@@ -432,7 +436,44 @@ fi
 
 # Run database migrations and seed
 echo "🗄️  Setting up database..."
-docker compose exec -T workspace php artisan migrate:fresh --seed
+if ! docker compose exec -T workspace php artisan migrate:fresh --seed; then
+    echo "❌ Database migration failed!"
+    echo "   Check database connection and try: docker compose exec workspace php artisan migrate:fresh --seed"
+    exit 1
+fi
+
+# Migrate and seed enabled modules (Roles must be first!)
+echo "📦 Setting up enabled modules..."
+if [ -f "modules_statuses.json" ]; then
+    # Get all enabled modules
+    ENABLED_MODULES=$(grep -o '"[^"]*":\s*true' modules_statuses.json | sed 's/"//g' | sed 's/: true//g')
+
+    # Roles module MUST be processed first (required by Auth and others)
+    if echo "$ENABLED_MODULES" | grep -q "Roles"; then
+        echo "   Migrating module: Roles"
+        docker compose exec -T workspace php artisan module:migrate Roles
+        echo "   Seeding module: Roles"
+        docker compose exec -T workspace php artisan module:seed Roles
+
+        # Remove Roles from list so we don't process it again
+        ENABLED_MODULES=$(echo "$ENABLED_MODULES" | grep -v "Roles")
+    fi
+
+    # Process remaining modules
+    for module in $ENABLED_MODULES; do
+        if [ -d "modules/$module" ]; then
+            echo "   Migrating module: $module"
+            docker compose exec -T workspace php artisan module:migrate $module
+
+            if [ -f "modules/$module/database/seeders/${module}DatabaseSeeder.php" ]; then
+                echo "   Seeding module: $module"
+                docker compose exec -T workspace php artisan module:seed $module
+            fi
+        fi
+    done
+
+    echo "✅ Module setup complete!"
+fi
 
 # Create storage link for media library
 echo "🔗 Creating storage link..."
@@ -444,8 +485,16 @@ docker compose exec -T workspace php artisan optimize:clear
 
 # Build frontend assets
 echo "🎨 Building frontend assets..."
-npm install 
-npm run build
+if ! npm install; then
+    echo "❌ npm install failed!"
+    exit 1
+fi
+
+if ! npm run build; then
+    echo "❌ Frontend build failed!"
+    echo "   Try running: npm run build"
+    exit 1
+fi
 
 # Setup hosts file (only for custom domains, not localhost)
 if [ "$APP_HOST" != "localhost" ]; then
@@ -466,6 +515,44 @@ else
     echo "⏭️  Skipping hosts file setup (using localhost)"
 fi
 
+# Post-setup verification
+echo ""
+echo "🔍 Verifying installation..."
+
+# Check database connection
+echo -n "   Database connection... "
+if docker compose exec -T workspace php artisan migrate:status > /dev/null 2>&1; then
+    echo "✅"
+else
+    echo "❌ Failed!"
+    echo "   Run: docker compose exec workspace php artisan migrate:status"
+fi
+
+# Check application key
+echo -n "   Application key... "
+if grep -q "^APP_KEY=base64:" .env; then
+    echo "✅"
+else
+    echo "❌ Missing or invalid!"
+fi
+
+# Check if Nginx is responding
+echo -n "   Web server... "
+if curl -sk "$APP_URL/health" > /dev/null 2>&1; then
+    echo "✅"
+else
+    echo "⚠️  Not responding yet (may need a moment)"
+fi
+
+# Check if admin user exists
+echo -n "   Admin user... "
+USER_CHECK=$(docker compose exec -T workspace php artisan tinker --execute="echo \App\Models\User::where('email', 'chef@saucebase.dev')->exists() ? 'yes' : 'no';" 2>/dev/null | tail -1)
+if [ "$USER_CHECK" = "yes" ]; then
+    echo "✅"
+else
+    echo "❌ Not created - module seeders may have failed"
+fi
+
 # Final status check
 echo ""
 echo "🎉 Setup complete!"
@@ -473,7 +560,7 @@ echo ""
 echo "📋 Next steps:"
 echo "1. Access your app at: $APP_URL"
 echo "2. Login with admin credentials:"
-echo "   Email: admin@saucebase.dev"
+echo "   Email: chef@saucebase.dev"
 echo "   Password: secretsauce"
 echo "   ⚠️  Change these credentials after first login!"
 echo "3. Start development with: docker compose exec workspace npm run dev"
