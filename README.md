@@ -298,7 +298,7 @@ docker compose down && docker compose up -d
 
 ```bash
 # Wait for services to be ready
-sleep 10
+docker compose up -d --wait
 
 # Run migrations and seed data
 docker compose exec workspace php artisan migrate:fresh --seed
