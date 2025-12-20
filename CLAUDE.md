@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 3, Inertia.js, Laravel, Tailwind CSS 4). It follows a "copy-and-own" philosophy where modules are installable feature packs that live in your repository.
 
 **Tech Stack:**
+
 - Backend: Laravel 12, PHP 8.4+
 - Frontend: Vue 3, TypeScript 5.8, Inertia.js 2.0, Vite 6
 - Styling: Tailwind CSS 4, shadcn-compatible component structure
@@ -17,11 +18,13 @@ Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 
 ## Development Commands
 
 ### Initial Setup
+
 ```bash
 ./bin/setup-env  # Bootstrap: Docker, SSL certs, deps, migrations, seeds
 ```
 
 ### Development Server
+
 ```bash
 # Start Docker services (DB, Redis, Mailpit, etc.)
 docker compose up -d
@@ -50,6 +53,7 @@ docker compose exec workspace php artisan tinker
 ```
 
 ### Frontend
+
 ```bash
 npm run dev          # Vite dev server with hot reload
 npm run build        # Production build (includes SSR: vite build && vite build --ssr)
@@ -57,6 +61,7 @@ npm run build:ssr    # Same as build
 ```
 
 ### Testing
+
 ```bash
 # Backend/unit tests
 composer test             # Runs php artisan test inside Docker
@@ -71,6 +76,7 @@ npm run test:e2e:report   # View test report
 ```
 
 ### Linting & Formatting
+
 ```bash
 # PHP
 vendor/bin/pint          # Format PHP code (Laravel preset)
@@ -113,10 +119,12 @@ modules/<ModuleName>/
 ### Module Management
 
 **Enable/Disable Modules:**
+
 - Edit `modules_statuses.json` (set module name to `true` or `false`)
 - Or use: `docker compose exec workspace php artisan module:enable <ModuleName>`
 
 **Install a Module:**
+
 ```bash
 composer require saucebase/<module-name>
 composer dump-autoload
@@ -126,6 +134,7 @@ npm run build
 ```
 
 **Remove a Module:**
+
 ```bash
 docker compose exec workspace php artisan module:delete <ModuleName>  # NEVER manually rm -rf a module
 ```
@@ -141,26 +150,30 @@ docker compose exec workspace php artisan module:delete <ModuleName>  # NEVER ma
 ### Frontend Integration
 
 **Component Resolution:**
+
 - Core pages: `resources/js/pages/Index.vue` → reference as `Index`
 - Module pages: `modules/Auth/resources/js/pages/Login.vue` → reference as `Auth::Login`
 
 **Module Lifecycle Hooks (in module's `resources/js/app.ts`):**
+
 ```typescript
 export const setup = async (app?: App) => {
-  // Runs before Vue app mounts (e.g., register global components, plugins)
-}
+    // Runs before Vue app mounts (e.g., register global components, plugins)
+};
 
 export const afterMount = async (app?: App) => {
-  // Runs after Vue app mounts (e.g., initialize services, load data)
-}
+    // Runs after Vue app mounts (e.g., initialize services, load data)
+};
 ```
 
 **Pinia Stores:**
+
 - Global stores: `resources/js/stores/` (e.g., `ui.ts`, `localization.ts`)
 - Module stores: `modules/<Module>/resources/js/stores/` (loaded in module setup)
 - Persistence configured via `pinia-plugin-persistedstate`
 
 **i18n:**
+
 - Language files: `lang/<locale>.json` (e.g., `lang/pt_BR.json`)
 - Use `$t('key')` in templates, `trans('key')` in backend
 - All user-facing strings MUST use i18n system
@@ -175,7 +188,9 @@ export const afterMount = async (app?: App) => {
 ## Code Quality Standards
 
 ### Commit Messages
+
 **Enforced via commitlint:**
+
 - Format: `<type>: <subject>` (single line, max 150 chars)
 - Types: `feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert`
 - Example: `feat: add OAuth callback`
@@ -183,18 +198,21 @@ export const afterMount = async (app?: App) => {
 - Subject must be lowercase, not sentence-case
 
 ### PHP Standards
+
 - **Formatter:** Laravel Pint (runs `vendor/bin/pint`)
 - **Static Analysis:** PHPStan level 5 (configured in `phpstan.neon`)
-  - Analyzes `app/` and `modules/`
-  - Ignores `env()` calls in module config files (cached config requirement)
+    - Analyzes `app/` and `modules/`
+    - Ignores `env()` calls in module config files (cached config requirement)
 - **Style:** Follow PSR-12 via Pint's Laravel preset
 
 ### JavaScript/TypeScript Standards
+
 - **Linter:** ESLint 9 with Vue + TypeScript configs
 - **Formatter:** Prettier with Tailwind plugin
 - **Type checking:** TypeScript strict mode via `vue-tsc`
 
 ### Testing Requirements
+
 - **Backend:** PHPUnit tests in `tests/`
 - **E2E:** Playwright tests in `tests/e2e/` (core) and `modules/*/tests/e2e/` (modules)
 - **Test Discovery:** `playwright.config.ts` auto-collects module test configs via `collectModulePlaywrightConfigs()`
@@ -212,28 +230,116 @@ export const afterMount = async (app?: App) => {
 ## Key Architectural Patterns
 
 ### Inertia.js SPA
+
 - SSR enabled (builds client + server bundles)
 - Shared data via `HandleInertiaRequests` middleware
 - Error pages handled via `bootstrap/app.php` exception handler (404, 403, 500, 503 → `Error.vue`)
 
 ### Middleware Stack
+
 - `HandleInertiaRequests`: Shares global props (user, flash messages, etc.)
 - `HandleLocalization`: Sets locale from session/preference
 - Spatie Permission middleware: `role`, `permission`, `role_or_permission`
 
 ### Theme & Persistence
+
 - Dark/light mode via `@vueuse/core` `useColorMode()`
 - Pinia stores persisted to localStorage
 - Tailwind CSS 4 with `@tailwindcss/vite` plugin
 
 ### Vite Configuration
+
 - HTTPS dev server with self-signed certs (`docker/development/ssl/`)
 - Path aliases: `@` → `resources/js/`, `@modules` → `modules/`
 - Icons via `unplugin-icons/vite` (auto-installs from `@iconify/json`)
 
+### Navigation System (Navigation Module)
+
+Saucebase uses a convention-based navigation system.
+
+**Register Navigation (modules):**
+
+Create `modules/<ModuleName>/config/navigation.php`:
+
+```php
+return [
+    'sidebar' => [
+        'app' => [  // Main app navigation
+            [
+                'label' => 'Dashboard',
+                'route' => 'dashboard',
+                'icon' => 'square-terminal',
+                'permission' => 'view.dashboard', // Optional
+            ],
+        ],
+        'settings' => [  // Settings page navigation
+            [
+                'label' => 'General',
+                'route' => 'settings.index',
+                'icon' => 'settings-2',
+            ],
+        ],
+        'user' => [  // User menu (universal)
+            [
+                'label' => 'Profile',
+                'route' => 'profile',
+                'icon' => 'user',
+            ],
+            [
+                'label' => 'Log out',
+                'action' => 'auth.logout',
+                'icon' => 'log-out',
+            ],
+        ],
+    ],
+];
+```
+
+**Nested Items:**
+
+```php
+[
+    'label' => 'Admin',
+    'route' => 'admin.*',
+    'icon' => 'shield',
+    'children' => [
+        ['label' => 'Users', 'route' => 'admin.users', 'icon' => 'users'],
+        ['label' => 'Roles', 'route' => 'admin.roles', 'icon' => 'key'],
+    ],
+]
+```
+
+**Special Types:**
+
+```php
+['type' => 'separator'],  // Visual separator
+['type' => 'label', 'label' => 'Section Title'],  // Section header
+```
+
+**No service provider registration needed!** Config files are auto-loaded by NavigationService.
+
+**Frontend Integration:**
+
+- Navigation data shared via Inertia props: `$page.props.navigation.app`, `$page.props.navigation.settings`, `$page.props.navigation.user`
+- **AppSidebar** component: Main application sidebar (always visible)
+- **SettingsSidebar** component: Settings navigation (only visible in settings pages)
+- **Nested sidebar pattern**: Settings pages show both sidebars side-by-side
+    - Regular pages: `[App Sidebar] [Content]`
+    - Settings pages: `[App Sidebar] [Settings Sidebar] [Content]`
+- Uses shadcn/ui sidebar components with `data-sidebar` attributes for testing
+
+**E2E Testing:**
+
+- Use `[data-sidebar="sidebar"]` to locate sidebar
+- Use `[data-sidebar="menu-button"]` for navigation buttons
+- Use `[data-sidebar="content"]` to scope to content area (exclude header)
+- Active state via `data-active="true"` attribute
+- User menu via `data-testid="user-menu-trigger"`
+
 ## Running Tests Before PRs
 
 **Checklist:**
+
 1. Format code: `npm run format && vendor/bin/pint`
 2. Lint: `npm run lint`
 3. Static analysis: `composer analyse`
@@ -247,27 +353,75 @@ export const afterMount = async (app?: App) => {
 ## Common Tasks
 
 ### Add a New Module Route
+
 1. Add route in `modules/<Module>/routes/web.php`
 2. Reference in controller/view as namespaced route
 3. Frontend page at `modules/<Module>/resources/js/pages/<Page>.vue`
 4. Reference in Inertia: `Inertia::render('ModuleName::Page')`
 
 ### Add a Vue Component
+
 - Core: `resources/js/components/<component>.vue`
 - Module: `modules/<Module>/resources/js/components/<component>.vue`
 - Use lowercase folder names
 
 ### Add Module Assets
+
 1. Create `modules/<Module>/vite.config.js`:
-   ```js
-   export default { paths: ['js/app.ts', 'css/app.css'] }
-   ```
+    ```js
+    export default { paths: ['js/app.ts', 'css/app.css'] };
+    ```
 2. Assets auto-collected by `module-loader.js`
 
 ### Add Pinia Store
+
 - Core store: `resources/js/stores/<name>.ts`
 - Module store: `modules/<Module>/resources/js/stores/<name>.ts`
 - Register in module's `app.ts` setup function
+
+### Add Navigation Items
+
+Create a `config/navigation.php` file in your module:
+
+```php
+// modules/MyModule/config/navigation.php
+return [
+    'sidebar' => [
+        'app' => [
+            [
+                'label' => 'My Feature',
+                'route' => 'my-feature.index',
+                'icon' => 'star',
+                'permission' => 'view.my-feature', // Optional
+            ],
+        ],
+        'settings' => [
+            [
+                'label' => 'My Settings',
+                'route' => 'my-feature.settings',
+                'icon' => 'settings-2',
+            ],
+        ],
+        'user' => [
+            [
+                'label' => 'My Profile',
+                'route' => 'profile.edit',
+                'icon' => 'user',
+            ],
+        ],
+    ],
+];
+```
+
+**Notes:**
+
+- No service provider registration needed - config files are auto-loaded by NavigationService
+- Use lucide icon names for the `icon` parameter
+- Permission checks via Spatie Laravel Permission
+- Add translations to `lang/<locale>.json`
+- `app` items appear in AppSidebar (main navigation)
+- `settings` items appear in SettingsSidebar (settings pages only)
+- `user` items appear in the user menu (universal across all layouts)
 
 ## Security Considerations
 
