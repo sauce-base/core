@@ -8,9 +8,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useLocalizationStore } from '@/stores/localization';
-import { usePage } from '@inertiajs/vue3';
-import { loadLanguageAsync } from 'laravel-vue-i18n';
+import { useLocalization } from '@/composables/useLocalization';
 import { Globe } from 'lucide-vue-next';
 import { computed } from 'vue';
 import IconBR from '~icons/circle-flags/br';
@@ -33,9 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
         'flex items-center rounded-lg p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
 });
 
-const store = useLocalizationStore();
-const page = usePage();
-const locales = computed(() => page.props.locales || {});
+const { language, locales, setLanguage } = useLocalization();
 
 // Icon mapping for different locales
 const iconMap: Record<string, any> = {
@@ -54,8 +50,7 @@ const languages = computed(() => {
 });
 
 const switchLanguage = async (langCode: string) => {
-    await store.setLanguage(langCode);
-    await loadLanguageAsync(langCode);
+    await setLanguage(langCode);
 };
 
 const currentLanguage = computed(() => {
@@ -65,7 +60,7 @@ const currentLanguage = computed(() => {
         return { code: 'en', name: 'English', icon: iconMap.en };
     }
 
-    return langs.find((lang) => lang.code === store.language) || langs[0];
+    return langs.find((lang) => lang.code === language.value) || langs[0];
 });
 </script>
 
@@ -81,16 +76,15 @@ const currentLanguage = computed(() => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" class="min-w-[160px]">
             <DropdownMenuItem
-                v-for="language in languages"
-                :key="language.code"
-                @click="switchLanguage(language.code)"
+                v-for="lang in languages"
+                :key="lang.code"
+                @click="switchLanguage(lang.code)"
                 :class="{
-                    'bg-accent text-accent-foreground':
-                        store.language === language.code,
+                    'bg-accent text-accent-foreground': language === lang.code,
                 }"
             >
-                <component :is="language.icon" class="size-4" />
-                {{ language.name }}
+                <component :is="lang.icon" class="size-4" />
+                {{ lang.name }}
             </DropdownMenuItem>
         </DropdownMenuContent>
     </DropdownMenu>
@@ -107,13 +101,13 @@ const currentLanguage = computed(() => {
         </DropdownMenuSubTrigger>
         <DropdownMenuSubContent>
             <DropdownMenuItem
-                v-for="language in languages"
-                :key="language.code"
-                @click="switchLanguage(language.code)"
-                :class="{ 'bg-accent': store.language === language.code }"
+                v-for="lang in languages"
+                :key="lang.code"
+                @click="switchLanguage(lang.code)"
+                :class="{ 'bg-accent': language === lang.code }"
             >
-                <component :is="language.icon" class="h-4 w-4" />
-                {{ language.name }}
+                <component :is="lang.icon" class="h-4 w-4" />
+                {{ lang.name }}
             </DropdownMenuItem>
         </DropdownMenuSubContent>
     </DropdownMenuSub>

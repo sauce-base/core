@@ -44,7 +44,7 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 
 ### Modern Stack, Zero Compromises
 
-- **Frontend**: Vue 3 Composition API, TypeScript 5.8, Inertia.js 2.0, Tailwind CSS 4, Pinia state management
+- **Frontend**: Vue 3 Composition API, TypeScript 5.8, Inertia.js 2.0, Tailwind CSS 4, VueUse composables
 - **Backend**: Laravel 12, PHP 8.4+, Filament 4 admin panel, Spatie permissions, Laravel Horizon
 - **DX Tools**: PHPStan level 9, Pint formatter, ESLint, Prettier, Playwright E2E tests, Commitlint
 
@@ -120,7 +120,7 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 │       ├── app/          # Module controllers, actions, providers
 │       ├── resources/    # Vue pages/components, CSS, translations
 │       └── routes/       # Module routes (web + api)
-├── resources/js/         # Inertia SPA (layouts, pages, Pinia stores, middleware, UI lib)
+├── resources/js/         # Inertia SPA (layouts, pages, composables, middleware, UI lib)
 ├── database/             # Migrations, factories, seeders (roles & demo users included)
 ├── docker/               # Development Dockerfiles + configs
 └── module-loader.js      # Collects enabled module assets and settings automatically

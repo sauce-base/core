@@ -1,11 +1,10 @@
-import { useLocalizationStore } from '@/stores/localization';
+import { useLocalization } from '@/composables/useLocalization';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { useColorMode } from '@vueuse/core';
 import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { resolveLanguage, resolveModularPageComponent } from './lib/utils';
-import { pinia } from './stores';
 
 import {
     discoverModuleSetups,
@@ -31,7 +30,6 @@ createInertiaApp({
             render: () => h(App, {}, () => h(InertiaApp, props)),
         })
             .use(plugin)
-            .use(pinia)
             .use(ZiggyVue)
             .use(i18nVue, {
                 resolve: resolveLanguage,
@@ -42,9 +40,9 @@ createInertiaApp({
             // Initialize global theme persistence after mount for proper Vue reactivity
             useColorMode();
 
-            const { language } = useLocalizationStore();
-            if (language !== 'en') {
-                loadLanguageAsync(language);
+            const { language } = useLocalization();
+            if (language.value !== 'en') {
+                loadLanguageAsync(language.value);
             }
 
             // Mount the app

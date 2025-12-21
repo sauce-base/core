@@ -12,7 +12,7 @@ Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 
 - Frontend: Vue 3, TypeScript 5.8, Inertia.js 2.0, Vite 6
 - Styling: Tailwind CSS 4, shadcn-compatible component structure
 - Admin: Filament 4
-- State: Pinia with persistence
+- State: Vue Composition API with VueUse composables
 - Testing: PHPUnit (backend), Playwright (E2E)
 
 ## Development Commands
@@ -166,12 +166,6 @@ export const afterMount = async (app?: App) => {
 };
 ```
 
-**Pinia Stores:**
-
-- Global stores: `resources/js/stores/` (e.g., `ui.ts`, `localization.ts`)
-- Module stores: `modules/<Module>/resources/js/stores/` (loaded in module setup)
-- Persistence configured via `pinia-plugin-persistedstate`
-
 **i18n:**
 
 - Language files: `lang/<locale>.json` (e.g., `lang/pt_BR.json`)
@@ -180,7 +174,7 @@ export const afterMount = async (app?: App) => {
 
 ## File Structure Conventions
 
-- **Lowercase folders:** Use `components/`, `pages/`, `layouts/`, `stores/` (not `Components/`, etc.)
+- **Lowercase folders:** Use `components/`, `pages/`, `layouts/`, `composables/` (not `Components/`, etc.)
 - **Vue components:** Single File Components in `.vue` files
 - **Module namespacing:** Controllers in `modules/<Module>/app/Http/Controllers/`
 - **Routes:** Module routes auto-discovered from `modules/<Module>/routes/web.php` and `api.php`
@@ -244,7 +238,7 @@ export const afterMount = async (app?: App) => {
 ### Theme & Persistence
 
 - Dark/light mode via `@vueuse/core` `useColorMode()`
-- Pinia stores persisted to localStorage
+- State management via Vue Composition API with VueUse composables
 - Tailwind CSS 4 with `@tailwindcss/vite` plugin
 
 ### Vite Configuration
@@ -255,68 +249,129 @@ export const afterMount = async (app?: App) => {
 
 ### Navigation System (Navigation Module)
 
-Saucebase uses a convention-based navigation system.
+Saucebase uses Spatie's laravel-navigation package for navigation management. Modules register navigation items in their service providers using a fluent API.
 
-**Register Navigation (modules):**
+**Register Navigation (in module service providers):**
 
-Create `modules/<ModuleName>/config/navigation.php`:
+Add a `registerNavigation()` method to your module's service provider:
 
 ```php
-return [
-    'sidebar' => [
-        'app' => [  // Main app navigation
-            [
+// modules/<ModuleName>/app/Providers/<ModuleName>ServiceProvider.php
+use Modules\Navigation\Services\NavigationRegistry;
+use Spatie\Navigation\Section;
+                'order' => 0,
+
+public function boot(): void
+{
+    // ... other boot logic
+
+    // Register navigation after routes are loaded
+    $this->app->booted(function () {
+        $this->registerNavigation();
+    });
+}
+
+protected function registerNavigation(): void
+{
+    $registry = app(NavigationRegistry::class);
+
+    // Main app navigation
+    $registry->app()
+        ->add('Dashboard', route('dashboard'), function(Section $section) {
+            $section->attributes([
                 'label' => 'Dashboard',
                 'route' => 'dashboard',
                 'icon' => 'square-terminal',
                 'permission' => 'view.dashboard', // Optional
-            ],
-        ],
-        'settings' => [  // Settings page navigation
-            [
+            ]);
+        });
+
+    // Settings navigation
+    $registry->settings()
+        ->add('General', route('settings.index'), function(Section $section) {
+            $section->attributes([
                 'label' => 'General',
                 'route' => 'settings.index',
                 'icon' => 'settings-2',
-            ],
-        ],
-        'user' => [  // User menu (universal)
-            [
+            ]);
+        });
+
+    // User menu
+    $registry->user()
+        ->add('Profile', route('profile'), function(Section $section) {
+            $section->attributes([
                 'label' => 'Profile',
                 'route' => 'profile',
                 'icon' => 'user',
-            ],
-            [
-                'label' => 'Log out',
-                'action' => 'auth.logout',
-                'icon' => 'log-out',
-            ],
-        ],
-    ],
-];
+            ]);
+        });
+}
 ```
 
 **Nested Items:**
 
 ```php
-[
-    'label' => 'Admin',
-    'route' => 'admin.*',
-    'icon' => 'shield',
-    'children' => [
-        ['label' => 'Users', 'route' => 'admin.users', 'icon' => 'users'],
-        ['label' => 'Roles', 'route' => 'admin.roles', 'icon' => 'key'],
-    ],
-]
+$registry->app()
+    ->add('Admin', route('admin'), function(Section $section) {
+        $section
+            ->attributes(['label' => 'Admin', 'icon' => 'shield'])
+            ->add('Users', route('admin.users'))
+            ->add('Roles', route('admin.roles'));
+    });
 ```
 
-**Special Types:**
+**Action Items (no route):**
 
 ```php
-['type' => 'separator'],  // Visual separator
-['type' => 'label', 'label' => 'Section Title'],  // Section header
+$registry->user()
+    ->add('Log out', '#', function(Section $section) {
+        $section->attributes([
+            'label' => 'Log out',
+            'action' => 'auth.logout',
+            'icon' => 'log-out',
+        ]);
+    });
 ```
 
-**No service provider registration needed!** Config files are auto-loaded by NavigationService.
+To handle custom actions, register action handlers in your module's `resources/js/app.ts`:
+
+```typescript
+// modules/<ModuleName>/resources/js/app.ts
+import { registerActionHandler } from '@modules/Navigation/resources/js/utils/actionHandlers';
+import { router } from '@inertiajs/vue3';
+
+export function setup() {
+    // Register custom action handlers
+    registerActionHandler('auth.logout', async (event: MouseEvent) => {
+        event.preventDefault();
+        if (confirm('Are you sure you want to log out?')) {
+            router.post(route('logout'));
+        }
+    });
+}
+```
+
+- Server-side active state detection by Spatie
+- Modules register action handlers in their `app.ts` setup function using `registerActionHandler()`
+
+**Permission Filtering:**
+
+```php
+$registry->app()
+    ->addIf(
+        auth()->check() && auth()->user()->can('manage.roles'),
+        'Roles',
+        route('roles.index'),
+        function(Section $section) {
+            $section->attributes([
+                'label' => 'Roles & Permissions',
+                'route' => 'roles.index',
+                'icon' => 'shield',
+                'permission' => 'manage.roles',
+            ]);
+        }
+    );
+```
 
 **Frontend Integration:**
 
@@ -373,50 +428,69 @@ return [
     ```
 2. Assets auto-collected by `module-loader.js`
 
-### Add Pinia Store
-
-- Core store: `resources/js/stores/<name>.ts`
-- Module store: `modules/<Module>/resources/js/stores/<name>.ts`
-- Register in module's `app.ts` setup function
-
 ### Add Navigation Items
 
-Create a `config/navigation.php` file in your module:
+Add a `registerNavigation()` method to your module's service provider:
 
 ```php
-// modules/MyModule/config/navigation.php
-return [
-    'sidebar' => [
-        'app' => [
-            [
+// modules/MyModule/app/Providers/MyModuleServiceProvider.php
+use Modules\Navigation\Services\NavigationRegistry;
+use Spatie\Navigation\Section;
+
+public function boot(): void
+{
+    // ... other boot logic
+
+    // Register navigation after routes are loaded
+    $this->app->booted(function () {
+        $this->registerNavigation();
+    });
+}
+
+protected function registerNavigation(): void
+{
+    $registry = app(NavigationRegistry::class);
+
+    // Main app navigation
+    $registry->app()
+        ->add('My Feature', route('my-feature.index'), function(Section $section) {
+            $section->attributes([
                 'label' => 'My Feature',
                 'route' => 'my-feature.index',
                 'icon' => 'star',
                 'permission' => 'view.my-feature', // Optional
-            ],
-        ],
-        'settings' => [
-            [
+                'order' => 0,
+            ]);
+        });
+
+- Items without `order` default to 999 (appear last)
+- Lower `order` numbers appear first
+    // Settings navigation
+    $registry->settings()
+        ->add('My Settings', route('my-feature.settings'), function(Section $section) {
+            $section->attributes([
                 'label' => 'My Settings',
                 'route' => 'my-feature.settings',
                 'icon' => 'settings-2',
-            ],
-        ],
-        'user' => [
-            [
+            ]);
+        });
+
+    // User menu
+    $registry->user()
+        ->add('My Profile', route('profile.edit'), function(Section $section) {
+            $section->attributes([
                 'label' => 'My Profile',
                 'route' => 'profile.edit',
                 'icon' => 'user',
-            ],
-        ],
-    ],
-];
+            ]);
+        });
+}
 ```
 
 **Notes:**
 
-- No service provider registration needed - config files are auto-loaded by NavigationService
-- Use lucide icon names for the `icon` parameter
+- Navigation must be registered in `app()->booted()` callback to ensure routes are loaded
+- Use Lucide icon names for the `icon` attribute
 - Permission checks via Spatie Laravel Permission
 - Add translations to `lang/<locale>.json`
 - `app` items appear in AppSidebar (main navigation)

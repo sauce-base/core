@@ -20,9 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
+            HandleLocalization::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
-            HandleLocalization::class,
         ]);
 
         // Register Spatie Permission Middleware
