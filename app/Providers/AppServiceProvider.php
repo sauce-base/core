@@ -73,8 +73,9 @@ class AppServiceProvider extends ServiceProvider
     {
         $registry = app(NavigationRegistry::class);
 
+        // TODO: fix this as the routes are not available yet
         $registry->app()
-            ->add('Dashboard', route('dashboard'), function (Section $section) {
+            ->add('Dashboard', '/dashboard', function (Section $section) {
                 $section->attributes([
                     'label' => 'Dashboard',
                     'route' => 'dashboard',
