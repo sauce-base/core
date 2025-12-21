@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Inertia\Inertia;
 use App\Services\Navigation\NavigationRegistry;
 use App\Services\Navigation\NavigationTransformer;
+use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class NavigationServiceProvider extends ServiceProvider
 {
