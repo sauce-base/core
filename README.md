@@ -298,7 +298,7 @@ docker compose down && docker compose up -d
 
 ```bash
 # Wait for services to be ready
-sleep 10
+docker compose up -d --wait
 
 # Run migrations and seed data
 docker compose exec workspace php artisan migrate:fresh --seed
@@ -462,7 +462,7 @@ mkcert -install
 2. Run `composer dump-autoload`
 3. Clear caches: `docker compose exec workspace php artisan optimize:clear`
 4. Rebuild frontend: `npm run build`
- </details>
+</details>
 
 <details>
 <summary><strong>Frontend build failures</strong></summary>
