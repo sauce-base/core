@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 
-class DashboardController
+class DashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
