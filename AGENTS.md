@@ -11,7 +11,7 @@ Key locations & conventions
 
 - Modules: `modules/<ModuleName>/` — module `app/`, `resources/`, `routes/`, and `composer.json` may exist and get merged.
 - Enable/disable modules: `modules_statuses.json` toggles modules on/off.
-- Frontend: `resources/js/` (layouts, pages, Pinia stores). Frontend folders are lowercase (`components`, `pages`, `layouts`) — follow this convention.
+- Frontend: `resources/js/` (layouts, pages, composables). Frontend folders are lowercase (`components`, `pages`, `layouts`, `composables`) — follow this convention.
 - i18n: Use `$t('key')` for all user-facing strings. Add Portuguese translations to `lang/pt_BR.json` when adding UI text.
 
 Developer workflows (authoritative commands)

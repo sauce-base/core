@@ -71,7 +71,9 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
                 // 'role:admin', // Uncomment this line to restrict access to admin role only [Roles module required]
             ])
-            ->plugin(ModulesPlugin::make())
+            ->plugins([
+                ModulesPlugin::make(),
+            ])
             ->default();
     }
 }
