@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Navigation\NavigationRegistry;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Navigation\Section;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureSecureUrls();
+
+        // Register navigation after routes are loaded
+        $this->app->booted(function () {
+            $this->registerNavigation();
+        });
     }
 
     protected function configureSecureUrls()
@@ -57,5 +64,23 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             });
         }
+    }
+
+    /**
+     * Register navigation items for core features.
+     */
+    protected function registerNavigation(): void
+    {
+        $registry = app(NavigationRegistry::class);
+
+        $registry->app()
+            ->add('Dashboard', route('dashboard'), function (Section $section) {
+                $section->attributes([
+                    'label' => 'Dashboard',
+                    'route' => 'dashboard',
+                    'icon' => 'square-terminal',
+                    'order' => 0,
+                ]);
+            });
     }
 }

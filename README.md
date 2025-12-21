@@ -25,7 +25,7 @@
 
 Saucebase is a **Laravel SaaS starter kit** that lets you own your code. Built on the **VILT stack** (Vue 3, Inertia.js, Laravel, Tailwind CSS), it follows the **copy-and-own philosophy** pioneered by shadcn/ui—install feature modules directly into your repository, customize freely, and never worry about upstream breaking changes.
 
-Start with a minimal, production-ready core. Add pre-built modules (Auth, Roles, Dashboard, Settings) with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices.
+Start with a minimal, production-ready core. Add pre-built modules with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices.
 
 ---
 
@@ -40,7 +40,7 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 - **Docker-first**: One command (`./bin/setup-env`) launches MySQL, Redis, Mailpit, SSL certs, migrations, and seeds
 - **Hot reload**: Vite dev server with instant HMR for Vue/TypeScript/CSS changes
 - **Type-safe routes**: Ziggy generates TypeScript route helpers from Laravel routes
-- **Pre-configured modules**: Auth, Roles, Dashboard, Settings, Navigation ready to install
+- **Pre-configured modules**: Auth and Settings ready to install
 
 ### Modern Stack, Zero Compromises
 
@@ -115,7 +115,7 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ```
 ├── app/                  # Core Laravel application (service providers, models, listeners)
-├── modules/              # Feature modules (Auth, Roles, Dashboard, Settings, Navigation)
+├── modules/              # Feature modules (Auth, Settings)
 │   └── <ModuleName>/
 │       ├── app/          # Module controllers, actions, providers
 │       ├── resources/    # Vue pages/components, CSS, translations
@@ -134,13 +134,10 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ## 📦 Modules to be installed
 
-| Module         | Highlights                                                                                                       |
-| -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Roles**      | Role management with Spatie permissions integration. [View module →](https://github.com/sauce-base/roles)        |
-| **Auth**       | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
-| **Dashboard**  | Dashboard basic structure [View module →](https://github.com/sauce-base/dashboard)                               |
-| **Navigation** | Navigation module for managing menus and links [View module →](https://github.com/sauce-base/navigation)         |
-| **Settings**   | Settings management module [View module →](https://github.com/sauce-base/settings)                               |
+| Module       | Highlights                                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Auth**     | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+| **Settings** | Settings management module [View module →](https://github.com/sauce-base/settings)                               |
 
 ### Copy-and-Own Philosophy
 
@@ -165,7 +162,7 @@ The script checks prerequisites, generates SSL certificates (if mkcert is availa
 
 Once installation completes, visit **https://localhost** to see your application.
 
-> **Note**: The core installation doesn't include authentication or admin panel. Install the [Auth](https://github.com/sauce-base/auth) and [Roles](https://github.com/sauce-base/roles) modules to access the Filament Admin at https://localhost/admin
+> **Note**: The core installation doesn't include authentication or admin panel. Install the [Auth](https://github.com/sauce-base/auth) module to access the Filament Admin at https://localhost/admin
 
 ### 3. Start Development
 
@@ -180,9 +177,6 @@ Starts the Vite dev server with hot module replacement. Edit Vue components in `
 Saucebase ships with a minimal core. Add features by installing modules:
 
 - **[Auth](https://github.com/sauce-base/auth)** - Authentication with social login (Google, GitHub)
-- **[Roles](https://github.com/sauce-base/roles)** - Role & permission management
-- **[Dashboard](https://github.com/sauce-base/dashboard)** - Dashboard structure
-- **[Navigation](https://github.com/sauce-base/navigation)** - Menu & link management
 - **[Settings](https://github.com/sauce-base/settings)** - Settings management
 
 Each module's README contains installation and configuration instructions.
@@ -331,9 +325,6 @@ docker compose exec workspace php artisan module:seed Auth
 **Available Modules:**
 
 - [**Auth**](https://github.com/sauce-base/auth) - Authentication with social login
-- [**Roles**](https://github.com/sauce-base/roles) - Role management with Spatie permissions
-- [**Dashboard**](https://github.com/sauce-base/dashboard) - Dashboard structure
-- [**Navigation**](https://github.com/sauce-base/navigation) - Menu and link management
 - [**Settings**](https://github.com/sauce-base/settings) - Settings management
 
 #### 9. Install Frontend Dependencies
@@ -352,7 +343,7 @@ For development with hot reload, use `npm run dev` instead of `npm run build`.
 
 Access your application at **`https://localhost`** or **`http://localhost`**
 
-> **Note**: To access the Filament Admin panel at `https://localhost/admin`, install the [Auth](https://github.com/sauce-base/auth) and [Roles](https://github.com/sauce-base/roles) modules. After installation, default credentials are `chef@saucebase.dev` / `secretsauce`.
+> **Note**: To access the Filament Admin panel at `https://localhost/admin`, install the [Auth](https://github.com/sauce-base/auth) module. After installation, default credentials are `chef@saucebase.dev` / `secretsauce`.
 
 **Health checks:**
 
@@ -462,7 +453,7 @@ mkcert -install
 2. Run `composer dump-autoload`
 3. Clear caches: `docker compose exec workspace php artisan optimize:clear`
 4. Rebuild frontend: `npm run build`
-</details>
+ </details>
 
 <details>
 <summary><strong>Frontend build failures</strong></summary>

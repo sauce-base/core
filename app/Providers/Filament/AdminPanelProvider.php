@@ -69,7 +69,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                // 'role:admin', // Uncomment this line to restrict access to admin role only [Roles module required]
+                'role:admin',
             ])
             ->plugins([
                 ModulesPlugin::make(),

@@ -3,18 +3,22 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Role;
+use App\Observers\UserObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-// use Modules\Roles\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
 
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements HasMedia
     // , MustVerifyEmail
 {
     use HasFactory,
-        // HasRoles,
+        HasRoles,
         InteractsWithMedia,
         Notifiable;
 
@@ -92,5 +96,25 @@ class User extends Authenticatable implements HasMedia
 
         // Final fallback: Default avatar
         return asset('images/default-avatar.jpg');
+    }
+
+    /**
+     * Check if user is an administrator
+     *
+     * @return bool True if the user has admin role
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole(Role::ADMIN);
+    }
+
+    /**
+     * Check if user is a regular user
+     *
+     * @return bool True if the user has user role
+     */
+    public function isUser(): bool
+    {
+        return $this->hasRole(Role::USER);
     }
 }

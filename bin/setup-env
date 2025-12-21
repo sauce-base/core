@@ -442,37 +442,11 @@ if ! docker compose exec -T workspace php artisan migrate:fresh --seed; then
     exit 1
 fi
 
-# Migrate and seed enabled modules (Roles must be first!)
+# Migrate and seed enabled modules
 echo "📦 Setting up enabled modules..."
-if [ -f "modules_statuses.json" ]; then
-    # Get all enabled modules
-    ENABLED_MODULES=$(grep -o '"[^"]*":\s*true' modules_statuses.json | sed 's/"//g' | sed 's/: true//g')
-
-    # Roles module MUST be processed first (required by Auth and others)
-    if echo "$ENABLED_MODULES" | grep -q "Roles"; then
-        echo "   Migrating module: Roles"
-        docker compose exec -T workspace php artisan module:migrate Roles
-        echo "   Seeding module: Roles"
-        docker compose exec -T workspace php artisan module:seed Roles
-
-        # Remove Roles from list so we don't process it again
-        ENABLED_MODULES=$(echo "$ENABLED_MODULES" | grep -v "Roles")
-    fi
-
-    # Process remaining modules
-    for module in $ENABLED_MODULES; do
-        if [ -d "modules/$module" ]; then
-            echo "   Migrating module: $module"
-            docker compose exec -T workspace php artisan module:migrate $module
-
-            if [ -f "modules/$module/database/seeders/${module}DatabaseSeeder.php" ]; then
-                echo "   Seeding module: $module"
-                docker compose exec -T workspace php artisan module:seed $module
-            fi
-        fi
-    done
-
-    echo "✅ Module setup complete!"
+if ! docker compose exec -T workspace php artisan module:migrate --all --seed; then
+    echo "❌ Module migrations failed!"
+    exit 1
 fi
 
 # Create storage link for media library
