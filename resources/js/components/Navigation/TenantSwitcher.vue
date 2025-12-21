@@ -12,7 +12,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { markRaw, ref } from 'vue';
+import { computed, markRaw, ref } from 'vue';
 
 import {
     SidebarMenu,
@@ -21,16 +21,32 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 
-const { isMobile } = useSidebar();
-const tenants = [
-    {
-        name: 'Sauce Base',
-        logo: markRaw(ApplicationLogo),
-        plan: 'SaaS',
-    },
-];
+interface Tenant {
+    name: string;
+    logo?: any;
+    plan?: string;
+}
 
-const activeTenant = ref(tenants[0]);
+const props = defineProps<{
+    tenants?: Tenant[];
+}>();
+
+const { isMobile } = useSidebar();
+
+// Use tenants from props if provided, otherwise use default
+const tenants = computed(() => {
+    return (
+        props.tenants || [
+            {
+                name: 'Sauce Base',
+                logo: markRaw(ApplicationLogo),
+                plan: 'SaaS',
+            },
+        ]
+    );
+});
+
+const activeTenant = ref(tenants.value[0]);
 </script>
 
 <template>

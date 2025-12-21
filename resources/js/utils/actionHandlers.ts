@@ -52,6 +52,7 @@ export function handleAction(actionId: string, event: MouseEvent): void {
  * Register a custom action handler.
  *
  * Allows modules to register additional action handlers at runtime.
+ * If a handler is already registered, it will be overwritten.
  *
  * @param actionId - The action ID
  * @param handler - The handler function
@@ -61,7 +62,9 @@ export function registerActionHandler(
     handler: ActionHandler,
 ): void {
     if (actionHandlers[actionId]) {
-        console.warn(`Action handler already registered for: ${actionId}`);
+        console.warn(
+            `Action handler for '${actionId}' already exists and will be overwritten.`,
+        );
     }
 
     actionHandlers[actionId] = handler;

@@ -16,13 +16,27 @@ class NavigationServiceProvider extends ServiceProvider
     {
         // Share navigation data with Inertia
         Inertia::share([
-            'navigation' => fn () => [
-                'app' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->app()->tree()),
-                'settings' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->settings()->tree()),
-                'user' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->user()->tree()),
-            ],
+            'navigation' => fn () => $this->getNavigationTrees(),
             'breadcrumbs' => fn () => $this->getBreadcrumbs(),
         ]);
+    }
+
+    /**
+     * Get navigation trees with caching for performance.
+     */
+    protected function getNavigationTrees(): array
+    {
+        // Cache navigation trees per request to avoid rebuilding multiple times
+        return once(function () {
+            $transformer = app(NavigationTransformer::class);
+            $registry = app(NavigationRegistry::class);
+
+            return [
+                'app' => $transformer->transform($registry->app()->tree()),
+                'settings' => $transformer->transform($registry->settings()->tree()),
+                'user' => $transformer->transform($registry->user()->tree()),
+            ];
+        });
     }
 
     /**
@@ -40,8 +54,17 @@ class NavigationServiceProvider extends ServiceProvider
                     'url' => $item['url'],
                 ];
             }, $breadcrumbs);
+        } catch (\Spatie\Navigation\Exceptions\CouldNotDetermineBreadcrumbs $e) {
+            // Page not in navigation - this is expected for pages without breadcrumbs
+            return [];
         } catch (\Exception $e) {
-            return []; // Page not in navigation
+            // Log unexpected errors for debugging
+            logger()->warning('Failed to generate breadcrumbs', [
+                'error' => $e->getMessage(),
+                'url' => request()->url(),
+            ]);
+
+            return [];
         }
     }
 

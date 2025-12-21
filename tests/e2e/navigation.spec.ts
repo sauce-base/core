@@ -90,8 +90,9 @@ test.describe('Navigation Module', () => {
             await expect(userMenuTrigger).toBeVisible();
             await userMenuTrigger.click();
 
-            // Wait for dropdown to open
-            await page.waitForTimeout(300);
+            // Wait for dropdown menu to be visible
+            const dropdownMenu = page.locator('[role="menu"]');
+            await expect(dropdownMenu).toBeVisible();
 
             // Check that user email is displayed in the dropdown content (not the trigger)
             const dropdownEmail = page
@@ -104,7 +105,6 @@ test.describe('Navigation Module', () => {
             // Open user menu
             const userMenuTrigger = page.getByTestId('user-menu-trigger');
             await userMenuTrigger.click();
-            await page.waitForTimeout(300);
 
             // Settings link should be in dropdown
             const settingsLink = page.getByRole('menuitem', {
@@ -117,7 +117,6 @@ test.describe('Navigation Module', () => {
             // Open user menu
             const userMenuTrigger = page.getByTestId('user-menu-trigger');
             await userMenuTrigger.click();
-            await page.waitForTimeout(300);
 
             // Click logout
             const logoutButton = page.getByRole('menuitem', {
@@ -160,11 +159,11 @@ test.describe('Navigation Module', () => {
             // Navigate to settings via user menu
             const userMenuTrigger = page.getByTestId('user-menu-trigger');
             await userMenuTrigger.click();
-            await page.waitForTimeout(300);
 
             const settingsLink = page.getByRole('menuitem', {
                 name: /settings/i,
             });
+            await expect(settingsLink).toBeVisible();
             await settingsLink.click();
 
             // Wait for navigation
