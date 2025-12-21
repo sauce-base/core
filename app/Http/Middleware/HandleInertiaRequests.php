@@ -14,8 +14,6 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
-            // add shared props here
-        ]);
+        return parent::share($request);
     }
 }
