@@ -9,8 +9,8 @@ async function createConfig() {
     return defineConfig({
         server: {
             https: {
-                key: fs.readFileSync('docker/development/ssl/app.key.pem'),
-                cert: fs.readFileSync('docker/development/ssl/app.pem'),
+                key: fs.readFileSync('docker/ssl/app.key.pem'),
+                cert: fs.readFileSync('docker/ssl/app.pem'),
             },
         },
         plugins: [

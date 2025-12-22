@@ -1,4 +1,4 @@
-FROM php:8.4-cli-alpine
+FROM php:8.4-fpm-alpine
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     unzip \
     bash \
     nodejs \
-    npm
+    npm \
+    supervisor
 
 # Install PHP extensions
 RUN docker-php-ext-install \
@@ -37,10 +38,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Configure Git to trust the mounted volume directory
 RUN git config --global --add safe.directory /var/www
 
-# PHP configuration files will be mounted as volumes in docker-compose.yml
-
 # Set working directory
 WORKDIR /var/www
 
-# Keep container running
-CMD ["tail", "-f", "/dev/null"]
+# Expose PHP-FPM port
+EXPOSE 9000
+
+# Default command (can be overridden in docker-compose.yml)
+CMD ["php-fpm"]

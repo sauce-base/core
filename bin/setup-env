@@ -192,7 +192,7 @@ echo "• Application caches and compiled assets"
 echo "• Frontend node_modules (will be reinstalled)"
 echo ""
 echo "The following will be CREATED/UPDATED:"
-echo "• SSL certificates (if not present)"
+echo "• SSL certificates (if mkcert available)"
 echo "• Fresh database with seed data"
 echo ""
 read -p "Do you want to continue? (y/N): " -n 1 -r
@@ -261,71 +261,28 @@ else
     fi
 fi
 
-# Configure application host
-echo "🌐 Application Host Configuration"
-echo "================================="
+# Configure application with SSL (simplified)
+echo "🌐 Application Configuration"
+echo "============================"
 echo ""
-echo "Choose your application host:"
-echo "1. localhost (default - with SSL)"
-echo "2. Custom domain"
-echo ""
-read -p "Enter your choice (1-2) [1]: " -r HOST_CHOICE
 
-case "${HOST_CHOICE:-1}" in
-    1)
-        APP_HOST="localhost"
-        read -p "Enable SSL for localhost? (Y/n): " -n 1 -r
-        echo ""
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            USE_SSL=false
-            echo "✅ Using localhost (HTTP only - http://localhost)"
-        else
-            USE_SSL=true
-            echo "✅ Using localhost with SSL (https://localhost)"
-        fi
-        ;;
-    2)
-        read -p "Enter custom domain: " -r CUSTOM_HOST
-        if [ -z "$CUSTOM_HOST" ]; then
-            echo "❌ No domain entered, using localhost as fallback"
-            APP_HOST="localhost"
-            USE_SSL=true
-            echo "✅ Using localhost with SSL (fallback)"
-        else
-            APP_HOST="$CUSTOM_HOST"
-            read -p "Enable SSL for $CUSTOM_HOST? (Y/n): " -n 1 -r
-            echo ""
-            if [[ $REPLY =~ ^[Nn]$ ]]; then
-                USE_SSL=false
-                echo "✅ SSL disabled for $APP_HOST"
-            else
-                USE_SSL=true
-                echo "✅ SSL enabled for $APP_HOST"
-                echo ""
-                echo "⚠️  Custom Domain SSL Notice:"
-                echo "If your browser shows a security warning, click 'Advanced'"
-                echo "then 'Proceed to $APP_HOST' to access the application."
-                echo ""
-            fi
-        fi
-        ;;
-    *)
-        echo "❌ Invalid choice, using localhost with SSL as default"
-        APP_HOST="localhost"
-        USE_SSL=true
-        ;;
-esac
+# Default to localhost with SSL
+APP_HOST="localhost"
 
-# Update .env file with chosen host
-echo ""
-echo "📝 Updating .env configuration..."
-if [ "$USE_SSL" = true ]; then
-    APP_URL="https://$APP_HOST"
+# Check if mkcert is available
+if command -v mkcert > /dev/null 2>&1; then
+    APP_URL="https://localhost"
+    USE_SSL=true
+    echo "✅ Using HTTPS (mkcert available)"
 else
-    APP_URL="http://$APP_HOST"
+    APP_URL="http://localhost"
+    USE_SSL=false
+    echo "⚠️  Using HTTP (mkcert not installed)"
+    echo "   Install mkcert for HTTPS: brew install mkcert && mkcert -install"
 fi
 
-# Update APP_HOST and APP_URL in .env file
+# Update .env file
+echo "📝 Updating .env configuration..."
 sed -i.bak "s|^APP_HOST=.*|APP_HOST=$APP_HOST|" .env
 sed -i.bak "s|^APP_URL=.*|APP_URL=$APP_URL|" .env
 rm -f .env.bak
@@ -343,50 +300,38 @@ docker compose down --remove-orphans
 echo "🗑️  Removing volumes for clean reset..."
 docker compose down -v
 
-# Setup SSL certificates (only if SSL is enabled) - MUST BE BEFORE npm build
+# Setup SSL certificates (simplified)
 if [ "$USE_SSL" = true ]; then
     echo "🔒 Setting up SSL certificates..."
-    # Always regenerate certificates for custom domains, or if certificates don't exist
-    if [ ! -f "docker/development/ssl/app.pem" ] || [ ! -f "docker/development/ssl/app.key.pem" ] || [ "$APP_HOST" != "localhost" ]; then
-        echo "🔧 Generating SSL certificates..."
-        
-        # Check if mkcert is installed
-        if ! command -v mkcert > /dev/null 2>&1; then
-            echo "❌ mkcert is not installed!"
-            echo ""
-            echo "Please install mkcert first:"
-            echo "• macOS: brew install mkcert"
-            echo "• Windows: choco install mkcert"
-            echo "• Linux: see https://github.com/FiloSottile/mkcert#installation"
-            echo ""
-            echo "Then run: mkcert -install"
-            echo "And re-run this setup script."
-            exit 1
-        fi
-        
-        # Ensure SSL directory exists
-        mkdir -p docker/development/ssl
-        
-        # Install mkcert CA to system trust store (reduces browser warnings)
-        echo "🔧 Installing mkcert CA in system trust store..."
+
+    # Create SSL directory if it doesn't exist
+    mkdir -p docker/ssl
+
+    # Generate certificates if they don't exist
+    if [ ! -f "docker/ssl/app.pem" ] || [ ! -f "docker/ssl/app.key.pem" ]; then
+        echo "🔧 Generating SSL certificates (with wildcard for multi-tenancy)..."
+
+        # Install CA to system trust store
         mkcert -install
-        
-        # Generate SSL certificates
-        cd docker/development/ssl
-        mkcert -key-file app.key.pem -cert-file app.pem $APP_HOST *.$APP_HOST localhost 127.0.0.1 ::1
-        cd ../../..
-        
-        echo "✅ SSL certificates generated successfully for $APP_HOST!"
+
+        # Generate certificates with wildcard support in docker/ssl directory
+        cd docker/ssl
+        mkcert -key-file app.key.pem -cert-file app.pem "*.localhost" localhost 127.0.0.1 ::1
+        cd ../..
+
+        echo "✅ SSL certificates generated!"
+        echo "   ✅ Supports: https://localhost"
+        echo "   ✅ Supports: https://*.localhost (multi-tenancy)"
     else
-        echo "✅ SSL certificates already exist!"
+        echo "✅ SSL certificates already exist"
     fi
 else
-    echo "⏭️  Skipping SSL setup (HTTP mode selected)"
-    echo "⚠️  Note: Creating placeholder SSL files for Vite config compatibility..."
-    mkdir -p docker/development/ssl
-    touch docker/development/ssl/app.key.pem
-    touch docker/development/ssl/app.pem
+    echo "⏭️  Skipping SSL setup (mkcert not available)"
+    echo "💡 Install mkcert: brew install mkcert && mkcert -install"
+    echo "💡 Or use ngrok for HTTPS: ngrok http 80"
 fi
+
+echo ""
 
 # Pull latest images and build containers (if forced)
 if [ "$FORCE_BUILD" = true ]; then
@@ -409,9 +354,9 @@ docker compose up -d --wait
 
 # Install PHP dependencies
 echo "📦 Installing PHP dependencies..."
-if ! docker compose exec -T workspace composer install; then
+if ! docker compose exec -T app composer install; then
     echo "❌ Failed to install PHP dependencies!"
-    echo "   Try running manually: docker compose exec workspace composer install"
+    echo "   Try running manually: docker compose exec app composer install"
     exit 1
 fi
 
@@ -420,13 +365,13 @@ echo "🔑 Generating application key..."
 APP_KEY_VALUE=$(grep "^APP_KEY=" .env 2>/dev/null | cut -d'=' -f2 | tr -d ' ')
 if [ -z "$APP_KEY_VALUE" ] || [ "$APP_KEY_VALUE" = "" ]; then
     echo "📝 Generating new application key..."
-    docker compose exec -T workspace php artisan key:generate
-    
+    docker compose exec -T app php artisan key:generate
+
     # Restart containers to reload environment variables with new APP_KEY
     echo "🔄 Restarting containers to reload environment variables..."
     docker compose down
     docker compose up -d
-    
+
     # Wait for services to be ready again
     echo "⏳ Waiting for services to be ready..."
     sleep 10
@@ -436,26 +381,26 @@ fi
 
 # Run database migrations and seed
 echo "🗄️  Setting up database..."
-if ! docker compose exec -T workspace php artisan migrate:fresh --seed; then
+if ! docker compose exec -T app php artisan migrate:fresh --seed; then
     echo "❌ Database migration failed!"
-    echo "   Check database connection and try: docker compose exec workspace php artisan migrate:fresh --seed"
+    echo "   Check database connection and try: docker compose exec app php artisan migrate:fresh --seed"
     exit 1
 fi
 
 # Migrate and seed enabled modules
 echo "📦 Setting up enabled modules..."
-if ! docker compose exec -T workspace php artisan module:migrate --all --seed; then
+if ! docker compose exec -T app php artisan module:migrate --all --seed; then
     echo "❌ Module migrations failed!"
     exit 1
 fi
 
 # Create storage link for media library
 echo "🔗 Creating storage link..."
-docker compose exec -T workspace php artisan storage:link
+docker compose exec -T app php artisan storage:link
 
 # Clear all caches
 echo "🧹 Clearing caches..."
-docker compose exec -T workspace php artisan optimize:clear
+docker compose exec -T app php artisan optimize:clear
 
 # Build frontend assets
 echo "🎨 Building frontend assets..."
@@ -470,24 +415,7 @@ if ! npm run build; then
     exit 1
 fi
 
-# Setup hosts file (only for custom domains, not localhost)
-if [ "$APP_HOST" != "localhost" ]; then
-    echo "🌐 Setting up hosts file..."
-    if ! grep -q "$APP_HOST" /etc/hosts 2>/dev/null; then
-        echo "🔧 Adding domain to hosts file..."
-        echo "127.0.0.1 $APP_HOST" | sudo tee -a /etc/hosts > /dev/null
-        if [ $? -eq 0 ]; then
-            echo "✅ Domain added to hosts file successfully!"
-        else
-            echo "⚠️  Failed to add domain to hosts file. Please add manually:"
-            echo "127.0.0.1 $APP_HOST"
-        fi
-    else
-        echo "✅ Domain already configured in hosts file!"
-    fi
-else
-    echo "⏭️  Skipping hosts file setup (using localhost)"
-fi
+# No hosts file setup needed (using localhost)
 
 # Post-setup verification
 echo ""
@@ -495,11 +423,11 @@ echo "🔍 Verifying installation..."
 
 # Check database connection
 echo -n "   Database connection... "
-if docker compose exec -T workspace php artisan migrate:status > /dev/null 2>&1; then
+if docker compose exec -T app php artisan migrate:status > /dev/null 2>&1; then
     echo "✅"
 else
     echo "❌ Failed!"
-    echo "   Run: docker compose exec workspace php artisan migrate:status"
+    echo "   Run: docker compose exec app php artisan migrate:status"
 fi
 
 # Check application key
@@ -520,7 +448,7 @@ fi
 
 # Check if admin user exists
 echo -n "   Admin user... "
-USER_CHECK=$(docker compose exec -T workspace php artisan tinker --execute="echo \App\Models\User::where('email', 'chef@saucebase.dev')->exists() ? 'yes' : 'no';" 2>/dev/null | tail -1)
+USER_CHECK=$(docker compose exec -T app php artisan tinker --execute="echo \App\Models\User::where('email', 'chef@saucebase.dev')->exists() ? 'yes' : 'no';" 2>/dev/null | tail -1)
 if [ "$USER_CHECK" = "yes" ]; then
     echo "✅"
 else
@@ -537,13 +465,14 @@ echo "2. Login with admin credentials:"
 echo "   Email: chef@saucebase.dev"
 echo "   Password: secretsauce"
 echo "   ⚠️  Change these credentials after first login!"
-echo "3. Start development with: docker compose exec workspace npm run dev"
-echo "4. Monitor queues with: docker compose exec workspace php artisan horizon"
+echo "3. Start development with: npm run dev"
+echo "4. Monitor queues with: docker compose exec app php artisan horizon"
 echo ""
 echo "🔧 Useful commands:"
-echo "• Run tests: docker compose exec workspace composer test"
-echo "• Run E2E tests: docker compose exec workspace npm run test:e2e"
-echo "• Format code: docker compose exec workspace ./vendor/bin/pint"
-echo "• Lint frontend: docker compose exec workspace npm run lint"
+echo "• Run artisan: docker compose exec app php artisan <command>"
+echo "• Run tests: docker compose exec app php artisan test"
+echo "• Run E2E tests: npm run test:e2e"
+echo "• Format code: vendor/bin/pint"
+echo "• Lint frontend: npm run lint"
 echo ""
 echo "✅ Development environment is ready!"

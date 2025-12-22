@@ -20,36 +20,42 @@ Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 
 ### Initial Setup
 
 ```bash
-./bin/setup-env  # Bootstrap: Docker, SSL certs, deps, migrations, seeds
+./bin/setup-env  # Bootstrap: Docker, SSL certs (if mkcert installed), deps, migrations, seeds
 ```
+
+**SSL Setup:**
+
+- If `mkcert` is installed, setup automatically generates HTTPS certificates
+- Install with: `brew install mkcert && mkcert -install` (macOS)
+- Without mkcert, app runs on HTTP
 
 ### Development Server
 
 ```bash
-# Start Docker services (DB, Redis, Mailpit, etc.)
+# Start Docker services (app, nginx, mysql, redis, mailpit)
 docker compose up -d
 
 # Start Vite dev server (frontend hot reload)
 npm run dev
 
-# Start full-stack dev environment (server, queue, logs, vite) inside Docker workspace
-docker compose exec workspace composer dev
+# Start full-stack dev environment (server, queue, logs, vite) inside Docker
+docker compose exec app composer dev
 ```
 
 ### Backend
 
-**IMPORTANT:** This project runs in Docker. ALL `php artisan` commands MUST be prefixed with `docker compose exec workspace`, otherwise they will fail.
+**IMPORTANT:** This project runs in Docker. ALL `php artisan` commands MUST be prefixed with `docker compose exec app`, otherwise they will fail.
 
 ```bash
-# Run artisan commands inside Docker workspace
-docker compose exec workspace php artisan <command>
+# Run artisan commands inside Docker
+docker compose exec app php artisan <command>
 
-# Common artisan commands (all require docker compose exec workspace prefix)
-docker compose exec workspace php artisan migrate
-docker compose exec workspace php artisan db:seed
-docker compose exec workspace php artisan queue:work
-docker compose exec workspace php artisan pail  # Log viewer
-docker compose exec workspace php artisan tinker
+# Common artisan commands (all require docker compose exec app prefix)
+docker compose exec app php artisan migrate
+docker compose exec app php artisan db:seed
+docker compose exec app php artisan queue:work
+docker compose exec app php artisan pail  # Log viewer
+docker compose exec app php artisan tinker
 ```
 
 ### Frontend
@@ -65,7 +71,7 @@ npm run build:ssr    # Same as build
 ```bash
 # Backend/unit tests
 composer test             # Runs php artisan test inside Docker
-docker compose exec workspace php artisan test
+docker compose exec app php artisan test
 
 # E2E tests (Playwright)
 npm run test              # Run all E2E tests
@@ -121,22 +127,22 @@ modules/<ModuleName>/
 **Enable/Disable Modules:**
 
 - Edit `modules_statuses.json` (set module name to `true` or `false`)
-- Or use: `docker compose exec workspace php artisan module:enable <ModuleName>`
+- Or use: `docker compose exec app php artisan module:enable <ModuleName>`
 
 **Install a Module:**
 
 ```bash
 composer require saucebase/<module-name>
 composer dump-autoload
-docker compose exec workspace php artisan module:enable <ModuleName>
-docker compose exec workspace php artisan module:migrate <ModuleName>
+docker compose exec app php artisan module:enable <ModuleName>
+docker compose exec app php artisan module:migrate <ModuleName>
 npm run build
 ```
 
 **Remove a Module:**
 
 ```bash
-docker compose exec workspace php artisan module:delete <ModuleName>  # NEVER manually rm -rf a module
+docker compose exec app php artisan module:delete <ModuleName>  # NEVER manually rm -rf a module
 ```
 
 ### How Modules Work
@@ -213,13 +219,14 @@ export const afterMount = async (app?: App) => {
 
 ## Important Constraints
 
-1. **Docker environment:** ALL `php artisan` commands MUST be prefixed with `docker compose exec workspace` - running artisan commands directly will fail
+1. **Docker environment:** ALL `php artisan` commands MUST be prefixed with `docker compose exec app` - running artisan commands directly will fail
 2. **Never commit secrets:** All sensitive config goes in `.env` (gitignored)
 3. **Single-line commits:** Body and footer rejected by commitlint
-4. **No manual module deletion:** Use `docker compose exec workspace php artisan module:delete <ModuleName>`
+4. **No manual module deletion:** Use `docker compose exec app php artisan module:delete <ModuleName>`
 5. **Portuguese translations required:** Add to `lang/pt_BR.json` when adding UI text
 6. **Module status updates:** Update `modules_statuses.json` when enabling/disabling modules
 7. **Directory naming:** Use lowercase for component folders (follow existing convention)
+8. **Xdebug enabled by default:** For active development. Disable with `XDEBUG_MODE=off` in `.env` if needed for performance
 
 ## Key Architectural Patterns
 
@@ -243,9 +250,153 @@ export const afterMount = async (app?: App) => {
 
 ### Vite Configuration
 
-- HTTPS dev server with self-signed certs (`docker/development/ssl/`)
+- HTTPS dev server with mkcert certificates (`docker/ssl/`)
 - Path aliases: `@` → `resources/js/`, `@modules` → `modules/`
 - Icons via `unplugin-icons/vite` (auto-installs from `@iconify/json`)
+
+### Xdebug Configuration
+
+**Xdebug is enabled by default** for active development:
+
+- **Mode:** `debug` (enabled)
+- **Port:** `9003`
+- **IDE Key:** `VSCODE`
+- **Client:** `host.docker.internal:9003`
+
+**VS Code Setup:**
+
+1. Install PHP Debug extension
+2. Add to `.vscode/launch.json`:
+    ```json
+    {
+        "name": "Listen for Xdebug",
+        "type": "php",
+        "request": "launch",
+        "port": 9003,
+        "pathMappings": {
+            "/var/www": "${workspaceFolder}"
+        }
+    }
+    ```
+3. Set breakpoints and press F5
+
+**PhpStorm Setup:**
+
+1. Go to Settings → PHP → Servers
+2. Add server: Name=`Docker`, Host=`localhost`, Port=`80`
+3. Set path mapping: `/var/www` → your project root
+4. Enable "Start Listening for PHP Debug Connections"
+
+**Disable Xdebug (for better performance):**
+
+```bash
+# Add to .env
+XDEBUG_MODE=off
+
+# Restart containers
+docker compose restart app
+```
+
+### SSL with mkcert (Recommended for Local Development)
+
+The setup script automatically configures HTTPS if mkcert is installed:
+
+```bash
+# Install mkcert (one-time setup)
+brew install mkcert          # macOS
+choco install mkcert         # Windows
+
+# Install local CA
+mkcert -install
+
+# Run setup (auto-generates certificates)
+./bin/setup-env
+```
+
+**Benefits:**
+
+- ✅ HTTPS on localhost (https://localhost)
+- ✅ No browser warnings
+- ✅ Automatic certificate generation
+- ✅ Works with service workers and PWAs
+- ✅ **Wildcard support** for multi-tenancy (https://\*.localhost)
+
+**Certificates location:** `docker/ssl/`
+
+### Multi-Tenancy Support
+
+The SSL certificates are generated with wildcard support, enabling multi-tenant applications:
+
+**Supported domains:**
+
+- `https://localhost` - Main domain
+- `https://tenant1.localhost` - Tenant subdomain
+- `https://acme.localhost` - Another tenant
+- `https://any-name.localhost` - Any subdomain works!
+
+**Setup for multi-tenancy:**
+
+1. **No hosts file needed** - `*.localhost` resolves automatically on most systems
+
+2. **Install a multi-tenancy package:**
+
+    ```bash
+    # Popular options:
+    composer require spatie/laravel-multitenancy
+    # or
+    composer require stancl/tenancy
+    ```
+
+3. **Configure tenant identification** in your package config:
+
+    ```php
+    // Identify tenants by subdomain
+    'tenant_finder' => Spatie\Multitenancy\TenantFinder\DomainTenantFinder::class,
+    ```
+
+4. **Test with subdomains:**
+
+    ```bash
+    # Main app
+    https://localhost
+
+    # Tenant apps
+    https://tenant1.localhost
+    https://tenant2.localhost
+    ```
+
+**Note:** If subdomains don't resolve on your system, add to `/etc/hosts`:
+
+```
+127.0.0.1 tenant1.localhost
+127.0.0.1 tenant2.localhost
+```
+
+Or use **dnsmasq** for automatic wildcard DNS resolution (recommended for many tenants).
+
+### Alternative: Using ngrok (For Public HTTPS)
+
+For sharing with clients, testing OAuth, or webhooks, use **ngrok**:
+
+```bash
+# Install ngrok
+brew install ngrok           # macOS
+# Or download from: https://ngrok.com/download
+
+# Start ngrok tunnel
+ngrok http 443
+
+# Get public HTTPS URL: https://abc123.ngrok.io
+# Update .env: APP_URL=https://abc123.ngrok.io
+```
+
+**When to use ngrok:**
+
+- Testing OAuth providers (Google, GitHub, etc.)
+- Webhook testing (Stripe, PayPal, etc.)
+- Sharing development with clients/team
+- Mobile device testing
+- Public demo URLs
 
 ### Navigation System (Navigation Module)
 
