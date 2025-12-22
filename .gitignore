@@ -38,6 +38,11 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
+# Filament 
+/public/css/filament
+/public/fonts/filament
+/public/js/filament
+
 # Playwright
 /test-results/
 /playwright-report/
