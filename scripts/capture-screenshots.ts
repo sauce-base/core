@@ -46,6 +46,18 @@ const screenshots: ScreenshotConfig[] = [
     { name: 'dashboard-dark', route: '/dashboard', theme: 'dark', auth: true },
     { name: 'settings-light', route: '/settings', theme: 'light', auth: true },
     { name: 'settings-dark', route: '/settings', theme: 'dark', auth: true },
+    {
+        name: 'profile-dark',
+        route: '/auth/settings/profile',
+        theme: 'dark',
+        auth: true,
+    },
+    {
+        name: 'profile-light',
+        route: '/auth/settings/profile',
+        theme: 'light',
+        auth: true,
+    },
 ];
 
 // Test user credentials (from modules/Auth/tests/e2e/fixtures/users.ts)

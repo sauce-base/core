@@ -104,7 +104,15 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ![Settings - Dark Theme](public/images/screenshots/settings-dark.png)
 
----
+### Profile Settings
+
+**Light Theme**
+
+![Profile Settings - Light Theme](public/images/screenshots/profile-light.png)
+
+**Dark Theme**
+
+## ![Profile Settings - Dark Theme](public/images/screenshots/profile-dark.png)
 
 ### Prerequisites
 

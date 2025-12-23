@@ -28,6 +28,8 @@ const props = defineProps<{
     }>;
 }>();
 
+//TODO: Investigate why this file is loading all icons from lucide-icons and being 836kb instead of the usual 4kb
+
 // Persist sidebar state across Inertia navigation
 const { isOpen } = useSidebarState();
 
