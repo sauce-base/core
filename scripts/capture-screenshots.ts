@@ -62,7 +62,7 @@ const screenshots: ScreenshotConfig[] = [
 
 // Test user credentials (from modules/Auth/tests/e2e/fixtures/users.ts)
 const TEST_USER = {
-    email: 'test@example.com',
+    email: 'chef@saucebase.dev',
     password: 'secretsauce',
 };
 

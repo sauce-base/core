@@ -108,6 +108,19 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                             </div>
                         </div>
                     </DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem as-child>
+                        <Link :href="route('auth.profile')">
+                            <component
+                                :is="resolveIcon('user-circle')"
+                                class="mr-2 size-4"
+                            />
+                            {{ $t('Profile') }}
+                        </Link>
+                    </DropdownMenuItem>
+
                     <DropdownMenuSeparator />
 
                     <!-- Fixed components (Language & Theme selectors) -->

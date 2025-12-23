@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Services\Navigation\NavigationRegistry;
+use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Spatie\Navigation\Section;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,17 +14,22 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
+
         $this->configureSecureUrls();
+
+        /**
+         * Fix for event discovery paths in modules
+         *
+         * @link https://github.com/nWidart/laravel-modules/issues/2128#issuecomment-3515275319
+         */
+        $this->fixDiscoverEventsModulePathIssue();
 
         // Register navigation after routes are loaded
         $this->app->booted(function () {
@@ -83,5 +90,23 @@ class AppServiceProvider extends ServiceProvider
                     'order' => 0,
                 ]);
             });
+    }
+
+    protected function fixDiscoverEventsModulePathIssue(): void
+    {
+        DiscoverEvents::guessClassNamesUsing(function (\SplFileInfo $file, $basePath) {
+            $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
+
+            // Remove the "app" folder from the path if it exists (useful for module structures)
+            $appFolder = Str::of(config('modules.app_folder', 'app/'))
+                ->start(DIRECTORY_SEPARATOR)
+                ->finish(DIRECTORY_SEPARATOR);
+
+            return ucfirst(Str::camel(str_replace(
+                [$appFolder, DIRECTORY_SEPARATOR, ucfirst(basename(app()->path())).'\\'],
+                ['\\', '\\', app()->getNamespace(), ''],
+                ucfirst(Str::replaceLast('.php', '', $class))
+            )));
+        });
     }
 }
