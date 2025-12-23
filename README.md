@@ -8,7 +8,7 @@
 
 > ⚠️ **Active development** – APIs, features, and architecture may change without notice.
 
-[![CI](https://github.com/sauce-base/core/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/core/actions/workflows/ci.yml)
+[![CI](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
@@ -150,8 +150,8 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 ### 1. Clone & Bootstrap
 
 ```bash
-git clone https://github.com/sauce-base/core.git
-cd core
+git clone https://github.com/sauce-base/saucebase.git
+cd saucebase
 chmod +x bin/setup-env
 ./bin/setup-env
 ```
@@ -218,8 +218,8 @@ For users who prefer step-by-step control over the installation process, or need
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/sauce-base/core.git
-cd core
+git clone https://github.com/sauce-base/saucebase.git
+cd saucebase
 ```
 
 Downloads the project to your local machine.

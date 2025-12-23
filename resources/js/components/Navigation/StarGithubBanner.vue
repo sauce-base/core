@@ -14,7 +14,7 @@ const { state, isMobile } = useSidebar();
     <Tooltip>
         <TooltipTrigger as-child>
             <a
-                href="https://github.com/sauce-base/core"
+                href="https://github.com/sauce-base/saucebase"
                 target="_blank"
                 rel="noopener noreferrer"
                 :class="[

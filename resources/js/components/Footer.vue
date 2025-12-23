@@ -11,13 +11,13 @@ import IconHeart from '~icons/heroicons/heart';
                 <div class="flex items-center gap-6">
                     <span>© 2025 Sauce Base</span>
                     <a
-                        href="https://github.com/sauce-base/core"
+                        href="https://github.com/sauce-base/saucebase"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ $t('GitHub') }}
                     </a>
                     <a
-                        href="https://github.com/sauce-base/core?tab=readme-ov-file#saucebase"
+                        href="https://github.com/sauce-base/saucebase?tab=readme-ov-file#saucebase"
                         class="hover:text-gray-900 dark:hover:text-white"
                     >
                         {{ $t('Documentation') }}
