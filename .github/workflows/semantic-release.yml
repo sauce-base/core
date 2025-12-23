@@ -1,0 +1,97 @@
+name: Reusable Semantic Release
+
+on:
+    workflow_call:
+        inputs:
+            version_file:
+                description: 'File to update with version (module.json, composer.json, package.json, or empty to skip)'
+                required: false
+                type: string
+                default: ''
+            version_file_path:
+                description: 'JSON path to version field (e.g., .version for module.json)'
+                required: false
+                type: string
+                default: '.version'
+            prerelease:
+                description: 'Mark release as pre-release'
+                required: false
+                type: boolean
+                default: false
+
+permissions:
+    contents: write
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Calculate semantic version
+              id: version
+              uses: paulhatch/semantic-version@v5.4.0
+              with:
+                  tag_prefix: 'v'
+                  major_pattern: '(BREAKING CHANGE:|!):'
+                  minor_pattern: '^feat'
+                  version_format: 'v${major}.${minor}.${patch}'
+                  search_commit_body: true
+                  bump_each_commit: false
+
+            - name: Check if version changed
+              id: check
+              run: |
+                  if [ "${{ steps.version.outputs.changed }}" == "false" ]; then
+                    echo "No version change detected (only chore/refactor/docs commits)"
+                    echo "skip=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "skip=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Update version file
+              if: steps.check.outputs.skip == 'false' && inputs.version_file != ''
+              run: |
+                  VERSION="${{ steps.version.outputs.version_tag }}"
+                  FILE="${{ inputs.version_file }}"
+                  PATH_EXPR="${{ inputs.version_file_path }}"
+
+                  if [ -f "$FILE" ]; then
+                    echo "Updating $FILE with version $VERSION"
+                    jq --arg version "$VERSION" "$PATH_EXPR = \$version" "$FILE" > "${FILE}.tmp"
+                    mv "${FILE}.tmp" "$FILE"
+                  else
+                    echo "Warning: $FILE not found, skipping version update"
+                  fi
+
+            - name: Commit version change
+              if: steps.check.outputs.skip == 'false' && inputs.version_file != ''
+              run: |
+                  if [ -n "$(git status --porcelain)" ]; then
+                    git config user.name "github-actions[bot]"
+                    git config user.email "github-actions[bot]@users.noreply.github.com"
+                    git add ${{ inputs.version_file }}
+                    git commit -m "chore: bump version to ${{ steps.version.outputs.version_tag }} [skip ci]"
+                    git push
+                  else
+                    echo "No changes to commit"
+                  fi
+
+            - name: Create git tag
+              if: steps.check.outputs.skip == 'false'
+              run: |
+                  git tag ${{ steps.version.outputs.version_tag }}
+                  git push origin ${{ steps.version.outputs.version_tag }}
+
+            - name: Create GitHub release
+              if: steps.check.outputs.skip == 'false'
+              uses: marvinpinto/action-automatic-releases@latest
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  prerelease: ${{ inputs.prerelease }}
+                  automatic_release_tag: ${{ steps.version.outputs.version_tag }}
+                  title: ${{ steps.version.outputs.version_tag }}
