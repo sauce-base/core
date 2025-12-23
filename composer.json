@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "saucebase/core",
+    "name": "saucebase/saucebase",
     "type": "project",
     "description": "A complete saas boilerplace powered with Vue, Filament, InertiaJS, and more",
     "license": "MIT",
