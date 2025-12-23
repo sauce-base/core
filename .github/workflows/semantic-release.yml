@@ -34,8 +34,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Generate token from GitHub App
-              if: secrets.APP_ID != ''
               id: generate-token
+              if: ${{ secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
               uses: actions/create-github-app-token@v1
               with:
                   app-id: ${{ secrets.APP_ID }}
