@@ -104,9 +104,10 @@ jobs:
 
             - name: Create GitHub release
               if: steps.check.outputs.skip == 'false'
-              uses: marvinpinto/action-automatic-releases@latest
+              uses: softprops/action-gh-release@v2
               with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  tag_name: ${{ steps.version.outputs.version_tag }}
+                  name: ${{ steps.version.outputs.version_tag }}
+                  generate_release_notes: true
                   prerelease: ${{ inputs.prerelease }}
-                  automatic_release_tag: ${{ steps.version.outputs.version_tag }}
-                  title: ${{ steps.version.outputs.version_tag }}
