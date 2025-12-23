@@ -8,7 +8,7 @@
 
 > ⚠️ **Active development** – APIs, features, and architecture may change without notice.
 
-[![CI](https://github.com/sauce-base/core/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/core/actions/workflows/ci.yml)
+[![CI](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
@@ -25,8 +25,7 @@
 
 Saucebase is a **Laravel SaaS boilerplate / Starter kit** that lets you own your code. Built on the **VILT stack** (Vue 3, Inertia.js, Laravel, Tailwind CSS), it follows the **copy-and-own philosophy** pioneered by shadcn/ui—install feature modules directly into your repository, customize freely, and never worry about upstream breaking changes.
 
-Start with a minimal, production-ready core. Add pre-built modules (Auth, Roles, Dashboard, Settings) with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices. 
-
+Start with a minimal, production-ready core. Add pre-built modules (Auth, Roles, Dashboard, Settings) with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices.
 
 ---
 
@@ -38,10 +37,10 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 
 ### Built for Speed
 
-- **Docker-first**: One command (`./bin/setup-env`) launches MySQL, Redis, Mailpit, SSL certs, migrations, and seeds
+- **Docker-first**: One command (`./bin/setup-env`) launches MySQL, Redis, Mailpit, generates SSL certs (with wildcard for multi-tenancy), runs migrations, and seeds
 - **Hot reload**: Vite dev server with instant HMR for Vue/TypeScript/CSS changes
 - **Type-safe routes**: Ziggy generates TypeScript route helpers from Laravel routes
-- **Pre-configured modules**: Auth, Roles, Dashboard, Settings, Navigation ready to install
+- **Pre-configured modules**: Auth and Settings ready to install
 
 ### Modern Stack, Zero Compromises
 
@@ -51,7 +50,7 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 
 ### Production-Ready Defaults
 
-Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, Redis caching, queue workers, email testing (Mailpit), and WebSocket server (Soketi). Not just a starter—a foundation you can ship.
+Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, Redis caching, queue workers, and email testing (Mailpit). Not just a starter—a foundation you can ship.
 
 ---
 
@@ -105,7 +104,15 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ![Settings - Dark Theme](public/images/screenshots/settings-dark.png)
 
----
+### Profile Settings
+
+**Light Theme**
+
+![Profile Settings - Light Theme](public/images/screenshots/profile-light.png)
+
+**Dark Theme**
+
+## ![Profile Settings - Dark Theme](public/images/screenshots/profile-dark.png)
 
 ### Prerequisites
 
@@ -116,14 +123,14 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ```
 ├── app/                  # Core Laravel application (service providers, models, listeners)
-├── modules/              # Feature modules (Auth, Roles, Dashboard, Settings, Navigation)
+├── modules/              # Feature modules (Auth, Settings)
 │   └── <ModuleName>/
 │       ├── app/          # Module controllers, actions, providers
 │       ├── resources/    # Vue pages/components, CSS, translations
 │       └── routes/       # Module routes (web + api)
 ├── resources/js/         # Inertia SPA (layouts, pages, composables, middleware, UI lib)
 ├── database/             # Migrations, factories, seeders (roles & demo users included)
-├── docker/               # Development Dockerfiles + configs
+├── docker/               # Simplified Docker setup (single Dockerfile, nginx, php.ini, ssl/)
 └── module-loader.js      # Collects enabled module assets and settings automatically
 ```
 
@@ -135,13 +142,10 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ## 📦 Modules to be installed
 
-| Module         | Highlights                                                                                                       |
-| -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| **Roles**      | Role management with Spatie permissions integration. [View module →](https://github.com/sauce-base/roles)        |
-| **Auth**       | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
-| **Dashboard**  | Dashboard basic structure [View module →](https://github.com/sauce-base/dashboard)                               |
-| **Navigation** | Navigation module for managing menus and links [View module →](https://github.com/sauce-base/navigation)         |
-| **Settings**   | Settings management module [View module →](https://github.com/sauce-base/settings)                               |
+| Module       | Highlights                                                                                                       |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- |
+| **Auth**     | Authentication module for Laravel with social login support. [View module →](https://github.com/sauce-base/auth) |
+| **Settings** | Settings management module [View module →](https://github.com/sauce-base/settings)                               |
 
 ### Copy-and-Own Philosophy
 
@@ -154,19 +158,19 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 ### 1. Clone & Bootstrap
 
 ```bash
-git clone https://github.com/sauce-base/core.git
-cd core
+git clone https://github.com/sauce-base/saucebase.git
+cd saucebase
 chmod +x bin/setup-env
 ./bin/setup-env
 ```
 
-The script checks prerequisites, generates SSL certificates (if mkcert is available), spins up Docker services, runs migrations/seeds, and installs all dependencies.
+The script checks prerequisites, generates wildcard SSL certificates (if mkcert is available) for multi-tenancy support, spins up Docker services, runs migrations/seeds, and installs all dependencies.
 
 ### 2. Access Your Application
 
 Once installation completes, visit **https://localhost** to see your application.
 
-> **Note**: The core installation doesn't include authentication or admin panel. Install the [Auth](https://github.com/sauce-base/auth) and [Roles](https://github.com/sauce-base/roles) modules to access the Filament Admin at https://localhost/admin
+> **Note**: The core installation doesn't include authentication or admin panel. Install the [Auth](https://github.com/sauce-base/auth) module to access the Filament Admin at https://localhost/admin
 
 ### 3. Start Development
 
@@ -181,9 +185,6 @@ Starts the Vite dev server with hot module replacement. Edit Vue components in `
 Saucebase ships with a minimal core. Add features by installing modules:
 
 - **[Auth](https://github.com/sauce-base/auth)** - Authentication with social login (Google, GitHub)
-- **[Roles](https://github.com/sauce-base/roles)** - Role & permission management
-- **[Dashboard](https://github.com/sauce-base/dashboard)** - Dashboard structure
-- **[Navigation](https://github.com/sauce-base/navigation)** - Menu & link management
 - **[Settings](https://github.com/sauce-base/settings)** - Settings management
 
 Each module's README contains installation and configuration instructions.
@@ -225,8 +226,8 @@ For users who prefer step-by-step control over the installation process, or need
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/sauce-base/core.git
-cd core
+git clone https://github.com/sauce-base/saucebase.git
+cd saucebase
 ```
 
 Downloads the project to your local machine.
@@ -251,21 +252,13 @@ Standard Laravel variables (DB\_\*, APP_KEY, etc.) have sensible defaults in .en
 
 ```bash
 mkcert -install
-mkdir -p docker/development/ssl
-cd docker/development/ssl
-mkcert -key-file app.key.pem -cert-file app.pem localhost 127.0.0.1 ::1
-cd ../../..
+mkdir -p docker/ssl
+cd docker/ssl
+mkcert -key-file app.key.pem -cert-file app.pem "*.localhost" localhost 127.0.0.1 ::1
+cd ../..
 ```
 
-**For HTTP only:**
-
-```bash
-mkdir -p docker/development/ssl
-touch docker/development/ssl/app.key.pem
-touch docker/development/ssl/app.pem
-```
-
-Enables secure HTTPS connections in development. Placeholder files are required for Vite config even if using HTTP.
+Enables secure HTTPS connections in development with **wildcard support** for multi-tenancy (`*.localhost`).
 
 #### 4. Start Docker Services
 
@@ -273,26 +266,26 @@ Enables secure HTTPS connections in development. Placeholder files are required 
 docker compose up -d --wait
 ```
 
-Launches all required services: Nginx (web server), PHP-FPM (runtime), MySQL (database), Redis (cache/queue), and Soketi (WebSockets).
+Launches all required services: Nginx (web server), PHP application container, MySQL (database), Redis (cache/queue), and Mailpit (email testing).
 
 #### 5. Install Backend Dependencies
 
 ```bash
-docker compose exec workspace composer install
+docker compose exec app composer install
 ```
 
-Installs Laravel and all PHP dependencies. Must run inside Docker workspace container.
+Installs Laravel and all PHP dependencies. Must run inside Docker app container.
 
 #### 6. Generate Application Key
 
 ```bash
-docker compose exec workspace php artisan key:generate
+docker compose exec app php artisan key:generate
 ```
 
 Generates encryption key for sessions and data security. Restart containers to load the new key:
 
 ```bash
-docker compose down && docker compose up -d
+docker compose restart app
 ```
 
 #### 7. Setup Database
@@ -302,10 +295,10 @@ docker compose down && docker compose up -d
 docker compose up -d --wait
 
 # Run migrations and seed data
-docker compose exec workspace php artisan migrate:fresh --seed
+docker compose exec app php artisan migrate:fresh --seed
 
 # Create storage link
-docker compose exec workspace php artisan storage:link
+docker compose exec app php artisan storage:link
 ```
 
 Creates database tables and loads sample data including a default admin user.
@@ -320,21 +313,18 @@ composer require saucebase/auth
 composer dump-autoload
 
 # 2. Enable the module
-docker compose exec workspace php artisan module:enable Auth
+docker compose exec app php artisan module:enable Auth
 
 # 3. Run migrations
-docker compose exec workspace php artisan module:migrate Auth
+docker compose exec app php artisan module:migrate Auth
 
 # 4. Run seeders (if available)
-docker compose exec workspace php artisan module:seed Auth
+docker compose exec app php artisan module:seed Auth
 ```
 
 **Available Modules:**
 
 - [**Auth**](https://github.com/sauce-base/auth) - Authentication with social login
-- [**Roles**](https://github.com/sauce-base/roles) - Role management with Spatie permissions
-- [**Dashboard**](https://github.com/sauce-base/dashboard) - Dashboard structure
-- [**Navigation**](https://github.com/sauce-base/navigation) - Menu and link management
 - [**Settings**](https://github.com/sauce-base/settings) - Settings management
 
 #### 9. Install Frontend Dependencies
@@ -353,13 +343,13 @@ For development with hot reload, use `npm run dev` instead of `npm run build`.
 
 Access your application at **`https://localhost`** or **`http://localhost`**
 
-> **Note**: To access the Filament Admin panel at `https://localhost/admin`, install the [Auth](https://github.com/sauce-base/auth) and [Roles](https://github.com/sauce-base/roles) modules. After installation, default credentials are `chef@saucebase.dev` / `secretsauce`.
+> **Note**: To access the Filament Admin panel at `https://localhost/admin`, install the [Auth](https://github.com/sauce-base/auth) module. After installation, default credentials are `chef@saucebase.dev` / `secretsauce`.
 
 **Health checks:**
 
 ```bash
 # Verify database connection
-docker compose exec workspace php artisan migrate:status
+docker compose exec app php artisan migrate:status
 
 # Check web server
 curl -sk https://localhost/health
@@ -377,24 +367,37 @@ Saucebase-specific environment variables (standard Laravel variables are documen
 | `APP_URL`                | Full application URL (must match APP_HOST)        | `https://localhost` |
 | `APP_SLUG`               | Project slug for database naming and storage keys | `saucebase`         |
 | `VITE_LOCAL_STORAGE_KEY` | Frontend local storage prefix                     | `${APP_SLUG}`       |
+| `XDEBUG_MODE`            | Xdebug mode (`debug`, `off`)                      | `debug`             |
 | `GOOGLE_CLIENT_ID`       | Google OAuth client ID (Auth module)              | -                   |
 | `GOOGLE_CLIENT_SECRET`   | Google OAuth secret (Auth module)                 | -                   |
 | `GITHUB_CLIENT_ID`       | GitHub OAuth client ID (Auth module)              | -                   |
 | `GITHUB_CLIENT_SECRET`   | GitHub OAuth secret (Auth module)                 | -                   |
 
+### Multi-Tenancy Support
+
+SSL certificates are generated with **wildcard support** (`*.localhost`), enabling multi-tenant applications out of the box:
+
+**Supported domains:**
+
+- `https://localhost` - Main application
+- `https://tenant1.localhost` - Tenant subdomains
+- `https://any-name.localhost` - Any subdomain works!
+
+To set up multi-tenancy, install a package like [Spatie Laravel Multitenancy](https://github.com/spatie/laravel-multitenancy) or [Tenancy for Laravel](https://tenancyforlaravel.com/). See [CLAUDE.md](CLAUDE.md) for detailed multi-tenancy setup instructions.
+
 ---
 
 ### Docker Services Overview
 
-| Service       | Purpose               | Ports                        | Access                          |
-| ------------- | --------------------- | ---------------------------- | ------------------------------- |
-| **nginx**     | Web server (Nginx)    | 80, 443                      | https://localhost               |
-| **php-fpm**   | PHP runtime (FastCGI) | -                            | Internal only                   |
-| **workspace** | CLI/Artisan container | -                            | `docker compose exec workspace` |
-| **mysql**     | Database (MySQL 8.0)  | 3306                         | Internal                        |
-| **redis**     | Cache/Session/Queue   | 6379                         | Internal                        |
-| **mailpit**   | Email testing         | 1025 (SMTP)<br>8025 (Web UI) | http://localhost:8025           |
-| **soketi**    | WebSocket server      | 6001<br>9601 (metrics)       | Internal                        |
+| Service     | Purpose                       | Ports                        | Access                    |
+| ----------- | ----------------------------- | ---------------------------- | ------------------------- |
+| **nginx**   | Web server (Nginx)            | 80, 443                      | https://localhost         |
+| **app**     | PHP application (FPM + CLI)   | -                            | `docker compose exec app` |
+| **mysql**   | Database (MySQL 8.0)          | 3306                         | Internal                  |
+| **redis**   | Cache/Session/Queue           | 6379                         | Internal                  |
+| **mailpit** | Email testing (SMTP + Web UI) | 1025 (SMTP)<br>8025 (Web UI) | http://localhost:8025     |
+
+**Note:** The `app` container handles both PHP-FPM (web requests) and CLI commands (Artisan), simplifying the Docker setup.
 
 ---
 
@@ -461,9 +464,9 @@ mkcert -install
 
 1. Check that the module is enabled in `modules_statuses.json`
 2. Run `composer dump-autoload`
-3. Clear caches: `docker compose exec workspace php artisan optimize:clear`
+3. Clear caches: `docker compose exec app php artisan optimize:clear`
 4. Rebuild frontend: `npm run build`
-</details>
+ </details>
 
 <details>
 <summary><strong>Frontend build failures</strong></summary>
@@ -472,7 +475,7 @@ Clear caches and reinstall:
 
 ```bash
 # Clear Laravel caches
-docker compose exec workspace php artisan optimize:clear
+docker compose exec app php artisan optimize:clear
 
 # Reinstall Node modules
 rm -rf node_modules package-lock.json

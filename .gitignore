@@ -38,10 +38,15 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
+# Filament 
+/public/css/filament
+/public/fonts/filament
+/public/js/filament
+
 # Playwright
 /test-results/
 /playwright-report/
 /playwright/.cache/
 
 # SSL Certificates (generated locally, not tracked)
-/docker/development/ssl/
+/docker/ssl/

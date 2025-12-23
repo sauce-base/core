@@ -26,12 +26,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Register Spatie Permission Middleware
-        // $middleware->alias([
-        //     'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-        //     'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-        //     'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        // ]);
+        $middleware->alias([
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        ]);
     })
+    ->withEvents(discover: [
+        __DIR__.'/../app/Listeners',
+        __DIR__.'/../modules/*/app/Listeners',
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
             if (! app()->environment(['local', 'testing']) && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
