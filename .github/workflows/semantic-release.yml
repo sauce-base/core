@@ -18,6 +18,13 @@ on:
                 required: false
                 type: boolean
                 default: false
+        secrets:
+            APP_ID:
+                description: 'GitHub App ID for generating token with bypass permissions'
+                required: false
+            APP_PRIVATE_KEY:
+                description: 'GitHub App private key for generating token'
+                required: false
 
 permissions:
     contents: write
@@ -26,11 +33,19 @@ jobs:
     release:
         runs-on: ubuntu-latest
         steps:
+            - name: Generate token from GitHub App
+              if: secrets.APP_ID != ''
+              id: generate-token
+              uses: actions/create-github-app-token@v1
+              with:
+                  app-id: ${{ secrets.APP_ID }}
+                  private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
             - name: Checkout code
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ steps.generate-token.outputs.token || secrets.GITHUB_TOKEN }}
 
             - name: Calculate semantic version
               id: version

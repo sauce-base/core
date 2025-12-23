@@ -15,3 +15,6 @@ jobs:
             version_file: 'module.json'
             version_file_path: '.version'
             prerelease: false
+        secrets:
+            APP_ID: ${{ secrets.APP_ID }}
+            APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
