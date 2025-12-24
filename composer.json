@@ -4,7 +4,6 @@
     "type": "project",
     "description": "A complete saas boilerplace powered with Vue, Filament, InertiaJS, and more",
     "license": "MIT",
-    "version": "v0.0.0",
     "require": {
         "php": "^8.4",
         "filament/actions": "^4.0",
