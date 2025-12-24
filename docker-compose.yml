@@ -8,7 +8,7 @@ services:
             - './docker/php.ini:/usr/local/etc/php/php.ini'
             - './docker/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini'
         networks:
-            - laravel
+            - saucebase
         environment:
             - APP_ENV=${APP_ENV:-local}
             - APP_KEY=${APP_KEY}
@@ -47,7 +47,7 @@ services:
         depends_on:
             - app
         networks:
-            - laravel
+            - saucebase
 
     mysql:
         image: 'mysql:8.0'
@@ -60,9 +60,9 @@ services:
             MYSQL_USER: '${DB_USERNAME}'
             MYSQL_PASSWORD: '${DB_PASSWORD}'
         volumes:
-            - 'laravel-mysql:/var/lib/mysql'
+            - 'saucebase-mysql:/var/lib/mysql'
         networks:
-            - laravel
+            - saucebase
         healthcheck:
             test:
                 [
@@ -84,9 +84,9 @@ services:
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
-            - 'laravel-redis:/data'
+            - 'saucebase-redis:/data'
         networks:
-            - laravel
+            - saucebase
         healthcheck:
             test: ['CMD', 'redis-cli', 'ping']
             retries: 3
@@ -99,14 +99,14 @@ services:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
         networks:
-            - laravel
+            - saucebase
 
 networks:
-    laravel:
+    saucebase:
         driver: bridge
 
 volumes:
-    laravel-mysql:
+    saucebase-mysql:
         driver: local
-    laravel-redis:
+    saucebase-redis:
         driver: local
