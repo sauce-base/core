@@ -3,15 +3,23 @@ import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import LanguageSelector from '@/components/LanguageSelector.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import IconMenu from '~icons/heroicons/bars-3';
 import IconX from '~icons/heroicons/x-mark';
 
 const isScrolled = ref(false);
 const mobileMenuOpen = ref(false);
 
-window.addEventListener('scroll', () => {
+const handleScroll = () => {
     isScrolled.value = window.scrollY > 10;
+};
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll);
 });
 
 defineProps<{
