@@ -111,10 +111,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
 
                     <template v-if="route().has('settings.profile')">
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            as-child
-                            v-if="route().has('settings.profile')"
-                        >
+                        <DropdownMenuItem as-child>
                             <Link :href="route('settings.profile')">
                                 <component
                                     :is="resolveIcon('user-circle')"
