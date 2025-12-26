@@ -50,7 +50,7 @@ class NavigationTransformerTest extends TestCase
                 'active' => false,
                 'attributes' => [
                     'label' => 'Log out',
-                    'action' => 'auth.logout',
+                    'action' => 'logout',
                     'icon' => 'log-out',
                 ],
                 'children' => [],
@@ -59,7 +59,7 @@ class NavigationTransformerTest extends TestCase
 
         $result = $this->transformer->transform($spatieTree);
 
-        $this->assertEquals('auth.logout', $result[0]['action']);
+        $this->assertEquals('logout', $result[0]['action']);
         $this->assertEquals('log-out', $result[0]['icon']);
     }
 

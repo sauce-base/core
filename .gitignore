@@ -50,3 +50,6 @@ Thumbs.db
 
 # SSL Certificates (generated locally, not tracked)
 /docker/ssl/
+
+_ide_helper.php
+.phpstorm.meta.php

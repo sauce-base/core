@@ -41,7 +41,7 @@ class NavigationTransformer
         $menuItem = [
             'label' => $attributes['label'] ?? $item['title'],
             'url' => $item['url'] ?? null,
-            'active' => $item['active'] ?? false,
+            'active' => $this->calculateActiveState($item, $attributes),
         ];
 
         // Add optional properties from attributes
@@ -67,6 +67,33 @@ class NavigationTransformer
         }
 
         return $menuItem;
+    }
+
+    /**
+     * Calculate the active state for a navigation item.
+     *
+     * Uses route-based matching for exact active detection instead of URL prefix matching.
+     * This prevents parent items from being marked as active when on child routes.
+     *
+     * @param  array  $item  Spatie navigation item
+     * @param  array  $attributes  Item attributes
+     * @return bool Whether the item is active
+     */
+    private function calculateActiveState(array $item, array $attributes): bool
+    {
+        // If a route attribute is provided, use route-based matching
+        if (isset($attributes['route'])) {
+            try {
+                return request()->routeIs($attributes['route']);
+            } catch (\Exception) {
+                // Route doesn't exist or error occurred
+                return false;
+            }
+        }
+
+        // Fallback to Spatie's URL-based active detection only if no route is specified
+        // Note: This uses prefix matching, so it may mark parent paths as active
+        return $item['active'] ?? false;
     }
 
     /**
