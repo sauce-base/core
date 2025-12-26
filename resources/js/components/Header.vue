@@ -46,7 +46,7 @@ defineProps<{
 
                     <Link
                         v-if="canLogin && !$page.props.auth?.user"
-                        :href="route('auth.login')"
+                        :href="route('login')"
                         class="rounded-full px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
                     >
                         {{ $t('Sign In') }}
@@ -54,7 +54,7 @@ defineProps<{
 
                     <Link
                         v-if="canRegister && !$page.props.auth?.user"
-                        :href="route('auth.register')"
+                        :href="route('register')"
                         class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                     >
                         {{ $t('Get Started') }}
@@ -70,10 +70,8 @@ defineProps<{
                         {{ $t('Dashboard') }}
                     </Link>
                     <Link
-                        v-if="
-                            route().has('auth.logout') && $page.props.auth?.user
-                        "
-                        :href="route('auth.logout')"
+                        v-if="route().has('logout') && $page.props.auth?.user"
+                        :href="route('logout')"
                         class="rounded-full px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white"
                     >
                         {{ $t('Logout') }}
@@ -111,7 +109,7 @@ defineProps<{
                         <div class="flex flex-col space-y-3">
                             <Link
                                 v-if="canLogin && !$page.props.auth?.user"
-                                :href="route('auth.login')"
+                                :href="route('login')"
                                 class="hover:text-primary dark:hover:text-primary rounded-full px-4 py-3 text-base font-medium text-gray-900 transition-all duration-200 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800/50"
                                 @click="mobileMenuOpen = false"
                             >
@@ -120,7 +118,7 @@ defineProps<{
 
                             <Link
                                 v-if="canRegister && !$page.props.auth?.user"
-                                :href="route('auth.register')"
+                                :href="route('register')"
                                 class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-4 py-3 text-base font-semibold transition-all duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none"
                                 @click="mobileMenuOpen = false"
                             >

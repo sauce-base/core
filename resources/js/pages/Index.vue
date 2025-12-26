@@ -92,7 +92,7 @@ onUnmounted(() => window.removeEventListener('mousemove', handleMouseMove));
                     <!-- Primary CTA -->
                     <Link
                         v-if="canRegister && !user"
-                        :href="route('auth.register')"
+                        :href="route('register')"
                         class="bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-semibold transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-950"
                     >
                         <IconUserPlus class="mr-2 h-5 w-5" />
@@ -123,7 +123,7 @@ onUnmounted(() => window.removeEventListener('mousemove', handleMouseMove));
                     <!-- Sign In Button -->
                     <Link
                         v-if="canLogin && !user"
-                        :href="route('auth.login')"
+                        :href="route('login')"
                         class="text-primary hover:text-primary/90 dark:text-white dark:hover:text-white/80"
                     >
                         {{ $t('Already have an account? Sign In') }}
