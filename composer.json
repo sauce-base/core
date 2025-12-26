@@ -58,7 +58,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
             "@php artisan filament:upgrade",
-            "@php -r \"if (getenv('CI') !== 'true' && getenv('SKIP_IDE_HELPER') !== 'true') { echo shell_exec('php artisan ide-helper:generate 2>&1') ?: ''; echo shell_exec('php artisan ide-helper:meta 2>&1') ?: ''; }\""
+            "@php bin/ide-helper"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

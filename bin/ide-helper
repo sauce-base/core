@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * IDE Helper Generator Script
+ *
+ * Generates IDE helper files for better autocompletion in PHPStorm/VSCode.
+ * Skips generation in CI environments or when SKIP_IDE_HELPER is set.
+ */
+
+// Skip in CI environments
+if (getenv('CI') === 'true') {
+    echo "Skipping IDE helper generation in CI environment\n";
+    exit(0);
+}
+
+// Skip if explicitly disabled
+if (getenv('SKIP_IDE_HELPER') === 'true') {
+    echo "Skipping IDE helper generation (SKIP_IDE_HELPER=true)\n";
+    exit(0);
+}
+
+// Generate IDE helper files
+echo "Generating IDE helper files...\n";
+
+$commands = [
+    'php artisan ide-helper:generate',
+    'php artisan ide-helper:meta',
+];
+
+foreach ($commands as $command) {
+    echo "Running: {$command}\n";
+    passthru($command, $exitCode);
+    
+    if ($exitCode !== 0) {
+        echo "Warning: {$command} failed with exit code {$exitCode}\n";
+    }
+}
+
+echo "IDE helper generation complete\n";
+exit(0);

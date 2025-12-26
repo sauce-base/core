@@ -208,6 +208,9 @@ Laravel IDE Helper generates accurate autocompletion for facades, models, and ot
 ```bash
 docker compose exec app php artisan ide-helper:generate  # Generate helper files
 docker compose exec app php artisan ide-helper:meta      # Generate PhpStorm meta
+
+# Or use the convenience script
+docker compose exec app php bin/ide-helper
 ```
 
 **Skip automatic generation** (useful in CI or when not needed):
