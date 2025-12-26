@@ -197,6 +197,25 @@ Each module's README contains installation and configuration instructions.
 - **Run tests**: `composer test` (PHPUnit) and `npm run test` (Playwright E2E)
 - **Learn more**: Check [CLAUDE.md](CLAUDE.md) for architecture details
 
+### Development Tools
+
+#### IDE Helper (PHPStorm/VSCode)
+
+Laravel IDE Helper generates accurate autocompletion for facades, models, and other Laravel features. By default, it runs automatically after `composer install` or `composer update` (skipped in CI environments).
+
+**Manual generation** (if needed):
+
+```bash
+docker compose exec app php artisan ide-helper:generate  # Generate helper files
+docker compose exec app php artisan ide-helper:meta      # Generate PhpStorm meta
+```
+
+**Skip automatic generation** (useful in CI or when not needed):
+
+```bash
+SKIP_IDE_HELPER=true composer install
+```
+
 For manual installation or troubleshooting, see the [Manual Installation](#-manual-installation) guide below.
 
 ---
