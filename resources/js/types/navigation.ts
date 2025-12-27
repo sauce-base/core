@@ -27,5 +27,7 @@ export interface MenuItem {
     action?: string; // For action buttons
     type?: 'label' | 'separator';
     active?: boolean; // Server-side active state from Spatie
+    external?: boolean; // If true, use regular anchor tag instead of Inertia Link
     children?: MenuItem[];
+    class?: string; // Additional CSS classes
 }

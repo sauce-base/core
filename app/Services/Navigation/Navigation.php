@@ -91,6 +91,10 @@ class Navigation extends SpatieNavigation
             $menuItem['type'] = $attributes['type'];
         }
 
+        if (isset($attributes['external'])) {
+            $menuItem['external'] = $attributes['external'];
+        }
+
         // Transform children recursively
         if (! empty($item['children'])) {
             $menuItem['children'] = $this->transformTree($item['children']);

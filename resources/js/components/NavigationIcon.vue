@@ -5,6 +5,7 @@ import { computed, type Component } from 'vue';
 import IconLogOut from '~icons/lucide/log-out';
 import IconSettings from '~icons/lucide/settings';
 import IconSettings2 from '~icons/lucide/settings-2';
+import IconShieldCheck from '~icons/lucide/shield-check';
 import IconSquareTerminal from '~icons/lucide/square-terminal';
 import IconUserCircle from '~icons/lucide/user-circle';
 
@@ -27,6 +28,7 @@ const iconMap: Record<string, Component> = {
     'lucide:settings-2': IconSettings2,
     'lucide:square-terminal': IconSquareTerminal,
     'lucide:user-circle': IconUserCircle,
+    'lucide:shield-check': IconShieldCheck,
 };
 
 const iconComponent = computed(() => {

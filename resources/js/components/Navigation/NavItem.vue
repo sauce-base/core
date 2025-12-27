@@ -18,6 +18,7 @@ import type { MenuItem } from '@/types/navigation';
 import { handleAction } from '@/utils/actionHandlers';
 import { Link } from '@inertiajs/vue3';
 import { computed, inject } from 'vue';
+import IconExternalLink from '~icons/lucide/arrow-up-right';
 import IconChevronRight from '~icons/lucide/chevron-right';
 
 const props = defineProps<{
@@ -32,6 +33,7 @@ const isSeparator = computed(() => props.item.type === 'separator');
 const isLabel = computed(() => props.item.type === 'label');
 const isAction = computed(() => !!props.item.action);
 const hasChildren = computed(() => !!props.item.children?.length);
+const isExternal = computed(() => props.item.external === true);
 
 // Active state - prefer server-side from Spatie, fallback to Ziggy
 const isActive = computed(() => {
@@ -102,7 +104,19 @@ function handleClick(event: MouseEvent) {
                                       )
                             "
                         >
-                            <Link :href="child.url || '#'">
+                            <!-- External child link (non-Inertia) -->
+                            <a
+                                v-if="child.external === true"
+                                :href="child.url || '#'"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <NavigationIcon :icon="child.icon" />
+                                <span>{{ $t(child.label) }}</span>
+                                <IconExternalLink class="ml-auto size-4" />
+                            </a>
+                            <!-- Internal child Inertia link -->
+                            <Link v-else :href="child.url || '#'">
                                 <NavigationIcon :icon="child.icon" />
                                 <span>{{ $t(child.label) }}</span>
                             </Link>
@@ -131,7 +145,19 @@ function handleClick(event: MouseEvent) {
             :is-active="isActive"
             :tooltip="showTooltip ? $t(item.label) : undefined"
         >
-            <Link :href="item.url || '#'">
+            <!-- External link (non-Inertia) -->
+            <a
+                v-if="isExternal"
+                :href="item.url || '#'"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <NavigationIcon :icon="item.icon" />
+                <span>{{ $t(item.label) }}</span>
+                <IconExternalLink class="ml-auto size-4" />
+            </a>
+            <!-- Internal Inertia link -->
+            <Link v-else :href="item.url || '#'">
                 <NavigationIcon :icon="item.icon" />
                 <span>{{ $t(item.label) }}</span>
             </Link>
