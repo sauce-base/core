@@ -20,6 +20,7 @@ class NavigationServiceProvider extends ServiceProvider
                 'app' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->app()->tree()),
                 'settings' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->settings()->tree()),
                 'user' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->user()->tree()),
+                'secondary' => app(NavigationTransformer::class)->transform(app(NavigationRegistry::class)->secondary()->tree()),
             ],
             'breadcrumbs' => fn () => $this->getBreadcrumbs(),
         ]);

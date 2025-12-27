@@ -11,6 +11,7 @@ use Spatie\Navigation\Navigation;
  * Central registry providing three Navigation instances (app, settings, user)
  * and helper methods for modules to register navigation items.
  */
+// TODO: refactor to use a single Navigation instance with groups
 class NavigationRegistry
 {
     /**
@@ -22,12 +23,22 @@ class NavigationRegistry
 
     private array $userCallbacks = [];
 
+    private array $secondaryCallbacks = [];
+
     /**
      * Get the app navigation instance.
      */
     public function app(): NavigationBuilder
     {
         return new NavigationBuilder($this->appCallbacks);
+    }
+
+    /**
+     * Get the secondary navigation instance.
+     */
+    public function secondary(): NavigationBuilder
+    {
+        return new NavigationBuilder($this->secondaryCallbacks);
     }
 
     /**
