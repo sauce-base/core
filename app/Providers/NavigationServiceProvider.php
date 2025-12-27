@@ -24,7 +24,7 @@ class NavigationServiceProvider extends ServiceProvider
     {
         // Override Spatie's scoped binding with our custom Navigation class
         // Using scoped() to match Spatie's binding type and ensure proper lifecycle
-        $this->app->singleton(\Spatie\Navigation\Navigation::class, function ($app) {
+        $this->app->scoped(\Spatie\Navigation\Navigation::class, function ($app) {
             return new Navigation($app->make(ActiveUrlChecker::class));
         });
     }

@@ -13,7 +13,7 @@ defineProps<{
         <SidebarMenu>
             <NavItem
                 v-for="item in items"
-                :key="item.id || item.label"
+                :key="item.id || item.title"
                 :item="item"
             />
         </SidebarMenu>

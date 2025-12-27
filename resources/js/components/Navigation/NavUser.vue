@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import LanguageSelector from '@/components/LanguageSelector.vue';
-import NavigationIcon from '@/components/NavigationIcon.vue';
+import NavigationIcon from '@/components/Navigation/NavigationIcon.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,7 +20,7 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import type { User } from '@/types';
-import type { MenuItem } from '@/types/navigation';
+import type { MenuBadge, MenuItem } from '@/types/navigation';
 import { handleAction } from '@/utils/actionHandlers';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -40,6 +41,19 @@ const userInitials = computed(() => {
         .slice(0, 2)
         .join('');
 });
+
+// Helper function to get badge configuration for an item
+function getBadgeConfig(item: MenuItem): MenuBadge | null {
+    if (!item.badge) return null;
+
+    // If badge is true, return simple dot configuration
+    if (item.badge === true) {
+        return { content: undefined };
+    }
+
+    // Otherwise return the badge object
+    return item.badge as MenuBadge;
+}
 
 function handleClick(item: MenuItem, event: MouseEvent) {
     if (item.action) {
@@ -133,26 +147,102 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                         <DropdownMenuGroup>
                             <DropdownMenuItem
                                 v-for="item in items"
-                                :key="item.id || item.label"
+                                :key="item.id || item.title"
                                 as-child
-                                :class="{ 'cursor-pointer': item.action }"
                                 @click="
                                     item.action
                                         ? handleClick(item, $event)
                                         : undefined
                                 "
                             >
-                                <Link
-                                    v-if="!item.action"
-                                    :href="item.url || '#'"
+                                <!-- Action button -->
+                                <div
+                                    v-if="item.action"
+                                    :class="['cursor-pointer', item.class]"
                                 >
                                     <NavigationIcon :icon="item.icon" />
-                                    <span>{{ $t(item.label) }}</span>
-                                </Link>
-                                <div v-else>
-                                    <NavigationIcon :icon="item.icon" />
-                                    <span>{{ $t(item.label) }}</span>
+                                    <span>{{ $t(item.title) }}</span>
+                                    <Badge
+                                        v-if="getBadgeConfig(item)"
+                                        :variant="getBadgeConfig(item)?.variant"
+                                        :class="getBadgeConfig(item)?.class"
+                                        class="ml-auto"
+                                    >
+                                        <template
+                                            v-if="getBadgeConfig(item)?.content"
+                                        >
+                                            {{ getBadgeConfig(item)?.content }}
+                                        </template>
+                                        <template v-else>
+                                            <span
+                                                class="size-1.5 rounded-full bg-current"
+                                            ></span>
+                                        </template>
+                                    </Badge>
                                 </div>
+                                <!-- External link (regular anchor) -->
+                                <a
+                                    v-else-if="item.external === true"
+                                    :href="item.url || '#'"
+                                    :target="
+                                        item.newPage ? '_blank' : undefined
+                                    "
+                                    :rel="
+                                        item.newPage
+                                            ? 'noopener noreferrer'
+                                            : undefined
+                                    "
+                                    :class="item.class"
+                                >
+                                    <NavigationIcon :icon="item.icon" />
+                                    <span>{{ $t(item.title) }}</span>
+                                    <Badge
+                                        v-if="getBadgeConfig(item)"
+                                        :variant="getBadgeConfig(item)?.variant"
+                                        :class="getBadgeConfig(item)?.class"
+                                        class="ml-auto"
+                                    >
+                                        <template
+                                            v-if="getBadgeConfig(item)?.content"
+                                        >
+                                            {{ getBadgeConfig(item)?.content }}
+                                        </template>
+                                        <template v-else>
+                                            <span
+                                                class="size-1.5 rounded-full bg-current"
+                                            ></span>
+                                        </template>
+                                    </Badge>
+                                </a>
+                                <!-- Internal Inertia link -->
+                                <Link
+                                    v-else
+                                    :href="item.url || '#'"
+                                    :target="
+                                        item.newPage ? '_blank' : undefined
+                                    "
+                                    :class="item.class"
+                                >
+                                    <NavigationIcon :icon="item.icon" />
+                                    <span>{{ $t(item.title) }}</span>
+                                    <Badge
+                                        v-if="getBadgeConfig(item)"
+                                        :variant="getBadgeConfig(item)?.variant"
+                                        :class="getBadgeConfig(item)?.class"
+                                        class="ml-auto"
+                                    >
+                                        <template
+                                            v-if="getBadgeConfig(item)?.content"
+                                        >
+                                            {{ getBadgeConfig(item)?.content }}
+                                        </template>
+                                        <template v-else>
+                                            <span
+                                                class="size-1.5 rounded-full bg-current"
+                                            ></span>
+                                        </template>
+                                    </Badge>
+                                </Link>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                     </template>

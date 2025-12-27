@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NavigationIcon from '@/components/NavigationIcon.vue';
+import NavLinkContent from '@/components/Navigation/NavLinkContent.vue';
 import {
     Collapsible,
     CollapsibleContent,
@@ -14,11 +14,10 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
-import type { MenuItem } from '@/types/navigation';
+import type { MenuBadge, MenuItem } from '@/types/navigation';
 import { handleAction } from '@/utils/actionHandlers';
 import { Link } from '@inertiajs/vue3';
 import { computed, inject } from 'vue';
-import IconExternalLink from '~icons/lucide/arrow-up-right';
 import IconChevronRight from '~icons/lucide/chevron-right';
 
 const props = defineProps<{
@@ -34,6 +33,7 @@ const isLabel = computed(() => props.item.type === 'label');
 const isAction = computed(() => !!props.item.action);
 const hasChildren = computed(() => !!props.item.children?.length);
 const isExternal = computed(() => props.item.external === true);
+const openInNewTab = computed(() => props.item.newPage === true);
 
 // Active state - prefer server-side from Spatie, fallback to Ziggy
 const isActive = computed(() => {
@@ -51,6 +51,27 @@ const isActive = computed(() => {
     }
 });
 
+// Badge configuration
+const badgeConfig = computed<MenuBadge | null>(() => {
+    if (!props.item.badge) return null;
+
+    // If badge is true, return simple dot configuration
+    if (props.item.badge === true) {
+        return { content: undefined };
+    }
+
+    // Otherwise return the badge object
+    return props.item.badge as MenuBadge;
+});
+
+// Helper to get badge config for child items
+function getChildBadgeConfig(child: MenuItem): MenuBadge | null {
+    if (!child.badge) return null;
+    return child.badge === true
+        ? { content: undefined }
+        : (child.badge as MenuBadge);
+}
+
 // Action handler
 function handleClick(event: MouseEvent) {
     if (props.item.action) {
@@ -65,7 +86,7 @@ function handleClick(event: MouseEvent) {
 
     <!-- Label -->
     <SidebarGroupLabel v-else-if="isLabel">
-        {{ $t(item.label) }}
+        {{ $t(item.title) }}
     </SidebarGroupLabel>
 
     <!-- Collapsible group with children -->
@@ -78,10 +99,14 @@ function handleClick(event: MouseEvent) {
         <SidebarMenuItem>
             <CollapsibleTrigger as-child>
                 <SidebarMenuButton
-                    :tooltip="showTooltip ? $t(item.label) : undefined"
+                    :tooltip="showTooltip ? $t(item.title) : undefined"
+                    :class="item.class"
                 >
-                    <NavigationIcon :icon="item.icon" />
-                    <span>{{ $t(item.label) }}</span>
+                    <NavLinkContent
+                        :icon="item.icon"
+                        :title="item.title"
+                        :badge="badgeConfig"
+                    />
                     <IconChevronRight
                         class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
                     />
@@ -91,7 +116,7 @@ function handleClick(event: MouseEvent) {
                 <SidebarMenuSub>
                     <SidebarMenuSubItem
                         v-for="child in item.children"
-                        :key="child.id || child.label"
+                        :key="child.id || child.title"
                     >
                         <SidebarMenuSubButton
                             as-child
@@ -104,21 +129,38 @@ function handleClick(event: MouseEvent) {
                                       )
                             "
                         >
-                            <!-- External child link (non-Inertia) -->
+                            <!-- External link (regular anchor) -->
                             <a
                                 v-if="child.external === true"
                                 :href="child.url || '#'"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                :target="child.newPage ? '_blank' : undefined"
+                                :rel="
+                                    child.newPage
+                                        ? 'noopener noreferrer'
+                                        : undefined
+                                "
+                                :class="child.class"
                             >
-                                <NavigationIcon :icon="child.icon" />
-                                <span>{{ $t(child.label) }}</span>
-                                <IconExternalLink class="ml-auto size-4" />
+                                <NavLinkContent
+                                    :icon="child.icon"
+                                    :title="child.title"
+                                    :badge="getChildBadgeConfig(child)"
+                                    :show-external-icon="child.newPage"
+                                />
                             </a>
-                            <!-- Internal child Inertia link -->
-                            <Link v-else :href="child.url || '#'">
-                                <NavigationIcon :icon="child.icon" />
-                                <span>{{ $t(child.label) }}</span>
+                            <!-- Internal Inertia link -->
+                            <Link
+                                v-else
+                                :href="child.url || '#'"
+                                :target="child.newPage ? '_blank' : undefined"
+                                :class="child.class"
+                            >
+                                <NavLinkContent
+                                    :icon="child.icon"
+                                    :title="child.title"
+                                    :badge="getChildBadgeConfig(child)"
+                                    :show-external-icon="child.newPage"
+                                />
                             </Link>
                         </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -130,11 +172,15 @@ function handleClick(event: MouseEvent) {
     <!-- Action button -->
     <SidebarMenuItem v-else-if="isAction">
         <SidebarMenuButton
-            :tooltip="showTooltip ? $t(item.label) : undefined"
+            :tooltip="showTooltip ? $t(item.title) : undefined"
+            :class="item.class"
             @click="handleClick"
         >
-            <NavigationIcon :icon="item.icon" />
-            <span>{{ $t(item.label) }}</span>
+            <NavLinkContent
+                :icon="item.icon"
+                :title="item.title"
+                :badge="badgeConfig"
+            />
         </SidebarMenuButton>
     </SidebarMenuItem>
 
@@ -143,23 +189,36 @@ function handleClick(event: MouseEvent) {
         <SidebarMenuButton
             as-child
             :is-active="isActive"
-            :tooltip="showTooltip ? $t(item.label) : undefined"
+            :tooltip="showTooltip ? $t(item.title) : undefined"
         >
-            <!-- External link (non-Inertia) -->
+            <!-- External link (regular anchor) -->
             <a
                 v-if="isExternal"
                 :href="item.url || '#'"
-                target="_blank"
-                rel="noopener noreferrer"
+                :target="openInNewTab ? '_blank' : undefined"
+                :rel="openInNewTab ? 'noopener noreferrer' : undefined"
+                :class="item.class"
             >
-                <NavigationIcon :icon="item.icon" />
-                <span>{{ $t(item.label) }}</span>
-                <IconExternalLink class="ml-auto size-4" />
+                <NavLinkContent
+                    :icon="item.icon"
+                    :title="item.title"
+                    :badge="badgeConfig"
+                    :show-external-icon="openInNewTab"
+                />
             </a>
             <!-- Internal Inertia link -->
-            <Link v-else :href="item.url || '#'">
-                <NavigationIcon :icon="item.icon" />
-                <span>{{ $t(item.label) }}</span>
+            <Link
+                v-else
+                :href="item.url || '#'"
+                :target="openInNewTab ? '_blank' : undefined"
+                :class="item.class"
+            >
+                <NavLinkContent
+                    :icon="item.icon"
+                    :title="item.title"
+                    :badge="badgeConfig"
+                    :show-external-icon="openInNewTab"
+                />
             </Link>
         </SidebarMenuButton>
     </SidebarMenuItem>

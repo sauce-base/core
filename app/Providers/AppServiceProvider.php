@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Facades\Navigation; // TODO: use Spatie\Navigation\Facades\Navigation;
 use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Spatie\Navigation\Facades\Navigation;
 use Spatie\Navigation\Section;
 
 class AppServiceProvider extends ServiceProvider
@@ -85,6 +85,21 @@ class AppServiceProvider extends ServiceProvider
                 'order' => 0,
             ]);
         });
+
+        Navigation::add(
+            'Star us on Github',
+            'https://github.com/sauce-base/saucebase',
+            function (Section $section) {
+                $section->attributes([
+                    'group' => 'secondary',
+                    'icon' => 'lucide:github',
+                    'external' => true,
+                    'newPage' => true,
+                    'order' => 0,
+                    'class' => 'text-blue-500',
+                ]);
+            }
+        );
     }
 
     protected function fixDiscoverEventsModulePathIssue(): void

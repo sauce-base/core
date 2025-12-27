@@ -2,6 +2,7 @@
 import { computed, type Component } from 'vue';
 // Navigation icons from backend providers
 // Add new icons here when adding new navigation items
+import IconGithub from '~icons/lucide/github';
 import IconLogOut from '~icons/lucide/log-out';
 import IconSettings from '~icons/lucide/settings';
 import IconSettings2 from '~icons/lucide/settings-2';
@@ -21,6 +22,8 @@ const props = defineProps<{ icon?: string | null }>();
  * To add a new navigation icon:
  * 1. Import it: import IconFoo from '~icons/lucide/foo'
  * 2. Add to iconMap: 'lucide:foo': IconFoo
+ *
+ * //TODO: Consider automating this process if the number of icons grows large.
  */
 const iconMap: Record<string, Component> = {
     'lucide:log-out': IconLogOut,
@@ -29,6 +32,7 @@ const iconMap: Record<string, Component> = {
     'lucide:square-terminal': IconSquareTerminal,
     'lucide:user-circle': IconUserCircle,
     'lucide:shield-check': IconShieldCheck,
+    'lucide:github': IconGithub,
 };
 
 const iconComponent = computed(() => {

@@ -3,6 +3,7 @@
 namespace App\Services\Navigation;
 
 use Spatie\Navigation\Navigation as SpatieNavigation;
+use Spatie\Navigation\Section;
 
 /**
  * Custom Navigation Service.
@@ -13,31 +14,107 @@ use Spatie\Navigation\Navigation as SpatieNavigation;
 class Navigation extends SpatieNavigation
 {
     /**
-     * Get navigation tree filtered by group and transformed to MenuItem format.
+     * Add a navigation item with a runtime condition check.
      *
-     * @param  string  $group  Group name to filter by (main, secondary, settings, user)
-     * @return array Transformed and filtered MenuItem array
+     * Unlike addIf (which checks at registration time), addWhen stores a callable
+     * that is evaluated at render time, allowing for dynamic visibility based on
+     * runtime state (e.g., current user permissions, feature flags).
+     *
+     * @param  callable  $condition  Callable that returns bool, evaluated at render time
+     * @param  string  $title  Navigation item title
+     * @param  string  $url  Navigation item URL
+     * @param  callable|null  $configure  Optional callback to configure the Section
      */
-    public function treeByGroup(string $group): array
+    public function addWhen(callable $condition, string $title = '', string $url = '', ?callable $configure = null): self
     {
-        $tree = $this->tree();
-        $filtered = $this->filterByGroup($tree, $group);
+        $this->add($title, $url, function (Section $section) use ($condition, $configure) {
+            // Store the 'when' callable for runtime evaluation
+            $section->attributes([
+                'when' => $condition,
+            ]);
 
-        return $this->transformTree($filtered);
+            // Apply additional configuration if provided
+            if ($configure) {
+                $configure($section);
+            }
+        });
+
+        return $this;
     }
 
     /**
-     * Filter navigation tree by group attribute.
+     * Get all navigation items grouped by their 'group' attribute.
+     *
+     * Returns an associative array where keys are group names and values are
+     * arrays of MenuItem objects. Items are filtered by 'when' callables and
+     * transformed to the MenuItem format.
+     *
+     * This is more efficient than calling treeByGroup() multiple times, as it
+     * processes the entire navigation tree once and groups items automatically.
+     *
+     * @return array Associative array of grouped MenuItems, e.g.:
+     *               [
+     *               'main' => [...MenuItem[]],
+     *               'settings' => [...MenuItem[]],
+     *               'user' => [...MenuItem[]],
+     *               ]
+     */
+    public function treeGrouped(): array
+    {
+        $tree = $this->tree();
+
+        // Group items by their 'group' attribute
+        $grouped = [];
+        foreach ($tree as $item) {
+            $group = $item['attributes']['group'] ?? 'ungrouped';
+            if (! isset($grouped[$group])) {
+                $grouped[$group] = [];
+            }
+            $grouped[$group][] = $item;
+        }
+
+        // Filter and transform each group to MenuItem format
+        foreach ($grouped as $group => $items) {
+            $filtered = $this->filterCallable($items);
+            $grouped[$group] = $this->transformTree($filtered);
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * Filter navigation items based on 'when' callable attribute.
+     *
+     * Items without a 'when' attribute are included by default.
+     * Items with a 'when' callable are included only if the callable returns true.
      *
      * @param  array  $tree  Spatie navigation tree
-     * @param  string  $group  Group name to filter by
      * @return array Filtered navigation items
      */
-    protected function filterByGroup(array $tree, string $group): array
+    protected function filterCallable(array $tree): array
     {
-        return array_values(array_filter($tree, function ($item) use ($group) {
-            return ($item['attributes']['group'] ?? null) === $group;
-        }));
+        $filtered = array_filter($tree, function ($item) {
+            $callable = $item['attributes']['when'] ?? null;
+
+            // If no 'when' callable exists, include the item by default
+            if ($callable === null) {
+                return true;
+            }
+
+            // If 'when' exists, include only if it's callable and returns true
+            return is_callable($callable) && $callable();
+        });
+
+        // Recursively filter children
+        $filtered = array_map(function ($item) {
+            if (! empty($item['children'])) {
+                $item['children'] = $this->filterCallable($item['children']);
+            }
+
+            return $item;
+        }, $filtered);
+
+        return array_values($filtered);
     }
 
     /**
@@ -58,41 +135,46 @@ class Navigation extends SpatieNavigation
     }
 
     /**
-     * Transform a single navigation item.
+     * Transform a single navigation item to MenuItem format.
+     *
+     * Converts Spatie's navigation item structure to a clean MenuItem object,
+     * filtering out internal attributes (when, group, order) and calculating
+     * the active state based on route matching.
      *
      * @param  array  $item  Spatie navigation item
-     * @return array MenuItem
+     * @return array MenuItem with structure:
+     *               [
+     *               'title' => string,
+     *               'url' => string|null,
+     *               'active' => bool,
+     *               'icon' => string|null,      // optional
+     *               'action' => string|null,    // optional
+     *               'type' => string|null,      // optional
+     *               'external' => bool|null,    // optional
+     *               'children' => array|null,   // optional
+     *               ]
      */
     protected function transformItem(array $item): array
     {
         $attributes = $item['attributes'] ?? [];
 
-        // Build MenuItem structure
+        // Build base MenuItem structure with required fields
         $menuItem = [
-            'label' => $attributes['label'] ?? $item['title'],
-            'url' => $item['url'] ?? null,
-            'active' => $this->calculateActiveState($item, $attributes),
+            'title' => $item['title'],
+            'active' => $this->isItemActive($item),
         ];
 
-        // Add optional properties from attributes
-        if (isset($attributes['route'])) {
-            $menuItem['route'] = $attributes['route'];
+        // Add URL from the item (stored at root level by Spatie)
+        if (isset($item['url'])) {
+            $menuItem['url'] = $item['url'];
         }
 
-        if (isset($attributes['icon'])) {
-            $menuItem['icon'] = $attributes['icon'];
-        }
-
-        if (isset($attributes['action'])) {
-            $menuItem['action'] = $attributes['action'];
-        }
-
-        if (isset($attributes['type'])) {
-            $menuItem['type'] = $attributes['type'];
-        }
-
-        if (isset($attributes['external'])) {
-            $menuItem['external'] = $attributes['external'];
+        // Add optional attributes if they exist (internal attributes like 'when', 'group', 'order' are excluded)
+        $optionalFields = ['icon', 'action', 'type', 'external', 'newPage', 'class', 'badge'];
+        foreach ($optionalFields as $field) {
+            if (isset($attributes[$field])) {
+                $menuItem[$field] = $attributes[$field];
+            }
         }
 
         // Transform children recursively
@@ -104,30 +186,31 @@ class Navigation extends SpatieNavigation
     }
 
     /**
-     * Calculate the active state for a navigation item.
+     * Check if a navigation item is active based on current URL.
      *
-     * Uses route-based matching for exact active detection instead of URL prefix matching.
-     * This prevents parent items from being marked as active when on child routes.
+     * Uses exact matching only. Parent items should handle their own active state
+     * by checking if any of their children are active.
      *
      * @param  array  $item  Spatie navigation item
-     * @param  array  $attributes  Item attributes
      * @return bool Whether the item is active
      */
-    protected function calculateActiveState(array $item, array $attributes): bool
+    protected function isItemActive(array $item): bool
     {
-        // If a route attribute is provided, use route-based matching
-        if (isset($attributes['route'])) {
-            try {
-                return request()->routeIs($attributes['route']);
-            } catch (\Exception) {
-                // Route doesn't exist or error occurred
-                return false;
-            }
+        $itemUrl = $item['url'] ?? null;
+
+        if (! $itemUrl) {
+            return false;
         }
 
-        // Fallback to Spatie's URL-based active detection only if no route is specified
-        // Note: This uses prefix matching, so it may mark parent paths as active
-        return $item['active'] ?? false;
+        // Get current request URL
+        $currentUrl = request()->url();
+
+        // Normalize URLs by removing trailing slashes
+        $itemPath = rtrim(parse_url($itemUrl, PHP_URL_PATH), '/');
+        $currentPath = rtrim(parse_url($currentUrl, PHP_URL_PATH), '/');
+
+        // Only exact match
+        return $currentPath === $itemPath;
     }
 
     /**

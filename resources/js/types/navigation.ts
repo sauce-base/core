@@ -15,11 +15,20 @@ export interface Navigation {
 }
 
 /**
+ * Badge configuration for navigation items.
+ */
+export interface MenuBadge {
+    content?: string | number; // Badge text/number (if omitted, shows small dot)
+    variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+    class?: string; // Additional custom classes
+}
+
+/**
  * Menu item.
  */
 export interface MenuItem {
     id?: string;
-    label: string;
+    title: string;
     route?: string; // Laravel route name (for active state matching)
     url?: string; // Generated URL (for navigation)
     icon?: string; // Lucide icon name
@@ -28,6 +37,8 @@ export interface MenuItem {
     type?: 'label' | 'separator';
     active?: boolean; // Server-side active state from Spatie
     external?: boolean; // If true, use regular anchor tag instead of Inertia Link
+    newPage?: boolean; // If true, open link in new tab (target="_blank")
+    badge?: MenuBadge | boolean; // Badge configuration or true for simple dot
     children?: MenuItem[];
     class?: string; // Additional CSS classes
 }
