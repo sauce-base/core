@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Services\Navigation\NavigationRegistry;
 use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Spatie\Navigation\Facades\Navigation;
 use Spatie\Navigation\Section;
 
 class AppServiceProvider extends ServiceProvider
@@ -78,18 +78,28 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerNavigation(): void
     {
-        $registry = app(NavigationRegistry::class);
+        Navigation::add('Dashboard', route('dashboard'), function (Section $section) {
+            $section->attributes([
+                'group' => 'main',
+                'icon' => 'lucide:square-terminal',
+                'order' => 0,
+            ]);
+        });
 
-        // TODO: fix this as the routes are not available yet
-        $registry->app()
-            ->add('Dashboard', '/dashboard', function (Section $section) {
+        Navigation::add(
+            'Star us on Github',
+            'https://github.com/sauce-base/saucebase',
+            function (Section $section) {
                 $section->attributes([
-                    'label' => 'Dashboard',
-                    'route' => 'dashboard',
-                    'icon' => 'square-terminal',
+                    'group' => 'secondary',
+                    'icon' => 'lucide:github',
+                    'external' => true,
+                    'newPage' => true,
                     'order' => 0,
+                    'class' => 'text-blue-500',
                 ]);
-            });
+            }
+        );
     }
 
     protected function fixDiscoverEventsModulePathIssue(): void

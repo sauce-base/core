@@ -2,9 +2,10 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff } from 'lucide-vue-next';
 import type { HTMLAttributes } from 'vue';
 import { ref } from 'vue';
+import IconEye from '~icons/lucide/eye';
+import IconEyeOff from '~icons/lucide/eye-off';
 
 const props = defineProps<{
     defaultValue?: string | number;
@@ -53,8 +54,11 @@ const togglePasswordVisibility = () => {
                     : 'password-toggle'
             "
         >
-            <Eye v-if="!showPassword" class="text-muted-foreground h-4 w-4" />
-            <EyeOff v-else class="text-muted-foreground h-4 w-4" />
+            <IconEye
+                v-if="!showPassword"
+                class="text-muted-foreground h-4 w-4"
+            />
+            <IconEyeOff v-else class="text-muted-foreground h-4 w-4" />
         </Button>
     </div>
 </template>

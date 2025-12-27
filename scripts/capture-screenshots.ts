@@ -48,13 +48,13 @@ const screenshots: ScreenshotConfig[] = [
     { name: 'settings-dark', route: '/settings', theme: 'dark', auth: true },
     {
         name: 'profile-dark',
-        route: '/auth/settings/profile',
+        route: '/settings/profile',
         theme: 'dark',
         auth: true,
     },
     {
         name: 'profile-light',
-        route: '/auth/settings/profile',
+        route: '/settings/profile',
         theme: 'light',
         auth: true,
     },
