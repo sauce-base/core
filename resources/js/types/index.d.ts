@@ -7,8 +7,15 @@ export interface User {
 }
 
 export interface Breadcrumb {
-    label: string;
-    url: string;
+    title: string;
+    url?: string;
+    active?: boolean;
+    attributes?: {
+        label?: string;
+        [key: string]: any;
+    };
+    children?: any[];
+    depth?: number;
 }
 
 export type PageProps<

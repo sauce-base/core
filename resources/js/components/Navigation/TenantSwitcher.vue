@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import ApplicationLogo from '@/components/ApplicationLogo.vue';
-import { Link } from '@inertiajs/vue3';
-import { ChevronsUpDown, Plus } from 'lucide-vue-next';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,14 +9,16 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { markRaw, ref } from 'vue';
-
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
+import { Link } from '@inertiajs/vue3';
+import { markRaw, ref } from 'vue';
+import IconChevronsUpDown from '~icons/lucide/chevrons-up-down';
+import IconPlus from '~icons/lucide/plus';
 
 const { isMobile } = useSidebar();
 const tenants = [
@@ -61,7 +60,7 @@ const activeTenant = ref(tenants[0]);
                                     activeTenant.plan
                                 }}</span>
                             </div>
-                            <ChevronsUpDown class="ml-auto" />
+                            <IconChevronsUpDown class="ml-auto" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -100,7 +99,7 @@ const activeTenant = ref(tenants[0]);
                             <div
                                 class="flex size-6 items-center justify-center rounded-md border bg-transparent"
                             >
-                                <Plus class="size-4" />
+                                <IconPlus class="size-4" />
                             </div>
                             <div class="text-muted-foreground font-medium">
                                 Add tenant

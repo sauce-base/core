@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ChevronsUpDown } from 'lucide-vue-next';
-
 import LanguageSelector from '@/components/LanguageSelector.vue';
+import NavigationIcon from '@/components/NavigationIcon.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -22,9 +21,10 @@ import {
 import type { User } from '@/types';
 import type { MenuItem } from '@/types/navigation';
 import { handleAction } from '@/utils/actionHandlers';
-import { resolveIcon } from '@/utils/iconResolver';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import IconChevronsUpDown from '~icons/lucide/chevrons-up-down';
+import IconUserCircle from '~icons/lucide/user-circle';
 
 const props = defineProps<{
     user: User;
@@ -74,7 +74,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                                 {{ user.email }}
                             </span>
                         </div>
-                        <ChevronsUpDown class="ml-auto size-4" />
+                        <IconChevronsUpDown class="ml-auto size-4" />
                     </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -113,10 +113,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                         <DropdownMenuSeparator />
                         <DropdownMenuItem as-child>
                             <Link :href="route('settings.profile')">
-                                <component
-                                    :is="resolveIcon('user-circle')"
-                                    class="mr-2 size-4"
-                                />
+                                <IconUserCircle class="size-4" />
                                 {{ $t('Profile') }}
                             </Link>
                         </DropdownMenuItem>
@@ -149,17 +146,11 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                                     v-if="!item.action"
                                     :href="item.url || '#'"
                                 >
-                                    <component
-                                        :is="resolveIcon(item.icon)"
-                                        v-if="item.icon"
-                                    />
+                                    <NavigationIcon :icon="item.icon" />
                                     <span>{{ $t(item.label) }}</span>
                                 </Link>
                                 <div v-else>
-                                    <component
-                                        :is="resolveIcon(item.icon)"
-                                        v-if="item.icon"
-                                    />
+                                    <NavigationIcon :icon="item.icon" />
                                     <span>{{ $t(item.label) }}</span>
                                 </div>
                             </DropdownMenuItem>

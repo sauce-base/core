@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NavigationIcon from '@/components/NavigationIcon.vue';
 import {
     Collapsible,
     CollapsibleContent,
@@ -15,10 +16,10 @@ import {
 } from '@/components/ui/sidebar';
 import type { MenuItem } from '@/types/navigation';
 import { handleAction } from '@/utils/actionHandlers';
-import { resolveIcon } from '@/utils/iconResolver';
 import { Link } from '@inertiajs/vue3';
-import { ChevronRight } from 'lucide-vue-next';
 import { computed, inject } from 'vue';
+import IconExternalLink from '~icons/lucide/arrow-up-right';
+import IconChevronRight from '~icons/lucide/chevron-right';
 
 const props = defineProps<{
     item: MenuItem;
@@ -32,6 +33,7 @@ const isSeparator = computed(() => props.item.type === 'separator');
 const isLabel = computed(() => props.item.type === 'label');
 const isAction = computed(() => !!props.item.action);
 const hasChildren = computed(() => !!props.item.children?.length);
+const isExternal = computed(() => props.item.external === true);
 
 // Active state - prefer server-side from Spatie, fallback to Ziggy
 const isActive = computed(() => {
@@ -48,11 +50,6 @@ const isActive = computed(() => {
         return false;
     }
 });
-
-// Icon resolution
-const icon = computed(() =>
-    props.item.icon ? resolveIcon(props.item.icon) : null,
-);
 
 // Action handler
 function handleClick(event: MouseEvent) {
@@ -83,9 +80,9 @@ function handleClick(event: MouseEvent) {
                 <SidebarMenuButton
                     :tooltip="showTooltip ? $t(item.label) : undefined"
                 >
-                    <component :is="icon" v-if="icon" />
+                    <NavigationIcon :icon="item.icon" />
                     <span>{{ $t(item.label) }}</span>
-                    <ChevronRight
+                    <IconChevronRight
                         class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
                     />
                 </SidebarMenuButton>
@@ -107,11 +104,20 @@ function handleClick(event: MouseEvent) {
                                       )
                             "
                         >
-                            <Link :href="child.url || '#'">
-                                <component
-                                    :is="resolveIcon(child.icon)"
-                                    v-if="child.icon"
-                                />
+                            <!-- External child link (non-Inertia) -->
+                            <a
+                                v-if="child.external === true"
+                                :href="child.url || '#'"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <NavigationIcon :icon="child.icon" />
+                                <span>{{ $t(child.label) }}</span>
+                                <IconExternalLink class="ml-auto size-4" />
+                            </a>
+                            <!-- Internal child Inertia link -->
+                            <Link v-else :href="child.url || '#'">
+                                <NavigationIcon :icon="child.icon" />
                                 <span>{{ $t(child.label) }}</span>
                             </Link>
                         </SidebarMenuSubButton>
@@ -127,7 +133,7 @@ function handleClick(event: MouseEvent) {
             :tooltip="showTooltip ? $t(item.label) : undefined"
             @click="handleClick"
         >
-            <component :is="icon" v-if="icon" />
+            <NavigationIcon :icon="item.icon" />
             <span>{{ $t(item.label) }}</span>
         </SidebarMenuButton>
     </SidebarMenuItem>
@@ -139,8 +145,20 @@ function handleClick(event: MouseEvent) {
             :is-active="isActive"
             :tooltip="showTooltip ? $t(item.label) : undefined"
         >
-            <Link :href="item.url || '#'">
-                <component :is="icon" v-if="icon" />
+            <!-- External link (non-Inertia) -->
+            <a
+                v-if="isExternal"
+                :href="item.url || '#'"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <NavigationIcon :icon="item.icon" />
+                <span>{{ $t(item.label) }}</span>
+                <IconExternalLink class="ml-auto size-4" />
+            </a>
+            <!-- Internal Inertia link -->
+            <Link v-else :href="item.url || '#'">
+                <NavigationIcon :icon="item.icon" />
                 <span>{{ $t(item.label) }}</span>
             </Link>
         </SidebarMenuButton>

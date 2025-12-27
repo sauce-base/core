@@ -8,7 +8,8 @@
  * Navigation prop structure (shared via Inertia).
  */
 export interface Navigation {
-    app: MenuItem[];
+    main: MenuItem[];
+    secondary: MenuItem[];
     settings: MenuItem[];
     user: MenuItem[];
 }
@@ -26,5 +27,7 @@ export interface MenuItem {
     action?: string; // For action buttons
     type?: 'label' | 'separator';
     active?: boolean; // Server-side active state from Spatie
+    external?: boolean; // If true, use regular anchor tag instead of Inertia Link
     children?: MenuItem[];
+    class?: string; // Additional CSS classes
 }
