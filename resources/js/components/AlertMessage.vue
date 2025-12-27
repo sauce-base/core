@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { Alert, AlertDescription } from '@/components/ui/alert';
-
-import {
-    AlertCircle,
-    AlertTriangle,
-    CheckCircle,
-    Info,
-    type LucideIcon,
-} from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
+import IconAlertCircle from '~icons/lucide/alert-circle';
+import IconAlertTriangle from '~icons/lucide/alert-triangle';
+import IconCheckCircle from '~icons/lucide/check-circle';
+import IconInfo from '~icons/lucide/info';
 
 interface Props {
     message: string | unknown;
@@ -24,12 +20,12 @@ const props = withDefaults(defineProps<Props>(), {
     hideIcon: false,
 });
 
-const defaultIcons: Record<string, LucideIcon> = {
-    success: CheckCircle,
-    info: Info,
-    warning: AlertTriangle,
-    error: AlertCircle,
-    default: Info,
+const defaultIcons: Record<string, Component> = {
+    success: IconCheckCircle,
+    info: IconInfo,
+    warning: IconAlertTriangle,
+    error: IconAlertCircle,
+    default: IconInfo,
 };
 
 const currentIcon = computed(() => {

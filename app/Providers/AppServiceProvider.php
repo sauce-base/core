@@ -83,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
                 'group' => 'main',
                 'label' => 'Dashboard',
                 'route' => 'dashboard',
-                'icon' => 'square-terminal',
+                'icon' => 'lucide:square-terminal',
                 'order' => 0,
             ]);
         });

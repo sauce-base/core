@@ -11,8 +11,8 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { PageProps } from '@/types';
 import type { Navigation } from '@/types/navigation';
 import { usePage } from '@inertiajs/vue3';
-import { Menu } from 'lucide-vue-next';
 import { computed } from 'vue';
+import IconMenu from '~icons/lucide/menu';
 import NavGroup from './NavGroup.vue';
 
 const page = usePage<PageProps<{ navigation: Navigation }>>();
@@ -32,7 +32,7 @@ const items = computed(() => page.props.navigation?.settings || []);
                 class="md:hidden"
                 aria-label="Open settings menu"
             >
-                <Menu class="size-5" />
+                <IconMenu class="size-5" />
             </Button>
         </SheetTrigger>
         <SheetContent side="left" class="w-64">
