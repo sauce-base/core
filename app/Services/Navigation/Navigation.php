@@ -2,21 +2,51 @@
 
 namespace App\Services\Navigation;
 
+use Spatie\Navigation\Navigation as SpatieNavigation;
+
 /**
- * Navigation Transformer Service.
+ * Custom Navigation Service.
  *
- * Transforms Spatie's navigation tree structure to our MenuItem format
- * for consumption by frontend components.
+ * Extends Spatie's Navigation to add group-based filtering and transformation
+ * to MenuItem format for frontend consumption.
  */
-class NavigationTransformer
+class Navigation extends SpatieNavigation
 {
+    /**
+     * Get navigation tree filtered by group and transformed to MenuItem format.
+     *
+     * @param  string  $group  Group name to filter by (main, secondary, settings, user)
+     * @return array Transformed and filtered MenuItem array
+     */
+    public function treeByGroup(string $group): array
+    {
+        $tree = $this->tree();
+        $filtered = $this->filterByGroup($tree, $group);
+
+        return $this->transformTree($filtered);
+    }
+
+    /**
+     * Filter navigation tree by group attribute.
+     *
+     * @param  array  $tree  Spatie navigation tree
+     * @param  string  $group  Group name to filter by
+     * @return array Filtered navigation items
+     */
+    protected function filterByGroup(array $tree, string $group): array
+    {
+        return array_values(array_filter($tree, function ($item) use ($group) {
+            return ($item['attributes']['group'] ?? null) === $group;
+        }));
+    }
+
     /**
      * Transform Spatie navigation tree to MenuItem array.
      *
      * @param  array  $tree  Spatie navigation tree
      * @return array MenuItem array
      */
-    public function transform(array $tree): array
+    protected function transformTree(array $tree): array
     {
         // Sort by order attribute before transforming
         $tree = $this->sortByOrder($tree);
@@ -33,7 +63,7 @@ class NavigationTransformer
      * @param  array  $item  Spatie navigation item
      * @return array MenuItem
      */
-    private function transformItem(array $item): array
+    protected function transformItem(array $item): array
     {
         $attributes = $item['attributes'] ?? [];
 
@@ -63,7 +93,7 @@ class NavigationTransformer
 
         // Transform children recursively
         if (! empty($item['children'])) {
-            $menuItem['children'] = $this->transform($item['children']);
+            $menuItem['children'] = $this->transformTree($item['children']);
         }
 
         return $menuItem;
@@ -79,7 +109,7 @@ class NavigationTransformer
      * @param  array  $attributes  Item attributes
      * @return bool Whether the item is active
      */
-    private function calculateActiveState(array $item, array $attributes): bool
+    protected function calculateActiveState(array $item, array $attributes): bool
     {
         // If a route attribute is provided, use route-based matching
         if (isset($attributes['route'])) {
@@ -102,7 +132,7 @@ class NavigationTransformer
      * @param  array  $items  Navigation items
      * @return array Sorted items
      */
-    private function sortByOrder(array $items): array
+    protected function sortByOrder(array $items): array
     {
         usort($items, function ($a, $b) {
             $orderA = $a['attributes']['order'] ?? 999;

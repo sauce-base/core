@@ -21,8 +21,8 @@ withDefaults(defineProps<SidebarProps>(), {
 
 const page = usePage<{ navigation: Navigation; auth: { user: User } }>();
 
-// Always show app navigation in main sidebar
-const items = computed(() => page.props.navigation?.app || []);
+// Always show main navigation in main sidebar
+const items = computed(() => page.props.navigation?.main || []);
 const userItems = computed(() => page.props.navigation?.user || []);
 const secondaryItems = computed(() => page.props.navigation?.secondary || []);
 const user = computed(() => page.props.auth?.user);

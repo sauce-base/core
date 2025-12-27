@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Navigation\NavigationRegistry;
+use App\Facades\Navigation;
 use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -78,18 +78,15 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerNavigation(): void
     {
-        $registry = app(NavigationRegistry::class);
-
-        // TODO: fix this as the routes are not available yet
-        $registry->app()
-            ->add('Dashboard', '/dashboard', function (Section $section) {
-                $section->attributes([
-                    'label' => 'Dashboard',
-                    'route' => 'dashboard',
-                    'icon' => 'square-terminal',
-                    'order' => 0,
-                ]);
-            });
+        Navigation::add('Dashboard', route('dashboard'), function (Section $section) {
+            $section->attributes([
+                'group' => 'main',
+                'label' => 'Dashboard',
+                'route' => 'dashboard',
+                'icon' => 'square-terminal',
+                'order' => 0,
+            ]);
+        });
     }
 
     protected function fixDiscoverEventsModulePathIssue(): void

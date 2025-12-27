@@ -8,7 +8,8 @@
  * Navigation prop structure (shared via Inertia).
  */
 export interface Navigation {
-    app: MenuItem[];
+    main: MenuItem[];
+    secondary: MenuItem[];
     settings: MenuItem[];
     user: MenuItem[];
 }
