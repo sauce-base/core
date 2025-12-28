@@ -14,6 +14,7 @@
         "paths": {
             "@/*": ["./resources/js/*"],
             "@modules/*": ["./modules/*"],
+            "@vite/*": ["./storage/framework/vite/*"],
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         }
     },
@@ -22,6 +23,7 @@
         "resources/js/**/*.vue",
         "modules/**/resources/js/**/*.ts",
         "modules/**/resources/js/**/*.vue",
+        "storage/framework/vite/**/*.ts",
         "types/**/*.ts"
     ]
 }
