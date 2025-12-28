@@ -22,23 +22,23 @@ Scans PHP files for icon references and automatically generates a TypeScript reg
 Already integrated in vite.config.js:
 
 ```javascript
-import { iconRegistryGenerator } from './vite/plugins/icon-registry';
+import { iconRegistryGenerator } from 'resources/js/icon-registry';
 
 export default defineConfig({
     plugins: [
         iconRegistryGenerator({
-            scanPaths: ['app', 'modules/*/app'],
-            outputPath: 'resources/js/generated/icon-registry.ts',
+            scanPaths: [
+                'app/Providers', // Core ServiceProviders
+                'app/Http/Controllers', // Core Controllers (for menus)
+                'modules/*/app/Providers', // Module ServiceProviders
+                'modules/*/app/Http/Controllers', // Module Controllers (for menus)
+                'config', // Config files
+            ],
+            outputPath: 'resources/js/icon-registry.ts',
             debounceMs: 300,
         }),
         // ... other plugins
     ],
-    resolve: {
-        alias: {
-            '@generated': path.resolve(__dirname, 'resources/js/generated'),
-            // ... other aliases
-        },
-    },
 });
 ```
 
@@ -74,11 +74,11 @@ Works with any iconify collection via unplugin-icons:
 
 ### Configuration Options
 
-| Option       | Type       | Default                                        | Description                                         |
-| ------------ | ---------- | ---------------------------------------------- | --------------------------------------------------- |
-| `scanPaths`  | `string[]` | `['app', 'modules/*/app']`                     | Paths to scan for PHP files                         |
-| `outputPath` | `string`   | `'resources/js/generated/icon-registry.ts'`    | Where to generate the registry                      |
-| `debounceMs` | `number`   | `300`                                          | Debounce delay for file watching                    |
+| Option       | Type       | Default                                     | Description                      |
+| ------------ | ---------- | ------------------------------------------- | -------------------------------- |
+| `scanPaths`  | `string[]` | `['app', 'modules/*/app']`                  | Paths to scan for PHP files      |
+| `outputPath` | `string`   | `'resources/js/generated/icon-registry.ts'` | Where to generate the registry   |
+| `debounceMs` | `number`   | `300`                                       | Debounce delay for file watching |
 
 ### How It Works
 
