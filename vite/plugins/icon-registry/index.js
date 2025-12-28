@@ -166,6 +166,25 @@ export function iconRegistryGenerator(options = {}) {
             return null;
         }
 
+        // Security: Validate library and name to prevent code injection and path traversal
+        // Only allow alphanumeric characters and hyphens
+        const safePattern = /^[a-z0-9-]+$/i;
+        const maxLength = 50;
+
+        if (library.length > maxLength || name.length > maxLength) {
+            console.warn(
+                `[icon-registry] Rejecting icon "${iconIdentifier}": library or name exceeds ${maxLength} characters`,
+            );
+            return null;
+        }
+
+        if (!safePattern.test(library) || !safePattern.test(name)) {
+            console.warn(
+                `[icon-registry] Rejecting icon "${iconIdentifier}": contains invalid characters. Only alphanumeric and hyphens allowed.`,
+            );
+            return null;
+        }
+
         // Convert kebab-case to PascalCase for import name
         const pascalName = name
             .split('-')
