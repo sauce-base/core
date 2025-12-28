@@ -142,7 +142,9 @@ export function iconRegistryGenerator(options = {}) {
      * Pattern: 'icon' => 'library:icon-name' or "icon" => "library:icon-name"
      */
     function extractIcons(phpContent) {
-        const iconPattern = /['"]icon['"]\s*=>\s*['"]([\w-]+):([\w-]+)['"]/g;
+        // Use bounded quantifiers to prevent ReDoS vulnerability
+        // Limit library and icon names to 50 chars max ([\w-]{1,50})
+        const iconPattern = /['"]icon['"]\s{0,100}=>\s{0,100}['"]([\w-]{1,50}):([\w-]{1,50})['"]/g;
         const icons = new Set();
         let match;
 
@@ -163,6 +165,31 @@ export function iconRegistryGenerator(options = {}) {
         const [library, name] = iconIdentifier.split(':');
 
         if (!library || !name) {
+            return null;
+        }
+
+        // SECURITY: Validate library and name to prevent code injection and path traversal
+        // Only allow alphanumeric characters and hyphens
+        const validPattern = /^[a-z0-9-]+$/i;
+        const maxLength = 50;
+
+        // Validate library
+        if (!validPattern.test(library) || library.length > maxLength) {
+            if (process.env.NODE_ENV !== 'production') {
+                console.warn(
+                    `[icon-registry] Rejected invalid library name: "${library}" (must match /^[a-z0-9-]+$/i and be <= ${maxLength} chars)`,
+                );
+            }
+            return null;
+        }
+
+        // Validate icon name
+        if (!validPattern.test(name) || name.length > maxLength) {
+            if (process.env.NODE_ENV !== 'production') {
+                console.warn(
+                    `[icon-registry] Rejected invalid icon name: "${name}" (must match /^[a-z0-9-]+$/i and be <= ${maxLength} chars)`,
+                );
+            }
             return null;
         }
 
@@ -234,11 +261,22 @@ export function iconRegistryGenerator(options = {}) {
         try {
             const files = await scanPhpFiles();
             const allIcons = new Set();
+            // SECURITY: Limit file size to prevent DoS via extremely large files (10MB max)
+            const maxFileSizeBytes = 10 * 1024 * 1024;
 
             // Read and extract icons from each file
             await Promise.all(
                 files.map(async (file) => {
                     try {
+                        // Check file size before reading
+                        const stats = statSync(file);
+                        if (stats.size > maxFileSizeBytes) {
+                            console.warn(
+                                `[icon-registry] Skipping ${file}: file too large (${stats.size} bytes, max ${maxFileSizeBytes})`,
+                            );
+                            return;
+                        }
+
                         const content = await readFile(file, 'utf-8');
                         const icons = extractIcons(content);
                         icons.forEach((icon) => allIcons.add(icon));
