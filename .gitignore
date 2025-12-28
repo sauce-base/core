@@ -19,9 +19,11 @@
 /public/storage
 /storage/*.key
 /storage/pail
-/storage/framework/vite/
 /vendor
 /bootstrap/ssr
+
+# Icon registry
+/resources/js/icon-registry.ts
 
 # Module-specific ignores
 modules/*/node_modules/

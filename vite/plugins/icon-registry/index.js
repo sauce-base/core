@@ -8,6 +8,7 @@ import {
 import { readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadEnabledModuleNames } from '../../../module-loader.js';
 import { generateIconRegistryTemplate } from './template.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -29,112 +30,62 @@ export function iconRegistryGenerator(options = {}) {
     let debounceTimer = null;
 
     /**
-     * Load enabled modules from modules_statuses.json
+     * Find PHP files that contain icon references
+     * Scans Providers, Controllers, and config files
      */
-    async function loadEnabledModules() {
-        try {
-            const statusFile = resolve(
-                __dirname,
-                '../../..',
-                'modules_statuses.json',
-            );
-            const content = await readFile(statusFile, 'utf-8');
-            const statuses = JSON.parse(content);
-            return Object.keys(statuses).filter(
-                (name) => statuses[name] === true,
-            );
-        } catch {
-            console.warn(
-                '[icon-registry] Could not load modules_statuses.json, scanning all modules',
-            );
-            return null;
-        }
-    }
-
-    /**
-     * Recursively find all PHP files in a directory
-     */
-    function findPhpFilesRecursive(dir) {
-        const files = [];
-
-        try {
-            const entries = readdirSync(dir);
-
-            for (const entry of entries) {
-                const fullPath = join(dir, entry);
-
-                try {
-                    const stats = statSync(fullPath);
-
-                    if (stats.isDirectory()) {
-                        // Recursively scan subdirectories
-                        files.push(...findPhpFilesRecursive(fullPath));
-                    } else if (stats.isFile() && entry.endsWith('.php')) {
-                        files.push(fullPath);
-                    }
-                } catch {
-                    // Skip files/directories we can't access
-                    continue;
-                }
-            }
-        } catch {
-            // Skip directories we can't read
-        }
-
-        return files;
-    }
-
-    /**
-     * Scan PHP files for icon patterns
-     */
-    async function scanPhpFiles() {
-        const enabledModules = await loadEnabledModules();
-        const allFiles = [];
+    async function findIconFiles() {
         const projectRoot = resolve(__dirname, '../../..');
+        const enabledModules = await loadEnabledModuleNames(projectRoot);
+        const files = [];
 
         for (const scanPath of scanPaths) {
             if (scanPath.includes('modules/*/')) {
                 // Handle module patterns
                 const modulesDir = resolve(projectRoot, 'modules');
-
                 if (!existsSync(modulesDir)) {
                     continue;
                 }
 
-                if (enabledModules) {
-                    // Only scan enabled modules
-                    for (const module of enabledModules) {
-                        const modulePath = resolve(
-                            projectRoot,
-                            `modules/${module}/app`,
-                        );
-                        if (existsSync(modulePath)) {
-                            allFiles.push(...findPhpFilesRecursive(modulePath));
-                        }
-                    }
-                } else {
-                    // Scan all modules if status file not available
-                    const modules = readdirSync(modulesDir);
-                    for (const module of modules) {
-                        const modulePath = join(modulesDir, module, 'app');
-                        if (
-                            existsSync(modulePath) &&
-                            statSync(modulePath).isDirectory()
-                        ) {
-                            allFiles.push(...findPhpFilesRecursive(modulePath));
+                // Extract the path after 'modules/*/'
+                const pathAfterModules = scanPath.replace('modules/*/', '');
+                const modulesToScan =
+                    enabledModules.length > 0
+                        ? enabledModules
+                        : readdirSync(modulesDir);
+
+                for (const module of modulesToScan) {
+                    const modulePath = join(
+                        modulesDir,
+                        module,
+                        pathAfterModules,
+                    );
+                    if (
+                        existsSync(modulePath) &&
+                        statSync(modulePath).isDirectory()
+                    ) {
+                        const entries = readdirSync(modulePath);
+                        for (const entry of entries) {
+                            if (entry.endsWith('.php')) {
+                                files.push(join(modulePath, entry));
+                            }
                         }
                     }
                 }
             } else {
                 // Scan core app paths
                 const fullPath = resolve(projectRoot, scanPath);
-                if (existsSync(fullPath)) {
-                    allFiles.push(...findPhpFilesRecursive(fullPath));
+                if (existsSync(fullPath) && statSync(fullPath).isDirectory()) {
+                    const entries = readdirSync(fullPath);
+                    for (const entry of entries) {
+                        if (entry.endsWith('.php')) {
+                            files.push(join(fullPath, entry));
+                        }
+                    }
                 }
             }
         }
 
-        return [...new Set(allFiles)]; // Remove duplicates
+        return [...new Set(files)]; // Remove duplicates
     }
 
     /**
@@ -144,7 +95,8 @@ export function iconRegistryGenerator(options = {}) {
     function extractIcons(phpContent) {
         // Use bounded quantifiers to prevent ReDoS vulnerability
         // Limit library and icon names to 50 chars max ([\w-]{1,50})
-        const iconPattern = /['"]icon['"]\s{0,100}=>\s{0,100}['"]([\w-]{1,50}):([\w-]{1,50})['"]/g;
+        const iconPattern =
+            /['"]icon['"]\s{0,100}=>\s{0,100}['"]([\w-]{1,50}):([\w-]{1,50})['"]/g;
         const icons = new Set();
         let match;
 
@@ -259,7 +211,7 @@ export function iconRegistryGenerator(options = {}) {
      */
     async function generateIconRegistry() {
         try {
-            const files = await scanPhpFiles();
+            const files = await findIconFiles();
             const allIcons = new Set();
             // SECURITY: Limit file size to prevent DoS via extremely large files (10MB max)
             const maxFileSizeBytes = 10 * 1024 * 1024;
@@ -339,13 +291,32 @@ export function iconRegistryGenerator(options = {}) {
         configureServer(server) {
             // Watch PHP files in dev mode
             const projectRoot = resolve(__dirname, '../../..');
-            const watchPatterns = scanPaths.map((p) => resolve(projectRoot, p));
 
-            // Use Vite's file watcher
-            server.watcher.add(watchPatterns);
+            // Create glob patterns for specific PHP files only
+            const watchGlobs = [];
+            for (const scanPath of scanPaths) {
+                if (scanPath.includes('modules/*/')) {
+                    // For module patterns, create glob pattern
+                    watchGlobs.push(resolve(projectRoot, scanPath, '*.php'));
+                } else {
+                    // For regular paths, watch PHP files
+                    watchGlobs.push(resolve(projectRoot, scanPath, '*.php'));
+                }
+            }
+
+            // Also watch modules_statuses.json for module enable/disable changes
+            watchGlobs.push(resolve(projectRoot, 'modules_statuses.json'));
+
+            // Use Vite's file watcher with glob patterns
+            server.watcher.add(watchGlobs);
 
             server.watcher.on('change', (filePath) => {
-                if (filePath.endsWith('.php')) {
+                if (filePath.endsWith('modules_statuses.json')) {
+                    console.log(
+                        '[icon-registry] Module status changed, rescanning...',
+                    );
+                    scheduleRegeneration();
+                } else if (filePath.endsWith('.php')) {
                     console.log('[icon-registry] Detected change in', filePath);
                     scheduleRegeneration();
                 }

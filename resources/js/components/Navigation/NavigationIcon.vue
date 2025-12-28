@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { iconRegistry, isIconRegistered } from '@vite/icon-registry';
+import { iconRegistry, isIconRegistered } from '@/icon-registry';
 import { computed, type Component } from 'vue';
 import IconHelpCircle from '~icons/lucide/help-circle';
 

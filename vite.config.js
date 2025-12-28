@@ -16,8 +16,14 @@ async function createConfig() {
         },
         plugins: [
             iconRegistryGenerator({
-                scanPaths: ['app', 'modules/*/app'],
-                outputPath: 'storage/framework/vite/icon-registry.ts',
+                scanPaths: [
+                    'app/Providers', // Core ServiceProviders
+                    'app/Http/Controllers', // Core Controllers (for menus)
+                    'modules/*/app/Providers', // Module ServiceProviders
+                    'modules/*/app/Http/Controllers', // Module Controllers (for menus)
+                    'config', // Config files
+                ],
+                outputPath: 'resources/js/icon-registry.ts',
                 debounceMs: 300,
             }),
             laravel({
@@ -42,7 +48,6 @@ async function createConfig() {
             alias: {
                 '@': path.resolve(__dirname, 'resources/js'),
                 '@modules': path.resolve(__dirname, 'modules'),
-                '@vite': path.resolve(__dirname, 'storage/framework/vite'),
                 'ziggy-js': path.resolve(__dirname, 'vendor/tightenco/ziggy'),
             },
         },
