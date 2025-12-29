@@ -4,6 +4,7 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
+import { iconRegistryGenerator } from './vite/plugins/icon-registry';
 
 async function createConfig() {
     return defineConfig({
@@ -14,6 +15,17 @@ async function createConfig() {
             },
         },
         plugins: [
+            iconRegistryGenerator({
+                scanPaths: [
+                    'app/Providers', // Core ServiceProviders
+                    'app/Http/Controllers', // Core Controllers (for menus)
+                    'modules/*/app/Providers', // Module ServiceProviders
+                    'modules/*/app/Http/Controllers', // Module Controllers (for menus)
+                    'config', // Config files
+                ],
+                outputPath: 'resources/js/icon-registry.ts',
+                debounceMs: 300,
+            }),
             laravel({
                 input: 'resources/js/app.ts',
                 refresh: true,

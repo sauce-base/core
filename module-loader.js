@@ -51,7 +51,7 @@ async function listModuleDirectories(modulesDir) {
     }
 }
 
-async function loadEnabledModuleNames(baseDir) {
+export async function loadEnabledModuleNames(baseDir) {
     const statuses = await loadModuleStatuses(baseDir);
     if (!statuses) {
         return [];

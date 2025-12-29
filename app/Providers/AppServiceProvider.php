@@ -92,11 +92,10 @@ class AppServiceProvider extends ServiceProvider
             function (Section $section) {
                 $section->attributes([
                     'group' => 'secondary',
-                    'icon' => 'lucide:github',
+                    'icon' => 'mdi:github',
                     'external' => true,
                     'newPage' => true,
                     'order' => 0,
-                    'class' => 'text-blue-500',
                 ]);
             }
         );

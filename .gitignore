@@ -22,6 +22,9 @@
 /vendor
 /bootstrap/ssr
 
+# Icon registry
+/resources/js/icon-registry.ts
+
 # Module-specific ignores
 modules/*/node_modules/
 modules/*/vendor/
