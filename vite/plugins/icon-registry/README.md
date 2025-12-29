@@ -74,11 +74,11 @@ Works with any iconify collection via unplugin-icons:
 
 ### Configuration Options
 
-| Option       | Type       | Default                                     | Description                      |
-| ------------ | ---------- | ------------------------------------------- | -------------------------------- |
-| `scanPaths`  | `string[]` | `['app', 'modules/*/app']`                  | Paths to scan for PHP files      |
-| `outputPath` | `string`   | `'resources/js/generated/icon-registry.ts'` | Where to generate the registry   |
-| `debounceMs` | `number`   | `300`                                       | Debounce delay for file watching |
+| Option       | Type       | Default                           | Description                      |
+| ------------ | ---------- | --------------------------------- | -------------------------------- |
+| `scanPaths`  | `string[]` | `['app', 'modules/*/app']`        | Paths to scan for PHP files      |
+| `outputPath` | `string`   | `'resources/js/icon-registry.ts'` | Where to generate the registry   |
+| `debounceMs` | `number`   | `300`                             | Debounce delay for file watching |
 
 ### How It Works
 

@@ -13,6 +13,8 @@ import { generateIconRegistryTemplate } from './template.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+//TODO: Make it a standalone package?
+
 /**
  * Vite plugin for automatic icon registry generation
  *
