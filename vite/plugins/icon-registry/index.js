@@ -6,7 +6,7 @@ import {
     writeFileSync,
 } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnabledModuleNames } from '../../../module-loader.js';
 import { generateIconRegistryTemplate } from './template.js';
@@ -269,6 +269,77 @@ export function iconRegistryGenerator(options = {}) {
     }
 
     /**
+     * Check if file path is within scan paths
+     */
+    function isInScanPaths(filePath) {
+        const projectRoot = resolve(__dirname, '../../..');
+        const relativePath = relative(projectRoot, filePath);
+
+        for (const scanPath of scanPaths) {
+            if (scanPath.includes('modules/*/')) {
+                // Handle module patterns
+                const pathAfterModules = scanPath.replace('modules/*/', '');
+                const modulePattern = new RegExp(
+                    `^modules/[^/]+/${pathAfterModules.replace(/\//g, '\\/')}`,
+                );
+                if (modulePattern.test(relativePath)) {
+                    return true;
+                }
+            } else {
+                // Direct path comparison
+                if (relativePath.startsWith(scanPath)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Quick check if file content contains icon patterns
+     * Only triggers regeneration if icons are actually found
+     */
+    async function shouldTriggerRegeneration(filePath) {
+        try {
+            // Always regenerate for module status changes
+            if (filePath.endsWith('modules_statuses.json')) {
+                return true;
+            }
+
+            // For PHP files, verify it's in scan paths first
+            if (!filePath.endsWith('.php')) {
+                return false;
+            }
+
+            if (!isInScanPaths(filePath)) {
+                return false;
+            }
+
+            // Check if file contains icon patterns
+            const stats = statSync(filePath);
+            const maxFileSizeBytes = 10 * 1024 * 1024;
+
+            if (stats.size > maxFileSizeBytes) {
+                return false;
+            }
+
+            const content = await readFile(filePath, 'utf-8');
+            const icons = extractIcons(content);
+
+            // Only trigger if icons are found
+            return icons.size > 0;
+        } catch (error) {
+            // If we can't read the file, don't trigger regeneration
+            console.warn(
+                `[icon-registry] Could not check ${filePath}:`,
+                error.message,
+            );
+            return false;
+        }
+    }
+
+    /**
      * Debounced regeneration function
      */
     function scheduleRegeneration() {
@@ -312,22 +383,37 @@ export function iconRegistryGenerator(options = {}) {
             // Use Vite's file watcher with glob patterns
             server.watcher.add(watchGlobs);
 
-            server.watcher.on('change', (filePath) => {
-                if (filePath.endsWith('modules_statuses.json')) {
-                    console.log(
-                        '[icon-registry] Module status changed, rescanning...',
-                    );
-                    scheduleRegeneration();
-                } else if (filePath.endsWith('.php')) {
-                    console.log('[icon-registry] Detected change in', filePath);
+            server.watcher.on('change', async (filePath) => {
+                const shouldRegenerate =
+                    await shouldTriggerRegeneration(filePath);
+
+                if (shouldRegenerate) {
+                    if (filePath.endsWith('modules_statuses.json')) {
+                        console.log(
+                            '[icon-registry] Module status changed, rescanning...',
+                        );
+                    } else {
+                        console.log(
+                            '[icon-registry] Icon change detected in',
+                            filePath,
+                        );
+                    }
                     scheduleRegeneration();
                 }
             });
 
-            server.watcher.on('add', (filePath) => {
+            server.watcher.on('add', async (filePath) => {
                 if (filePath.endsWith('.php')) {
-                    console.log('[icon-registry] Detected new file', filePath);
-                    scheduleRegeneration();
+                    const shouldRegenerate =
+                        await shouldTriggerRegeneration(filePath);
+
+                    if (shouldRegenerate) {
+                        console.log(
+                            '[icon-registry] New file with icons detected',
+                            filePath,
+                        );
+                        scheduleRegeneration();
+                    }
                 }
             });
         },
