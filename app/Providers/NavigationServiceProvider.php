@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\Navigation\Navigation;
+use App\Services\Navigation;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Navigation\Helpers\ActiveUrlChecker;
 

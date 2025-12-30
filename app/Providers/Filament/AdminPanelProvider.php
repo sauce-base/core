@@ -19,10 +19,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Spatie\Navigation\Facades\Navigation;
-use Spatie\Navigation\Section;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -78,26 +75,5 @@ class AdminPanelProvider extends PanelProvider
                 ModulesPlugin::make(),
             ])
             ->default();
-    }
-
-    public function boot(): void
-    {
-        $this->app->booted(function () {
-            Navigation::addWhen(
-                fn () => Auth::check() && Auth::user()->isAdmin(),
-                'Admin',
-                route('filament.admin.pages.dashboard'),
-                function (Section $section) {
-                    $section->attributes([
-                        'group' => 'secondary',
-                        'icon' => 'lucide:shield-check',
-                        'order' => 10,
-                        'external' => true,
-                        'newPage' => true,
-                        'class' => 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-400',
-                    ]);
-                }
-            );
-        });
     }
 }

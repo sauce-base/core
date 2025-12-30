@@ -6,8 +6,7 @@ use Illuminate\Foundation\Events\DiscoverEvents;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
-use Spatie\Navigation\Facades\Navigation;
-use Spatie\Navigation\Section;
+use Nwidart\Modules\Facades\Module;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,11 +29,6 @@ class AppServiceProvider extends ServiceProvider
          * @link https://github.com/nWidart/laravel-modules/issues/2128#issuecomment-3515275319
          */
         $this->fixDiscoverEventsModulePathIssue();
-
-        // Register navigation after routes are loaded
-        $this->app->booted(function () {
-            $this->registerNavigation();
-        });
     }
 
     protected function configureSecureUrls()
@@ -73,37 +67,24 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register navigation items for core features.
-     */
-    protected function registerNavigation(): void
-    {
-        Navigation::add('Dashboard', route('dashboard'), function (Section $section) {
-            $section->attributes([
-                'group' => 'main',
-                'order' => 0,
-            ]);
-        });
-
-        Navigation::add(
-            'Star us on Github',
-            'https://github.com/sauce-base/saucebase',
-            function (Section $section) {
-                $section->attributes([
-                    'group' => 'secondary',
-                    'slug' => 'github',
-                    'external' => true,
-                    'newPage' => true,
-                    'order' => 0,
-                ]);
-            }
-        );
-    }
-
     protected function fixDiscoverEventsModulePathIssue(): void
     {
         DiscoverEvents::guessClassNamesUsing(function (\SplFileInfo $file, $basePath) {
             $class = trim(Str::replaceFirst($basePath, '', $file->getRealPath()), DIRECTORY_SEPARATOR);
+
+            // Check if this is a module file and skip if module is disabled
+            $modulesPath = config('modules.paths.modules');
+            $realPath = $file->getRealPath();
+
+            if ($modulesPath && str_starts_with($realPath, $modulesPath.DIRECTORY_SEPARATOR)) {
+                // Extract module name from path (e.g., "/path/to/modules/Auth/..." -> "Auth")
+                $relativePath = Str::after($realPath, $modulesPath.DIRECTORY_SEPARATOR);
+                $moduleName = Str::before($relativePath, DIRECTORY_SEPARATOR);
+
+                if ($moduleName && ! Module::isEnabled($moduleName)) {
+                    return null;
+                }
+            }
 
             // Remove the "app" folder from the path if it exists (useful for module structures)
             $appFolder = Str::of(config('modules.app_folder', 'app/'))

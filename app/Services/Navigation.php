@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Navigation;
+namespace App\Services;
 
 use Illuminate\Support\Str;
 use Spatie\Navigation\Navigation as SpatieNavigation;
@@ -172,7 +172,7 @@ class Navigation extends SpatieNavigation
         }
 
         // Add optional attributes if they exist (internal attributes like 'when', 'group', 'order' are excluded)
-        $optionalFields = ['slug', 'action', 'type', 'external', 'newPage', 'class', 'badge'];
+        $optionalFields = ['action', 'type', 'external', 'newPage', 'class', 'badge'];
         foreach ($optionalFields as $field) {
             if (isset($attributes[$field])) {
                 $menuItem[$field] = $attributes[$field];

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue';
+import IconHelpCircle from '~icons/lucide/help-circle';
 import IconLogOut from '~icons/lucide/log-out';
 import IconSettings from '~icons/lucide/settings';
+import IconShieldCheck from '~icons/lucide/shield-check';
 import IconSquareTerminal from '~icons/lucide/square-terminal';
 import IconUserCircle from '~icons/lucide/user-circle';
 import IconGithub from '~icons/mdi/github';
@@ -15,8 +17,6 @@ const props = defineProps<{ icon?: string | null }>();
 //
 // Backend provides semantic slugs (e.g., 'settings', 'dashboard')
 // Frontend decides which icon library to use for each slug.
-//
-// If a slug is not found in the mapping, nothing is rendered (returns null).
 
 const iconMapping: Record<string, Component> = {
     settings: IconSettings,
@@ -24,6 +24,7 @@ const iconMapping: Record<string, Component> = {
     profile: IconUserCircle,
     logout: IconLogOut,
     github: IconGithub,
+    admin: IconShieldCheck,
 };
 
 const iconComponent = computed<Component | null>(() => {
@@ -38,6 +39,8 @@ const iconComponent = computed<Component | null>(() => {
             `[NavigationIcon] Icon mapping missing for slug: "${props.icon}".\n` +
                 `Add it to NavigationIcon.vue iconMapping.`,
         );
+
+        return IconHelpCircle;
     }
 
     return icon;
