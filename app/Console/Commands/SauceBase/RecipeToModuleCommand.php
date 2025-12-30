@@ -17,7 +17,7 @@ class RecipeToModuleCommand extends Command
 {
     protected $signature = 'saucebase:recipe {module?} {template?}';
 
-    protected $description = 'Create starter module from a template';
+    protected $description = 'Create starter module from a recipe';
 
     protected string $moduleName = '';
 
@@ -108,7 +108,7 @@ class RecipeToModuleCommand extends Command
 
         if ($template === '') {
             $template = select(
-                'Which template would you like to use?',
+                'Which recipe would you like to use?',
                 array_keys($templateConfig)
             );
             $template = $templateConfig[$template];

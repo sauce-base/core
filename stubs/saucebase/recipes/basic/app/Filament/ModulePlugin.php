@@ -2,6 +2,7 @@
 
 namespace ___MODULE_NAMESPACE___\___Module___\Filament;
 
+use App\Filament\ModulePlugin;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 

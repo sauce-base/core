@@ -18,15 +18,13 @@ import {
 } from '@/components/ui/sidebar';
 import { useSidebarState } from '@/composables/useSidebarState';
 import { Breadcrumb as BreadcrumbType } from '@/types';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps<{
     title?: string;
     breadcrumbs?: BreadcrumbType[];
 }>();
-
-//TODO: Investigate why this file is loading all icons from lucide-icons and being 836kb instead of the usual 4kb
 
 // Persist sidebar state across Inertia navigation
 const { isOpen } = useSidebarState();
@@ -43,6 +41,7 @@ const displayBreadcrumbs = computed(() => {
 
 <template>
     <SidebarProvider v-model:open="isOpen">
+        <Head :title="title" />
         <AppSidebar />
         <SidebarInset>
             <header
