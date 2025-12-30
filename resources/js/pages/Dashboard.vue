@@ -172,7 +172,7 @@ const recentActivity = ref([
                     <CardContent>
                         <div class="text-3xl font-bold">{{ stat.value }}</div>
                         <p
-                            class="text-muted-foreground flex items-center gap-1 text-sm"
+                            class="text-muted-foreground flex items-center gap-1 text-xs"
                         >
                             <component
                                 :is="
