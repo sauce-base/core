@@ -2,6 +2,7 @@
 
 namespace App\Services\Navigation;
 
+use Illuminate\Support\Str;
 use Spatie\Navigation\Navigation as SpatieNavigation;
 use Spatie\Navigation\Section;
 
@@ -162,6 +163,7 @@ class Navigation extends SpatieNavigation
         $menuItem = [
             'title' => $item['title'],
             'active' => $this->isItemActive($item),
+            'slug' => $attributes['slug'] ?? Str::slug($item['title'], '-'),
         ];
 
         // Add URL from the item (stored at root level by Spatie)
@@ -170,7 +172,7 @@ class Navigation extends SpatieNavigation
         }
 
         // Add optional attributes if they exist (internal attributes like 'when', 'group', 'order' are excluded)
-        $optionalFields = ['icon', 'action', 'type', 'external', 'newPage', 'class', 'badge'];
+        $optionalFields = ['slug', 'action', 'type', 'external', 'newPage', 'class', 'badge'];
         foreach ($optionalFields as $field) {
             if (isset($attributes[$field])) {
                 $menuItem[$field] = $attributes[$field];

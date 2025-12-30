@@ -6,7 +6,7 @@ import { computed } from 'vue';
 import IconExternalLink from '~icons/lucide/arrow-up-right';
 
 const props = defineProps<{
-    icon?: string;
+    slug?: string;
     title: string;
     badge?: MenuBadge | null;
     showExternalIcon?: boolean;
@@ -26,7 +26,7 @@ const needsSpacer = computed(() => props.showExternalIcon && !props.badge);
 </script>
 
 <template>
-    <NavigationIcon :icon="icon" />
+    <NavigationIcon :icon="slug" />
     <span>{{ $t(title) }}</span>
     <NavBadge :config="badge ?? null" :class="badgeClass" />
     <span v-if="needsSpacer" class="ml-auto" />

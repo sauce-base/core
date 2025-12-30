@@ -103,7 +103,7 @@ function handleClick(event: MouseEvent) {
                     :class="item.class"
                 >
                     <NavLinkContent
-                        :icon="item.icon"
+                        :slug="item.slug"
                         :title="item.title"
                         :badge="badgeConfig"
                     />
@@ -142,7 +142,7 @@ function handleClick(event: MouseEvent) {
                                 :class="child.class"
                             >
                                 <NavLinkContent
-                                    :icon="child.icon"
+                                    :slug="child.slug"
                                     :title="child.title"
                                     :badge="getChildBadgeConfig(child)"
                                     :show-external-icon="child.newPage"
@@ -156,7 +156,7 @@ function handleClick(event: MouseEvent) {
                                 :class="child.class"
                             >
                                 <NavLinkContent
-                                    :icon="child.icon"
+                                    :slug="child.slug"
                                     :title="child.title"
                                     :badge="getChildBadgeConfig(child)"
                                     :show-external-icon="child.newPage"
@@ -177,7 +177,7 @@ function handleClick(event: MouseEvent) {
             @click="handleClick"
         >
             <NavLinkContent
-                :icon="item.icon"
+                :slug="item.slug"
                 :title="item.title"
                 :badge="badgeConfig"
             />
@@ -200,7 +200,7 @@ function handleClick(event: MouseEvent) {
                 :class="item.class"
             >
                 <NavLinkContent
-                    :icon="item.icon"
+                    :slug="item.slug"
                     :title="item.title"
                     :badge="badgeConfig"
                     :show-external-icon="openInNewTab"
@@ -214,7 +214,7 @@ function handleClick(event: MouseEvent) {
                 :class="item.class"
             >
                 <NavLinkContent
-                    :icon="item.icon"
+                    :slug="item.slug"
                     :title="item.title"
                     :badge="badgeConfig"
                     :show-external-icon="openInNewTab"

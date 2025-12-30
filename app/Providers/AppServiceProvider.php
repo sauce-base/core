@@ -81,7 +81,6 @@ class AppServiceProvider extends ServiceProvider
         Navigation::add('Dashboard', route('dashboard'), function (Section $section) {
             $section->attributes([
                 'group' => 'main',
-                'icon' => 'lucide:square-terminal',
                 'order' => 0,
             ]);
         });
@@ -92,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
             function (Section $section) {
                 $section->attributes([
                     'group' => 'secondary',
-                    'icon' => 'mdi:github',
+                    'slug' => 'github',
                     'external' => true,
                     'newPage' => true,
                     'order' => 0,
