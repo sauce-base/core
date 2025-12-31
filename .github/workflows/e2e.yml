@@ -57,8 +57,8 @@ jobs:
 
             - name: Fix storage permissions
               run: |
-                  docker compose exec -T app mkdir -p storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
-                  docker compose exec -T app chmod -R 777 storage bootstrap/cache
+                  docker compose exec -T app chown -R www-data:www-data storage bootstrap/cache
+                  docker compose exec -T app chmod -R 775 storage bootstrap/cache
 
             - name: Install PHP dependencies
               run: docker compose exec -T app composer install --no-interaction --prefer-dist
