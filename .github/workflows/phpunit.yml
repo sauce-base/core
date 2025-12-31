@@ -20,4 +20,4 @@ jobs:
               uses: ./.github/actions/setup-laravel
 
             - name: Run tests
-              run: php artisan test --parallel
+              run: php artisan test
