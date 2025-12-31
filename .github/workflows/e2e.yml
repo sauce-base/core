@@ -51,6 +51,9 @@ jobs:
                   cp .env.example .env
                   echo "XDEBUG_MODE=off" >> .env
 
+            - name: Use CI nginx config (no SSL)
+              run: cp docker/nginx-ci.conf docker/nginx.conf
+
             - name: Start Docker services
               run: docker compose up -d
 

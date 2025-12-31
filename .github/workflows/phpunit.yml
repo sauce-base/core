@@ -16,6 +16,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -36,12 +42,17 @@ jobs:
                       ${{ runner.os }}-composer-
 
             - name: Install dependencies
-              run: composer install --prefer-dist --no-interaction
+              run: |
+                  composer install --prefer-dist --no-interaction
+                  npm ci
 
             - name: Prepare environment
               run: |
                   cp .env.example .env
                   php artisan key:generate
+
+            - name: Build frontend assets
+              run: npm run build
 
             - name: Run tests
               run: php artisan test
