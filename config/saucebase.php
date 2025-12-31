@@ -2,7 +2,7 @@
 
 return [
     'template' => [
-        'Plain Vue Typescript' => 'stubs/saucebase/recipes/plain-vuets',
+        'Basic Recipe' => 'stubs/saucebase/recipes/basic',
     ],
     'ignore_files' => ['module.json'],
 ];

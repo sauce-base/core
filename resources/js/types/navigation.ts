@@ -31,7 +31,7 @@ export interface MenuItem {
     title: string;
     route?: string; // Laravel route name (for active state matching)
     url?: string; // Generated URL (for navigation)
-    icon?: string; // Lucide icon name
+    slug?: string; // Navigation slug (e.g., 'settings', 'dashboard')
     permission?: string; // Server-side filtered
     action?: string; // For action buttons
     type?: 'label' | 'separator';

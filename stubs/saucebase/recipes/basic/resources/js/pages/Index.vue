@@ -26,7 +26,7 @@ import IconRocket from '~icons/heroicons/rocket-launch';
 import IconSparkles from '~icons/heroicons/sparkles';
 import IconUsers from '~icons/heroicons/user-group';
 
-const title = 'Dashboard';
+const title = '{Module}';
 
 // Sample stats data
 const stats = ref([
@@ -141,15 +141,15 @@ const recentActivity = ref([
             </div>
 
             <!-- Info Alert -->
-            <Alert class="border-accent-foreground text-foreground">
+            <Alert class="border-accent-foreground text-white">
                 <IconInfo />
                 <AlertTitle class="text-lg">{{
-                    $t('Welcome to Saucebase!')
+                    $t('Welcome to your new Module!')
                 }}</AlertTitle>
                 <AlertDescription>
                     {{
                         $t(
-                            'This is a sample dashboard with fake data. Customize it to fit your needs.',
+                            'This is a sample page with fake data. Customize it to fit your needs.',
                         )
                     }}
                 </AlertDescription>

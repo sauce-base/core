@@ -160,7 +160,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                                     v-if="item.action"
                                     :class="['cursor-pointer', item.class]"
                                 >
-                                    <NavigationIcon :icon="item.icon" />
+                                    <NavigationIcon :icon="item.slug" />
                                     <span>{{ $t(item.title) }}</span>
                                     <Badge
                                         v-if="getBadgeConfig(item)"
@@ -194,7 +194,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                                     "
                                     :class="item.class"
                                 >
-                                    <NavigationIcon :icon="item.icon" />
+                                    <NavigationIcon :icon="item.slug" />
                                     <span>{{ $t(item.title) }}</span>
                                     <Badge
                                         v-if="getBadgeConfig(item)"
@@ -223,7 +223,7 @@ function handleClick(item: MenuItem, event: MouseEvent) {
                                     "
                                     :class="item.class"
                                 >
-                                    <NavigationIcon :icon="item.icon" />
+                                    <NavigationIcon :icon="item.slug" />
                                     <span>{{ $t(item.title) }}</span>
                                     <Badge
                                         v-if="getBadgeConfig(item)"
