@@ -8,7 +8,8 @@
 
 > ⚠️ **Active development** – APIs, features, and architecture may change without notice.
 
-[![CI](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml/badge.svg)](https://github.com/sauce-base/saucebase/actions/workflows/ci.yml)
+[![PHPUnit Tests](https://github.com/sauce-base/saucebase/actions/workflows/phpunit.yml/badge.svg)](https://github.com/sauce-base/saucebase/actions/workflows/phpunit.yml)
+[![E2E Tests](https://github.com/sauce-base/saucebase/actions/workflows/e2e.yml/badge.svg)](https://github.com/sauce-base/saucebase/actions/workflows/e2e.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-777BB4?logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
@@ -25,7 +26,7 @@
 
 Saucebase is a **Laravel SaaS boilerplate / Starter kit** that lets you own your code. Built on the **VILT stack** (Vue 3, Inertia.js, Laravel, Tailwind CSS), it follows the **copy-and-own philosophy** pioneered by shadcn/ui—install feature modules directly into your repository, customize freely, and never worry about upstream breaking changes.
 
-Start with a minimal, production-ready core. Add pre-built modules (Auth, Roles, Dashboard, Settings) with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices.
+Start with a minimal, production-ready core. Add pre-built modules (Auth, Settings) with one command. Everything lives in your repo. No hidden packages, no vendor lock-in. Just modern Laravel development with TypeScript, hot reload, Docker-first setup, and built-in best practices.
 
 ---
 
