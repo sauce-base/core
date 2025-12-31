@@ -6,13 +6,19 @@ import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
 
 async function createConfig() {
+    const sslKeyPath = 'docker/ssl/app.key.pem';
+    const sslCertPath = 'docker/ssl/app.pem';
+    const hasSSL = fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath);
+
     return defineConfig({
-        server: {
-            https: {
-                key: fs.readFileSync('docker/ssl/app.key.pem'),
-                cert: fs.readFileSync('docker/ssl/app.pem'),
-            },
-        },
+        server: hasSSL
+            ? {
+                  https: {
+                      key: fs.readFileSync(sslKeyPath),
+                      cert: fs.readFileSync(sslCertPath),
+                  },
+              }
+            : {},
         plugins: [
             laravel({
                 input: 'resources/js/app.ts',
