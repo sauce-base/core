@@ -16,110 +16,75 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: pdo, pdo_sqlite, mbstring, zip, pcntl, intl, exif
+                  coverage: none
+
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: '22'
                   cache: 'npm'
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.4'
-                  extensions: pdo, pdo_mysql, mbstring, zip, pcntl, intl, exif
-                  coverage: none
-
-            - name: Get Composer cache directory
-              id: composer-cache
-              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-            - name: Cache Composer dependencies
-              uses: actions/cache@v4
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-composer-
-
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Prepare environment
+            - name: Copy .env
               run: |
                   cp .env.example .env
-                  echo "XDEBUG_MODE=off" >> .env
+                  echo "DB_CONNECTION=sqlite" >> .env
+                  echo "DB_DATABASE=database/database.sqlite" >> .env
                   echo "LOG_CHANNEL=stderr" >> .env
                   echo "TELESCOPE_ENABLED=false" >> .env
 
-            - name: Use CI nginx config (no SSL)
-              run: cp docker/nginx-ci.conf docker/nginx.conf
-
-            - name: Start Docker services
-              run: docker compose up -d --wait
-
-            - name: Fix storage permissions
-              run: |
-                  docker compose exec -T app sh -c "mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache"
-                  docker compose exec -T app chown -R www-data:www-data storage bootstrap/cache
-                  docker compose exec -T app chmod -R 777 storage bootstrap/cache
-
             - name: Install PHP dependencies
-              run: docker compose exec -T app composer install --no-interaction --prefer-dist
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-            - name: Generate application key
-              run: docker compose exec -T app php artisan key:generate --force
+            - name: Install Node dependencies
+              run: npm ci
 
-            - name: Restart containers to reload APP_KEY from .env
+            - name: Directory Permissions
+              run: chmod -R 777 storage bootstrap/cache
+
+            - name: Create SQLite Database
               run: |
-                  docker compose down
-                  docker compose up -d --wait
-                  docker compose exec -T app chown -R www-data:www-data storage bootstrap/cache
-                  docker compose exec -T app chmod -R 777 storage bootstrap/cache
+                  mkdir -p database
+                  touch database/database.sqlite
 
-            - name: Setup database
-              run: |
-                  docker compose exec -T app php artisan config:clear
-                  docker compose exec -T app php artisan migrate --force --seed
+            - name: Generate key
+              run: php artisan key:generate
 
-            - name: Build frontend
+            - name: Run migrations
+              run: php artisan migrate --force --seed
+
+            - name: Build frontend assets
               run: npm run build
-
-            - name: Verify Docker services
-              run: |
-                  echo "=== Docker Container Status ==="
-                  docker compose ps
-                  echo -e "\n=== Nginx Logs ==="
-                  docker compose logs nginx
-                  echo -e "\n=== App Logs ==="
-                  docker compose logs app
-                  echo -e "\n=== PHP-FPM Status ==="
-                  docker compose exec -T app php -v
-
-            - name: Wait for nginx to be ready
-              run: |
-                  timeout 60 bash -c 'until curl -f http://localhost/health > /dev/null 2>&1; do
-                    echo "Waiting for nginx..."
-                    sleep 2
-                  done'
-                  echo "✅ Nginx is ready!"
-                  curl -v http://localhost/health
 
             - name: Install Playwright
               run: npx playwright install chromium --with-deps
 
+            - name: Start Laravel server
+              run: php artisan serve --host=0.0.0.0 --port=8000 &
+              env:
+                  APP_ENV: testing
+
+            - name: Wait for server to be ready
+              run: |
+                  timeout 30 bash -c 'until curl -f http://localhost:8000 > /dev/null 2>&1; do
+                    echo "Waiting for Laravel server..."
+                    sleep 2
+                  done'
+                  echo "✅ Server is ready!"
+
             - name: Run E2E tests
               env:
-                  APP_URL: http://localhost
+                  APP_URL: http://localhost:8000
               run: npm run test:e2e
 
-            - name: Upload screenshots
+            - name: Upload test report
               if: failure()
               uses: actions/upload-artifact@v4
               with:
                   name: playwright-report
                   path: playwright-report/
                   retention-days: 7
-
-            - name: Cleanup
-              if: always()
-              run: docker compose down
