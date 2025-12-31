@@ -1,0 +1,84 @@
+name: E2E Tests
+
+on:
+    pull_request:
+        branches: [main]
+
+permissions:
+    contents: read
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: pdo, pdo_mysql, mbstring, zip, pcntl, intl, exif
+                  coverage: none
+
+            - name: Get Composer cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: |
+                  composer install --prefer-dist --no-interaction
+                  npm ci
+
+            - name: Prepare environment
+              run: |
+                  cp .env.example .env
+                  echo "XDEBUG_MODE=off" >> .env
+
+            - name: Start Docker services
+              run: docker compose up -d
+
+            - name: Wait for services
+              run: sleep 30
+
+            - name: Setup Laravel
+              run: |
+                  docker compose exec -T app php artisan key:generate
+                  docker compose exec -T app php artisan migrate --force
+
+            - name: Build frontend
+              run: npm run build
+
+            - name: Install Playwright
+              run: npx playwright install chromium --with-deps
+
+            - name: Run E2E tests
+              run: npm run test:e2e
+
+            - name: Upload screenshots
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report/
+                  retention-days: 7
+
+            - name: Cleanup
+              if: always()
+              run: docker compose down
