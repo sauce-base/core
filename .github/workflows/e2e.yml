@@ -69,8 +69,12 @@ jobs:
             - name: Generate application key
               run: docker compose exec -T app php artisan key:generate --force
 
-            - name: Restart app container to load new APP_KEY
-              run: docker compose restart app
+            - name: Restart containers to reload APP_KEY from .env
+              run: |
+                  docker compose down
+                  docker compose up -d --wait
+                  docker compose exec -T app chown -R www-data:www-data storage bootstrap/cache
+                  docker compose exec -T app chmod -R 777 storage bootstrap/cache
 
             - name: Setup database
               run: |
