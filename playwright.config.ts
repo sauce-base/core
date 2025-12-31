@@ -13,16 +13,16 @@ type ModulePlaywrightConfig = {
 };
 
 async function createConfig() {
-
     // Collect Playwright configs from all modules
     // cast to ModulePlaywrightConfig[] so modules can include extra keys beyond name/testDir/use
-    const modules = (await collectModulePlaywrightConfigs() || []) as ModulePlaywrightConfig[];
+    const modules = ((await collectModulePlaywrightConfigs()) ||
+        []) as ModulePlaywrightConfig[];
 
     const testDevices = [
         'Desktop Chrome',
         // 'Desktop Firefox',
         // 'Desktop Safari',
-        // 'iPhone 14', 
+        // 'iPhone 14',
         // Add more devices here if needed
     ];
 
@@ -36,14 +36,15 @@ async function createConfig() {
             use: {}, // will be extended below
         } as ModulePlaywrightConfig,
         // Add more projects here if needed
-    ].concat(modules as ModulePlaywrightConfig[])
-        .map(project => {
+    ]
+        .concat(modules as ModulePlaywrightConfig[])
+        .map((project) => {
             // Extend each project with the selected devices
-            return testDevices.map(device => {
+            return testDevices.map((device) => {
                 return {
                     ...project,
                     name: `${project.name} [${device}]`,
-                    use: { ...devices[device], ...(project.use ?? {}), },
+                    use: { ...devices[device], ...(project.use ?? {}) },
                 };
             });
         })
@@ -85,12 +86,16 @@ async function createConfig() {
 
         /* Configure projects for major browsers */
         projects: projects,
-        webServer: {
-            command: `npx vite --port 5173`,
-            timeout: 10 * 1000,
-            reuseExistingServer: !process.env.CI,
-        },
+
+        /* Only start webServer locally (not in CI where we build assets) */
+        ...(!process.env.CI && {
+            webServer: {
+                command: `npx vite --port 5173`,
+                timeout: 10 * 1000,
+                reuseExistingServer: true,
+            },
+        }),
     });
-};
+}
 
 export default createConfig();

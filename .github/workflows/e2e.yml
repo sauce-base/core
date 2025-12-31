@@ -69,6 +69,8 @@ jobs:
               run: npx playwright install chromium --with-deps
 
             - name: Run E2E tests
+              env:
+                  APP_URL: http://localhost
               run: npm run test:e2e
 
             - name: Upload screenshots
