@@ -65,6 +65,21 @@ jobs:
             - name: Build frontend
               run: npm run build
 
+            - name: Verify Docker services
+              run: |
+                  docker compose ps
+                  docker compose logs --tail=20 nginx
+                  docker compose logs --tail=20 app
+
+            - name: Wait for nginx to be ready
+              run: |
+                  timeout 60 bash -c 'until curl -f http://localhost > /dev/null 2>&1; do
+                    echo "Waiting for nginx..."
+                    sleep 2
+                  done'
+                  echo "Nginx is ready!"
+                  curl -I http://localhost
+
             - name: Install Playwright
               run: npx playwright install chromium --with-deps
 
