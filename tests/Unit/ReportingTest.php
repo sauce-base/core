@@ -17,10 +17,8 @@ class ReportingTest extends TestCase
     /**
      * @test
      */
-    public function skip_intentional_failure_for_testing_ci_reporting()
+    public function intentional_failure_for_testing_ci_reporting()
     {
-        $this->markTestSkipped('Remove skip to test CI failure reporting');
-
         // This will fail to test the reporting
         $this->assertEquals(3, 1 + 1, 'Math should work, but this is intentionally wrong');
     }

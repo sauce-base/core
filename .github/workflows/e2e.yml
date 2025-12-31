@@ -81,10 +81,23 @@ jobs:
                   APP_URL: http://localhost:8000
               run: |
                   npm run test:e2e | tee e2e-output.txt
-                  echo "## Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+                  EXIT_CODE=${PIPESTATUS[0]}
+
+                  echo "## 🎭 Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
                   echo '```' >> $GITHUB_STEP_SUMMARY
                   grep -E "passed|failed|skipped" e2e-output.txt | tail -1 >> $GITHUB_STEP_SUMMARY || echo "Tests completed" >> $GITHUB_STEP_SUMMARY
                   echo '```' >> $GITHUB_STEP_SUMMARY
+                  echo "" >> $GITHUB_STEP_SUMMARY
+
+                  if [ $EXIT_CODE -ne 0 ]; then
+                    echo "❌ **Tests Failed**" >> $GITHUB_STEP_SUMMARY
+                    echo "" >> $GITHUB_STEP_SUMMARY
+                    echo "See the Playwright HTML report in artifacts for detailed information." >> $GITHUB_STEP_SUMMARY
+                    exit $EXIT_CODE
+                  else
+                    echo "✅ **All Tests Passed**" >> $GITHUB_STEP_SUMMARY
+                  fi
 
             - name: Upload test report
               if: failure()

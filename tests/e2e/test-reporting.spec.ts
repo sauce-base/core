@@ -6,7 +6,7 @@ test.describe('Test Reporting', () => {
         expect(true).toBe(true);
     });
 
-    test.skip('should fail - intentional failure for testing CI reporting', async ({
+    test('should fail - intentional failure for testing CI reporting', async ({
         page,
     }) => {
         await page.goto('/');
