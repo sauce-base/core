@@ -79,7 +79,12 @@ jobs:
             - name: Run E2E tests
               env:
                   APP_URL: http://localhost:8000
-              run: npm run test:e2e
+              run: |
+                  npm run test:e2e | tee e2e-output.txt
+                  echo "## Playwright E2E Test Results" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+                  grep -E "passed|failed|skipped" e2e-output.txt | tail -1 >> $GITHUB_STEP_SUMMARY || echo "Tests completed" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
 
             - name: Upload test report
               if: failure()

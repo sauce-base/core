@@ -61,4 +61,9 @@ jobs:
               run: npm run build
 
             - name: Run tests
-              run: php artisan test
+              run: |
+                  php artisan test --parallel | tee test-output.txt
+                  echo "## PHPUnit Test Results" >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
+                  grep -A 2 "Tests:" test-output.txt | tail -3 >> $GITHUB_STEP_SUMMARY
+                  echo '```' >> $GITHUB_STEP_SUMMARY
