@@ -49,6 +49,7 @@ jobs:
                   cp .env.example .env
                   echo "XDEBUG_MODE=off" >> .env
                   echo "LOG_CHANNEL=stderr" >> .env
+                  echo "TELESCOPE_ENABLED=false" >> .env
 
             - name: Use CI nginx config (no SSL)
               run: cp docker/nginx-ci.conf docker/nginx.conf
@@ -65,9 +66,14 @@ jobs:
             - name: Install PHP dependencies
               run: docker compose exec -T app composer install --no-interaction --prefer-dist
 
-            - name: Setup Laravel
+            - name: Generate application key
+              run: docker compose exec -T app php artisan key:generate --force
+
+            - name: Restart app container to load new APP_KEY
+              run: docker compose restart app
+
+            - name: Setup database
               run: |
-                  docker compose exec -T app php artisan key:generate --force
                   docker compose exec -T app php artisan config:clear
                   docker compose exec -T app php artisan migrate --force --seed
 
