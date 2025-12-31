@@ -1,0 +1,67 @@
+name: 'Setup Laravel Application'
+description: 'Setup PHP, Node, dependencies, database, and build assets for Laravel testing'
+
+inputs:
+    php-version:
+        description: 'PHP version to use'
+        required: false
+        default: '8.4'
+    node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '22'
+
+runs:
+    using: 'composite'
+    steps:
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: ${{ inputs.php-version }}
+              extensions: pdo, pdo_sqlite, mbstring, zip, pcntl, intl, exif
+              coverage: none
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+              node-version: ${{ inputs.node-version }}
+              cache: 'npm'
+
+        - name: Copy .env
+          shell: bash
+          run: |
+              cp .env.example .env
+              echo "DB_CONNECTION=sqlite" >> .env
+              echo "DB_DATABASE=database/database.sqlite" >> .env
+              echo "LOG_CHANNEL=stderr" >> .env
+              echo "TELESCOPE_ENABLED=false" >> .env
+
+        - name: Install PHP dependencies
+          shell: bash
+          run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+        - name: Install Node dependencies
+          shell: bash
+          run: npm ci
+
+        - name: Directory Permissions
+          shell: bash
+          run: chmod -R 777 storage bootstrap/cache
+
+        - name: Create SQLite Database
+          shell: bash
+          run: |
+              mkdir -p database
+              touch database/database.sqlite
+
+        - name: Generate application key
+          shell: bash
+          run: php artisan key:generate
+
+        - name: Run migrations
+          shell: bash
+          run: php artisan migrate --force --seed
+
+        - name: Build frontend assets
+          shell: bash
+          run: npm run build
