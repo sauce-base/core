@@ -16,40 +16,46 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.4'
+                  extensions: pdo, pdo_sqlite, mbstring, zip, pcntl, intl, exif
+                  coverage: none
+
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: '22'
                   cache: 'npm'
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.4'
-                  extensions: pdo, pdo_mysql, mbstring, zip, pcntl, intl, exif, redis
-                  coverage: none
-
-            - name: Get Composer cache directory
-              id: composer-cache
-              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-            - name: Cache Composer dependencies
-              uses: actions/cache@v4
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-composer-
-
-            - name: Install dependencies
-              run: |
-                  composer install --prefer-dist --no-interaction
-                  npm ci
-
-            - name: Prepare environment
+            - name: Copy .env
               run: |
                   cp .env.example .env
-                  php artisan key:generate
+                  echo "DB_CONNECTION=sqlite" >> .env
+                  echo "DB_DATABASE=database/database.sqlite" >> .env
+                  echo "LOG_CHANNEL=stderr" >> .env
+                  echo "TELESCOPE_ENABLED=false" >> .env
+
+            - name: Install PHP dependencies
+              run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+            - name: Install Node dependencies
+              run: npm ci
+
+            - name: Directory Permissions
+              run: chmod -R 777 storage bootstrap/cache
+
+            - name: Create SQLite Database
+              run: |
+                  mkdir -p database
+                  touch database/database.sqlite
+
+            - name: Generate key
+              run: php artisan key:generate
+
+            - name: Run migrations
+              run: php artisan migrate --force --seed
 
             - name: Build frontend assets
               run: npm run build
