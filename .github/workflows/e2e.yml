@@ -42,9 +42,7 @@ jobs:
                       ${{ runner.os }}-composer-
 
             - name: Install dependencies
-              run: |
-                  composer install --prefer-dist --no-interaction
-                  npm ci
+              run: npm ci
 
             - name: Prepare environment
               run: |
@@ -55,33 +53,39 @@ jobs:
               run: cp docker/nginx-ci.conf docker/nginx.conf
 
             - name: Start Docker services
-              run: docker compose up -d
+              run: docker compose up -d --wait
 
-            - name: Wait for services
-              run: sleep 30
+            - name: Install PHP dependencies
+              run: docker compose exec -T app composer install --no-interaction --prefer-dist
 
             - name: Setup Laravel
               run: |
-                  docker compose exec -T app php artisan key:generate
-                  docker compose exec -T app php artisan migrate --force
+                  docker compose exec -T app php artisan key:generate --force
+                  docker compose exec -T app php artisan config:clear
+                  docker compose exec -T app php artisan migrate --force --seed
 
             - name: Build frontend
               run: npm run build
 
             - name: Verify Docker services
               run: |
+                  echo "=== Docker Container Status ==="
                   docker compose ps
-                  docker compose logs --tail=20 nginx
-                  docker compose logs --tail=20 app
+                  echo -e "\n=== Nginx Logs ==="
+                  docker compose logs nginx
+                  echo -e "\n=== App Logs ==="
+                  docker compose logs app
+                  echo -e "\n=== PHP-FPM Status ==="
+                  docker compose exec -T app php -v
 
             - name: Wait for nginx to be ready
               run: |
-                  timeout 60 bash -c 'until curl -f http://localhost > /dev/null 2>&1; do
+                  timeout 60 bash -c 'until curl -f http://localhost/health > /dev/null 2>&1; do
                     echo "Waiting for nginx..."
                     sleep 2
                   done'
-                  echo "Nginx is ready!"
-                  curl -I http://localhost
+                  echo "✅ Nginx is ready!"
+                  curl -v http://localhost/health
 
             - name: Install Playwright
               run: npx playwright install chromium --with-deps
