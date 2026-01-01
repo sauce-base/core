@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "saucebase/saucebase",
     "type": "project",
-    "description": "A complete saas boilerplace powered with Vue, Filament, InertiaJS, and more",
+    "description": "A complete modular Laravel foundation for building SaaS applications.",
     "license": "MIT",
     "require": {
         "php": "^8.4",
@@ -23,10 +23,6 @@
         "spatie/laravel-permission": "^6.24",
         "tightenco/ziggy": "^2.0"
     },
-    "suggest": {
-        "saucebase/auth": "Authentication module with social login support"
-    },
-    "repositories": [],
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3.6",
@@ -41,6 +37,11 @@
         "saucebase/module-installer": "^0.0.6",
         "symfony/filesystem": "^7.3"
     },
+    "suggest": {
+        "saucebase/auth": "Authentication module with social login support",
+        "saucebase/settings": "Settings module to manage application settings"
+    },
+    "repositories": [],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
@@ -54,6 +55,14 @@
         }
     },
     "scripts": {
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "npm install",
+            "npm run build"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
@@ -115,27 +124,16 @@
         {
             "name": "Sauce Base",
             "email": "hello@saucebase.dev"
+        },
+        {
+            "name": "Renan Roble",
+            "email": "renanroble@gmail.com"
         }
     ],
     "keywords": [
-        "saucebase",
-        "laravel skeleton",
-        "laravel",
-        "laravel project",
-        "laravel application",
         "laravel starter kit",
         "laravel boilerplate",
-        "laravel base",
-        "laravel foundation",
-        "laravel base project",
-        "laravel base application",
-        "laravel base skeleton",
-        "laravel base starter kit",
-        "laravel boilerplate",
-        "saas base",
         "saas starter kit",
-        "saas boilerplate",
-        "saas foundation",
-        "saas framework"
+        "saas boilerplate"
     ]
 }
