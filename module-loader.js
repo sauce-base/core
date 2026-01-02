@@ -186,3 +186,33 @@ export async function collectModulePlaywrightConfigs() {
 
     return projects;
 }
+
+/**
+ * Collects language paths from enabled modules
+ *
+ * @returns {Promise<string[]>} Array of module language directory paths
+ *
+ * @example
+ * const langPaths = await collectModuleLangPaths();
+ * // Returns: ['modules/Auth/lang', 'modules/Settings/lang', ...]
+ */
+export async function collectModuleLangPaths() {
+    const langPaths = [];
+    const modulesDir = path.join(__dirname, MODULES_PATH);
+    const enabledModules = await loadEnabledModuleNames(__dirname);
+
+    for (const moduleName of enabledModules) {
+        const langPath = path.join(MODULES_PATH, moduleName, 'lang');
+        const fullLangPath = path.join(modulesDir, moduleName, 'lang');
+
+        try {
+            await fs.access(fullLangPath);
+            langPaths.push(langPath);
+        } catch (error) {
+            console.error(error);
+            // Module doesn't have a lang directory, skip it
+        }
+    }
+
+    return langPaths;
+}
