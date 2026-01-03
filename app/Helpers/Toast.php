@@ -35,6 +35,24 @@ class Toast
 
     const POSITION_DEFAULT = self::POSITION_BOTTOM_RIGHT;
 
+    private const TYPES = [
+        self::TYPE_DEFAULT,
+        self::TYPE_SUCCESS,
+        self::TYPE_ERROR,
+        self::TYPE_INFO,
+        self::TYPE_WARNING,
+        self::TYPE_LOADING,
+    ];
+
+    private const POSITIONS = [
+        self::POSITION_TOP_LEFT,
+        self::POSITION_TOP_CENTER,
+        self::POSITION_TOP_RIGHT,
+        self::POSITION_BOTTOM_LEFT,
+        self::POSITION_BOTTOM_CENTER,
+        self::POSITION_BOTTOM_RIGHT,
+    ];
+
     private static function payload(
         string $message,
         string $type,
@@ -43,6 +61,15 @@ class Toast
         ?int $duration = null,
         ?string $position = null
     ): array {
+
+        if (! in_array($type, self::TYPES, true)) {
+            $type = self::TYPE_DEFAULT;
+        }
+
+        if ($position !== null && ! in_array($position, self::POSITIONS, true)) {
+            $position = self::POSITION_DEFAULT;
+        }
+
         return array_filter([
             'message' => $message,
             'type' => $type,
