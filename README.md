@@ -53,18 +53,6 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 
 Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, Redis caching, queue workers, and email testing (Mailpit). Not just a starter—a foundation you can ship.
 
----
-
-## 🎥 Demo Video
-
-Watch a complete walkthrough of the application, showcasing the authentication flow, theme switching, and settings pages:
-
-<video src="public/videos/complete-tour.webm" controls style="width: 100%; max-width: 1200px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"></video>
-
-> The demo video shows navigation through the application with live theme switching between light and dark modes.
-
----
-
 ## 📸 Screenshots
 
 ### Home Page
