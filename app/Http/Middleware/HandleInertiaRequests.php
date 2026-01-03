@@ -21,6 +21,7 @@ class HandleInertiaRequests extends Middleware
             'locale' => app()->getLocale(),
             'navigation' => $nav->treeGrouped(),
             'breadcrumbs' => $nav->breadcrumbs(),
+            'toast' => fn () => $request->session()->pull('toast'),
         ]);
     }
 }

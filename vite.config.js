@@ -1,14 +1,19 @@
 import vue from '@vitejs/plugin-vue';
 import fs from 'fs';
 import laravel from 'laravel-vite-plugin';
+import i18n from 'laravel-vue-i18n/vite';
 import path from 'path';
 import Icons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
+import { collectModuleLangPaths } from './module-loader.js';
 
 async function createConfig() {
     const sslKeyPath = 'docker/ssl/app.key.pem';
     const sslCertPath = 'docker/ssl/app.pem';
     const hasSSL = fs.existsSync(sslKeyPath) && fs.existsSync(sslCertPath);
+
+    // Collect module language paths
+    const moduleLangPaths = await collectModuleLangPaths();
 
     return defineConfig({
         server: hasSSL
@@ -36,6 +41,9 @@ async function createConfig() {
             Icons({
                 compiler: 'vue3',
                 autoInstall: true,
+            }),
+            i18n({
+                additionalLangPaths: moduleLangPaths,
             }),
         ],
         resolve: {

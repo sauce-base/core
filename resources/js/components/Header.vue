@@ -3,7 +3,7 @@ import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import LanguageSelector from '@/components/LanguageSelector.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import IconMenu from '~icons/heroicons/bars-3';
 import IconX from '~icons/heroicons/x-mark';
 

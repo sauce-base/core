@@ -54,5 +54,8 @@ Thumbs.db
 # SSL Certificates (generated locally, not tracked)
 /docker/ssl/
 
+# Generated language files
+lang/php_*.json
+
 _ide_helper.php
 .phpstorm.meta.php
