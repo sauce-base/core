@@ -11,12 +11,15 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
+// use Modules\Auth\Traits\useSocialite;
+
 class User extends Authenticatable implements HasMedia
     // , MustVerifyEmail
 {
     use HasFactory,
         HasRoles,
         InteractsWithMedia,
+        // useSocialite,
         Notifiable;
 
     /**
