@@ -208,8 +208,7 @@ export async function collectModuleLangPaths() {
         try {
             await fs.access(fullLangPath);
             langPaths.push(langPath);
-        } catch (error) {
-            console.error(error);
+        } catch {
             // Module doesn't have a lang directory, skip it
         }
     }

@@ -55,6 +55,16 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ---
 
+## 🎥 Demo Video
+
+Watch a complete walkthrough of the application, showcasing the authentication flow, theme switching, and settings pages:
+
+<video src="public/videos/complete-tour.webm" controls style="width: 100%; max-width: 1200px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"></video>
+
+> The demo video shows navigation through the application with live theme switching between light and dark modes.
+
+---
+
 ## 📸 Screenshots
 
 ### Home Page
@@ -111,9 +121,13 @@ Built-in i18n (Portuguese + English), persistent dark/light mode, SSR support, R
 
 ![Profile Settings - Light Theme](public/images/screenshots/profile-light.png)
 
+![Profile Edit - Light Theme](public/images/screenshots/profile-edit-light.png)
+
 **Dark Theme**
 
-## ![Profile Settings - Dark Theme](public/images/screenshots/profile-dark.png)
+![Profile Settings - Dark Theme](public/images/screenshots/profile-dark.png)
+
+![Profile Edit - Dark Theme](public/images/screenshots/profile-edit-dark.png)
 
 ### Prerequisites
 
