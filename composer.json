@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "diglactic/laravel-breadcrumbs": "^10.0",
         "filament/actions": "^4.0",
         "filament/filament": "~4.0",
         "filament/forms": "^4.0",
