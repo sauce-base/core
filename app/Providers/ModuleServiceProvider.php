@@ -97,10 +97,10 @@ abstract class ModuleServiceProvider extends ServiceProvider
         $langPath = resource_path('lang/modules/'.$this->nameLower);
 
         if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, $this->nameLower);
+            $this->loadTranslationsFrom($langPath);
             $this->loadJsonTranslationsFrom($langPath);
         } else {
-            $this->loadTranslationsFrom(module_path($this->name, 'lang'), $this->nameLower);
+            $this->loadTranslationsFrom(module_path($this->name, 'lang'));
             $this->loadJsonTranslationsFrom(module_path($this->name, 'lang'));
         }
     }
