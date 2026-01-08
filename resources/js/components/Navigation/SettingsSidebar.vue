@@ -5,11 +5,13 @@ import { PageProps } from '@/types';
 import type { Navigation } from '@/types/navigation';
 import { usePage } from '@inertiajs/vue3';
 import { computed, provide } from 'vue';
+import IconSettings from '~icons/lucide/settings';
 import NavGroup from './NavGroup.vue';
 
-withDefaults(defineProps<SidebarProps>(), {
+const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'none',
     variant: 'inset',
+    class: '',
 });
 
 const page = usePage<PageProps<{ navigation: Navigation }>>();
@@ -29,10 +31,16 @@ provide('showTooltip', false);
         :variant="variant"
         :collapsible="collapsible"
         data-sidebar="settings-sidebar"
-        class="round-rb-md bg-surface-50 ml-2 !h-full w-48 self-stretch"
+        :class="props.class"
         v-bind="$attrs"
     >
-        <SidebarContent data-sidebar="content" class="">
+        <slot name="header">
+            <div class="flex items-center px-3 pt-4 pb-4 text-lg font-semibold">
+                <IconSettings class="mr-2 inline-block" />
+                {{ $t('Settings') }}
+            </div>
+        </slot>
+        <SidebarContent data-sidebar="content" class="mb-2">
             <NavGroup :items="items" />
         </SidebarContent>
     </Sidebar>

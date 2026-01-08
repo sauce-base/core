@@ -29,7 +29,7 @@ const items = computed(() => page.props.navigation?.settings || []);
             <Button
                 variant="outline"
                 size="icon"
-                class="md:hidden"
+                class="mr-4 mb-4 lg:hidden"
                 aria-label="Open settings menu"
             >
                 <IconMenu class="size-5" />
