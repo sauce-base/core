@@ -177,7 +177,7 @@ That's it! Visit **https://localhost** to see your app.
 
 ### What Gets Installed
 
-The installer sets up Docker containers (MySQL, Redis, Nginx), generates SSL certificates, runs migrations, configures modules (Auth, Settings), and builds frontend assets. Answer a few prompts and you're ready to code.
+The installer sets up Docker containers (MySQL, Redis, Nginx), generates SSL certificates, runs migrations, installs required modules (Auth, Settings) via composer, and builds frontend assets. Answer a few prompts and you're ready to code.
 
 For advanced options, CI/CD setup, or manual installation, see the [Manual Installation](#-manual-installation) guide below.
 
@@ -194,9 +194,6 @@ The `php artisan saucebase:install` command supports several options:
 ```bash
 php artisan saucebase:install --no-docker    # Skip Docker, use manual setup
 php artisan saucebase:install --no-ssl       # Skip SSL certificate generation
-php artisan saucebase:install --no-auth      # Don't install Auth module
-php artisan saucebase:install --no-settings  # Don't install Settings module
-php artisan saucebase:install --seed         # Seed database with demo data
 php artisan saucebase:install --force        # Force reinstallation
 ```
 
