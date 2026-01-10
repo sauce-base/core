@@ -71,7 +71,7 @@ class InstallCommand extends Command
         }
 
         // Check if ports are available
-        if (! $this->checkPorts()) {
+        if (! $this->option('force') && ! $this->checkPorts()) {
             return;
         }
 
@@ -91,6 +91,7 @@ class InstallCommand extends Command
 
         // Build Docker images if forced
         if ($this->option('force')) {
+            $this->resetDockerServices();
             $this->buildDockerImages();
         }
 
@@ -146,7 +147,7 @@ class InstallCommand extends Command
         $this->line('  4. Configure your web server');
 
         $this->newLine();
-        $this->info('Documentation: https://docs.saucebase.dev/manual-setup');
+        $this->info('Documentation: https://github.com/sauce-base/saucebase');
     }
 
     protected function handleCIInstallation(): int
@@ -236,12 +237,9 @@ class InstallCommand extends Command
 
             $this->newLine();
             $this->line('Solutions:');
-            $this->line('  1. Stop the services using these ports');
-            $this->line('  2. Change ports in .env file:');
-            $this->line('     APP_PORT=8080 (for port 80)');
-            $this->line('     APP_HTTPS_PORT=8443 (for port 443)');
-            $this->line('     FORWARD_DB_PORT=33060 (for port 3306)');
-            $this->line('     FORWARD_REDIS_PORT=63790 (for port 6379)');
+            $this->line('  1. Check for other running Docker containers: docker compose down -v --remove-orphans');
+            $this->line('  2. Stop the services using these ports');
+            $this->line('  3. Change ports in .env file');
             $this->newLine();
             $this->line('Then run: php artisan saucebase:install --force');
 
@@ -280,6 +278,14 @@ class InstallCommand extends Command
         return $this->confirm('Generate SSL certificates for HTTPS?', true);
     }
 
+    protected function dumpAutoload(): bool
+    {
+        $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'composer', 'dump-autoload']);
+        $process->run();
+
+        return $process->isSuccessful();
+    }
+
     protected function setupModules(): void
     {
         $this->newLine();
@@ -315,10 +321,7 @@ class InstallCommand extends Command
 
             // Dump autoload after installing modules
             $this->components->task('Updating autoloader', function () {
-                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'composer', 'dump-autoload']);
-                $process->run();
-
-                return $process->isSuccessful();
+                return $this->dumpAutoload();
             });
 
             // Enable Auth module
@@ -348,7 +351,7 @@ class InstallCommand extends Command
 
             // Migrate Settings module (no seed)
             $this->components->task('Migrating Settings module', function () {
-                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:migrate', 'Settings']);
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:migrate', 'Settings', '--seed']);
                 $process->setTimeout(60);
                 $process->run();
 
@@ -396,8 +399,10 @@ class InstallCommand extends Command
             // Generate certificates with wildcard support
             $process = new Process([
                 'mkcert',
-                '-key-file', $keyFile,
-                '-cert-file', $certFile,
+                '-key-file',
+                $keyFile,
+                '-cert-file',
+                $certFile,
                 '*.localhost',
                 'localhost',
                 '127.0.0.1',
@@ -434,6 +439,17 @@ class InstallCommand extends Command
         $process->setTimeout(600);
         $process->run(function ($_, $buffer) {
             echo $buffer;
+        });
+    }
+
+    protected function resetDockerServices(): void
+    {
+        $this->components->task('Reseting Docker services', function () {
+            $process = new Process(['docker', 'compose', 'down', '-v', '--remove-orphans']);
+            $process->setTimeout(180);
+            $process->run();
+
+            return $process->isSuccessful();
         });
     }
 
@@ -519,7 +535,8 @@ class InstallCommand extends Command
 
     protected function buildFrontend(): void
     {
-        $this->info('Building frontend assets...');
+        $this->newLine();
+        $this->info('🎨 Building frontend assets...');
         $this->newLine();
 
         $this->components->task('Installing npm dependencies', function () {
@@ -537,6 +554,8 @@ class InstallCommand extends Command
 
             return $process->isSuccessful();
         });
+
+        $this->newLine();
     }
 
     protected function verifyInstallation(): void
@@ -583,10 +602,13 @@ class InstallCommand extends Command
     protected function displayWelcome(): void
     {
         $this->newLine();
-        $this->line('  ┌─────────────────────────────────┐');
-        $this->line('  │   🍯 <fg=yellow;options=bold>Saucebase Installer</> 🍯     │');
-        $this->line('  │   Laravel 12 SaaS Starter Kit   │');
-        $this->line('  └─────────────────────────────────┘');
+        $this->line('  ┌───────────────────────────────────────┐');
+        $this->line('  │                                       │');
+        $this->line('  │       🍯 <fg=#5455c4;options=bold>SAUCE</><fg=#26b9d9;options=bold>BASE</> <fg=yellow;options=bold>INSTALLER</> 🍯       │');
+        $this->line('  │                                       │');
+        $this->line('  │   Laravel Modular SaaS Starter Kit    │');
+        $this->line('  │                                       │');
+        $this->line('  └───────────────────────────────────────┘');
         $this->newLine();
     }
 
@@ -602,6 +624,6 @@ class InstallCommand extends Command
         $this->line('  2. Visit: https://localhost');
         $this->line('  3. Login with demo credentials (check seeders)');
         $this->newLine();
-        $this->line('Documentation: <fg=cyan>https://docs.saucebase.dev</>');
+        $this->line('Learn more: <fg=cyan>https://github.com/sauce-base/saucebase</>');
     }
 }
