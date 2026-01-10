@@ -10,9 +10,6 @@ class InstallCommand extends Command
     protected $signature = 'saucebase:install
                             {--no-docker : Skip Docker setup and use manual configuration}
                             {--no-ssl : Skip SSL certificate generation}
-                            {--no-auth : Skip Auth module installation}
-                            {--no-settings : Skip Settings module installation}
-                            {--seed : Seed database with demo data}
                             {--force : Force reinstallation even if already set up}';
 
     protected $description = 'Install and configure Saucebase';
@@ -66,30 +63,65 @@ class InstallCommand extends Command
     protected function installWithDocker(): void
     {
         $this->info('🐳 Setting up with Docker...');
+        $this->newLine();
 
         // Check requirements
         if (! $this->checkDockerRequirements()) {
             return;
         }
 
-        // Build setup-env flags
-        $flags = [];
-
-        if ($this->option('no-ssl') || ! $this->shouldSetupSSL()) {
-            $flags[] = '--no-ssl';
+        // Check if ports are available
+        if (! $this->checkPorts()) {
+            return;
         }
 
+        // Determine SSL setup
+        $setupSsl = ! $this->option('no-ssl') && $this->shouldSetupSSL();
+
+        // Configure environment
+        $this->configureEnvironment($setupSsl);
+
+        // Setup SSL certificates
+        if ($setupSsl) {
+            $this->setupSslCertificates();
+        }
+
+        // Stop existing containers
+        $this->stopExistingContainers();
+
+        // Build Docker images if forced
         if ($this->option('force')) {
-            $flags[] = '--force-build';
+            $this->buildDockerImages();
         }
 
-        // Call existing bin/setup-env script
-        $this->newLine();
-        $this->callSetupEnv($flags);
+        // Start Docker services
+        $this->startDockerServices();
 
-        // Post-setup: Enable modules
+        // Install PHP dependencies
+        $this->installComposerDependencies();
+
+        // Generate application key
+        $this->generateApplicationKey();
+
+        // Setup database
+        $this->setupDatabase();
+
+        // Install and setup modules (Auth, Settings)
         $this->setupModules();
 
+        // Create storage link
+        $this->createStorageLink();
+
+        // Clear caches
+        $this->clearCaches();
+
+        // Install and build frontend
+        $this->buildFrontend();
+
+        // Verify installation
+        $this->verifyInstallation();
+
+        // Display success
         $this->displaySuccess();
     }
 
@@ -176,6 +208,62 @@ class InstallCommand extends Command
         return true;
     }
 
+    protected function checkPorts(): bool
+    {
+        $ports = [
+            80 => 'HTTP (Nginx)',
+            443 => 'HTTPS (Nginx)',
+            3306 => 'MySQL',
+            6379 => 'Redis',
+            8025 => 'Mailpit',
+        ];
+
+        $portsInUse = [];
+
+        foreach ($ports as $port => $service) {
+            if ($this->isPortInUse($port)) {
+                $portsInUse[$port] = $service;
+            }
+        }
+
+        if (! empty($portsInUse)) {
+            $this->error('The following ports are already in use:');
+            $this->newLine();
+
+            foreach ($portsInUse as $port => $service) {
+                $this->line("  Port {$port}: {$service}");
+            }
+
+            $this->newLine();
+            $this->line('Solutions:');
+            $this->line('  1. Stop the services using these ports');
+            $this->line('  2. Change ports in .env file:');
+            $this->line('     APP_PORT=8080 (for port 80)');
+            $this->line('     APP_HTTPS_PORT=8443 (for port 443)');
+            $this->line('     FORWARD_DB_PORT=33060 (for port 3306)');
+            $this->line('     FORWARD_REDIS_PORT=63790 (for port 6379)');
+            $this->newLine();
+            $this->line('Then run: php artisan saucebase:install --force');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function isPortInUse(int $port): bool
+    {
+        $connection = @fsockopen('127.0.0.1', $port, $errno, $errstr, 1);
+
+        if (is_resource($connection)) {
+            fclose($connection);
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected function shouldSetupSSL(): bool
     {
         // Check if mkcert is installed
@@ -192,46 +280,295 @@ class InstallCommand extends Command
         return $this->confirm('Generate SSL certificates for HTTPS?', true);
     }
 
-    protected function callSetupEnv(array $flags = []): void
-    {
-        $command = base_path('bin/setup-env').' '.implode(' ', $flags);
-
-        $process = Process::fromShellCommandline($command)
-            ->setTimeout(600) // 10 minutes
-            ->setTty(true);
-
-        $process->run(function ($type, $buffer) {
-            echo $buffer;
-        });
-
-        if (! $process->isSuccessful()) {
-            $this->error('Setup failed. Please check the output above.');
-            exit(1);
-        }
-    }
-
     protected function setupModules(): void
     {
         $this->newLine();
-        $this->info('📦 Configuring modules...');
+        $this->info('📦 Installing required modules...');
 
-        $installAuth = ! $this->option('no-auth')
-            && $this->confirm('Install Auth module? (Login, registration, social auth)', true);
+        // Check if modules are already installed
+        $composerJson = json_decode(file_get_contents(base_path('composer.json')), true);
+        $requireDev = $composerJson['require-dev'] ?? [];
 
-        $installSettings = ! $this->option('no-settings')
-            && $this->confirm('Install Settings module? (User settings, preferences)', true);
+        $modulesToInstall = [];
 
-        if (! $installAuth) {
-            $this->call('module:disable', ['module' => 'Auth']);
+        if (! isset($requireDev['saucebase/auth'])) {
+            $modulesToInstall[] = 'saucebase/auth';
         }
 
-        if (! $installSettings) {
-            $this->call('module:disable', ['module' => 'Settings']);
+        if (! isset($requireDev['saucebase/settings'])) {
+            $modulesToInstall[] = 'saucebase/settings';
         }
 
-        if ($this->option('seed') || $this->confirm('Seed database with demo data?', false)) {
-            $this->call('db:seed');
+        if (! empty($modulesToInstall)) {
+            $this->components->task('Installing '.implode(', ', $modulesToInstall), function () use ($modulesToInstall) {
+                $command = array_merge(
+                    ['docker', 'compose', 'exec', '-T', 'app', 'composer', 'require', '--dev'],
+                    $modulesToInstall
+                );
+
+                $process = new Process($command);
+                $process->setTimeout(300);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+
+            // Dump autoload after installing modules
+            $this->components->task('Updating autoloader', function () {
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'composer', 'dump-autoload']);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+
+            // Enable Auth module
+            $this->components->task('Enabling Auth module', function () {
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:enable', 'Auth']);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+
+            // Migrate and seed Auth module
+            $this->components->task('Migrating Auth module', function () {
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:migrate', 'Auth', '--seed']);
+                $process->setTimeout(60);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+
+            // Enable Settings module
+            $this->components->task('Enabling Settings module', function () {
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:enable', 'Settings']);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+
+            // Migrate Settings module (no seed)
+            $this->components->task('Migrating Settings module', function () {
+                $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'module:migrate', 'Settings']);
+                $process->setTimeout(60);
+                $process->run();
+
+                return $process->isSuccessful();
+            });
+        } else {
+            $this->info('✓ Auth and Settings modules already installed');
         }
+    }
+
+    protected function configureEnvironment(bool $setupSsl): void
+    {
+        $this->components->task('Configuring environment', function () use ($setupSsl) {
+            $appUrl = $setupSsl ? 'https://localhost' : 'http://localhost';
+
+            $env = file_get_contents(base_path('.env'));
+            $env = preg_replace('/^APP_HOST=.*/m', 'APP_HOST=localhost', $env);
+            $env = preg_replace('/^APP_URL=.*/m', "APP_URL={$appUrl}", $env);
+            file_put_contents(base_path('.env'), $env);
+
+            return true;
+        });
+    }
+
+    protected function setupSslCertificates(): void
+    {
+        $this->components->task('Setting up SSL certificates', function () {
+            $sslDir = base_path('docker/ssl');
+
+            if (! is_dir($sslDir)) {
+                mkdir($sslDir, 0755, true);
+            }
+
+            $certFile = $sslDir.'/app.pem';
+            $keyFile = $sslDir.'/app.key.pem';
+
+            if (file_exists($certFile) && file_exists($keyFile)) {
+                return true; // Certificates already exist
+            }
+
+            // Install mkcert CA
+            $process = new Process(['mkcert', '-install']);
+            $process->run();
+
+            // Generate certificates with wildcard support
+            $process = new Process([
+                'mkcert',
+                '-key-file', $keyFile,
+                '-cert-file', $certFile,
+                '*.localhost',
+                'localhost',
+                '127.0.0.1',
+                '::1',
+            ], $sslDir);
+
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function stopExistingContainers(): void
+    {
+        $this->components->task('Stopping existing containers', function () {
+            $process = new Process(['docker', 'compose', 'down', '-v', '--remove-orphans']);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function buildDockerImages(): void
+    {
+        $this->info('Building Docker images...');
+
+        $process = new Process(['docker', 'compose', 'pull']);
+        $process->setTimeout(300);
+        $process->run(function ($_, $buffer) {
+            echo $buffer;
+        });
+
+        $process = new Process(['docker', 'compose', 'build', '--no-cache']);
+        $process->setTimeout(600);
+        $process->run(function ($_, $buffer) {
+            echo $buffer;
+        });
+    }
+
+    protected function startDockerServices(): void
+    {
+        $this->components->task('Starting Docker services', function () {
+            $process = new Process(['docker', 'compose', 'up', '-d', '--wait']);
+            $process->setTimeout(180);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function installComposerDependencies(): void
+    {
+        $this->components->task('Installing PHP dependencies', function () {
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'composer', 'install']);
+            $process->setTimeout(300);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function generateApplicationKey(): void
+    {
+        $this->components->task('Generating application key', function () {
+            // Check if key already exists
+            $env = file_get_contents(base_path('.env'));
+            if (preg_match('/^APP_KEY=base64:.+$/m', $env)) {
+                return true; // Key already exists
+            }
+
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'key:generate']);
+            $process->run();
+
+            if ($process->isSuccessful()) {
+                // Restart containers to reload environment
+                $restart = new Process(['docker', 'compose', 'restart', 'app']);
+                $restart->run();
+
+                // Wait for services to be ready
+                sleep(5);
+
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    protected function setupDatabase(): void
+    {
+        $this->components->task('Setting up database', function () {
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'migrate:fresh', '--seed', '--force']);
+            $process->setTimeout(300);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function createStorageLink(): void
+    {
+        $this->components->task('Creating storage link', function () {
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'storage:link']);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function clearCaches(): void
+    {
+        $this->components->task('Clearing caches', function () {
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'optimize:clear']);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function buildFrontend(): void
+    {
+        $this->info('Building frontend assets...');
+        $this->newLine();
+
+        $this->components->task('Installing npm dependencies', function () {
+            $process = new Process(['npm', 'install']);
+            $process->setTimeout(300);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+
+        $this->components->task('Building assets', function () {
+            $process = new Process(['npm', 'run', 'build']);
+            $process->setTimeout(300);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+    }
+
+    protected function verifyInstallation(): void
+    {
+        $this->newLine();
+        $this->info('🔍 Verifying installation...');
+
+        $this->components->task('Database connection', function () {
+            $process = new Process(['docker', 'compose', 'exec', '-T', 'app', 'php', 'artisan', 'migrate:status']);
+            $process->run();
+
+            return $process->isSuccessful();
+        });
+
+        $this->components->task('Application key', function () {
+            $env = file_get_contents(base_path('.env'));
+
+            return (bool) preg_match('/^APP_KEY=base64:.+$/m', $env);
+        });
+
+        $appUrl = env('APP_URL', 'https://localhost');
+        $this->components->task('Web server', function () use ($appUrl) {
+            $ch = curl_init($appUrl.'/health');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            return $httpCode === 200;
+        });
     }
 
     protected function isCI(): bool
@@ -247,7 +584,7 @@ class InstallCommand extends Command
     {
         $this->newLine();
         $this->line('  ┌─────────────────────────────────┐');
-        $this->line('  │   🍯 <fg=yellow;options=bold>Saucebase Installer</> 🍯   │');
+        $this->line('  │   🍯 <fg=yellow;options=bold>Saucebase Installer</> 🍯     │');
         $this->line('  │   Laravel 12 SaaS Starter Kit   │');
         $this->line('  └─────────────────────────────────┘');
         $this->newLine();
