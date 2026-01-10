@@ -82,7 +82,7 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi --no-interaction",
-            "@php -r \"echo PHP_EOL . '\\033[1;32m✓ Saucebase installed!\\033[0m' . PHP_EOL . PHP_EOL . 'Next steps:' . PHP_EOL . '  php artisan saucebase:install' . PHP_EOL . PHP_EOL;\""
+            "@php -r \"echo PHP_EOL . '\\033[1;32m✓ Saucebase installed!\\033[0m' . PHP_EOL . PHP_EOL . 'Next steps:' . PHP_EOL . '  cd ' . basename(getcwd()) . PHP_EOL . '  php artisan saucebase:install' . PHP_EOL . PHP_EOL;\""
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
