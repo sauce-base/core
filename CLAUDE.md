@@ -19,8 +19,32 @@ Saucebase is a modular Laravel 12 SaaS starter kit built on the VILT stack (Vue 
 
 ### Initial Setup
 
+**New Project:**
+
 ```bash
-./bin/setup-env  # Bootstrap: Docker, SSL certs (if mkcert installed), deps, migrations, seeds
+composer create-project saucebase/saucebase my-app
+cd my-app
+php artisan saucebase:install
+```
+
+**Skip Docker:**
+
+```bash
+php artisan saucebase:install --no-docker
+```
+
+**Automated/CI:**
+
+```bash
+php artisan saucebase:install --no-interaction
+# Auto-detects CI environment
+```
+
+**Manual Docker Setup:**
+
+```bash
+./bin/setup-env
+# Use this directly if you prefer the full automated script
 ```
 
 **SSL Setup:**

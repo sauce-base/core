@@ -38,7 +38,7 @@ Like shadcn/ui, modules install **directly into your repository**. No vendor pac
 
 ### Built for Speed
 
-- **Docker-first**: One command (`./bin/setup-env`) launches MySQL, Redis, Mailpit, generates SSL certs (with wildcard for multi-tenancy), runs migrations, and seeds
+- **Docker-first**: One command (`php artisan saucebase:install`) launches MySQL, Redis, Mailpit, generates SSL certs (with wildcard for multi-tenancy), runs migrations, and seeds
 - **Hot reload**: Vite dev server with instant HMR for Vue/TypeScript/CSS changes
 - **Type-safe routes**: Ziggy generates TypeScript route helpers from Laravel routes
 - **Pre-configured modules**: Auth and Settings ready to install
@@ -158,55 +158,54 @@ Upcoming modules will follow the same copy-and-own philosophy—pull the files y
 
 ## ⚙️ Quick Start
 
-### 1. Clone & Bootstrap
-
 ```bash
-git clone https://github.com/sauce-base/saucebase.git
-cd saucebase
-chmod +x bin/setup-env
-./bin/setup-env
-```
-
-The script checks prerequisites, generates wildcard SSL certificates (if mkcert is available) for multi-tenancy support, spins up Docker services, runs migrations/seeds, and installs all dependencies.
-
-### 2. Access Your Application
-
-Once installation completes, visit **https://localhost** to see your application.
-
-> **Note**: The core installation doesn't include authentication or admin panel. Install the [Auth](https://github.com/sauce-base/auth) module to access the Filament Admin at https://localhost/admin
-
-### 3. Start Development
-
-```bash
+composer create-project saucebase/saucebase my-app
+cd my-app
+php artisan saucebase:install
 npm run dev
 ```
 
-Starts the Vite dev server with hot module replacement. Edit Vue components in `resources/js/` and see changes instantly in your browser.
+That's it! Visit **https://localhost** to see your app.
 
-### 4. Add Modules
+### Requirements
 
-Saucebase ships with a minimal core. Add features by installing modules:
+- Docker Desktop
+- Node.js 18+
+- npm 8+
 
-- **[Auth](https://github.com/sauce-base/auth)** - Authentication with social login (Google, GitHub)
-- **[Settings](https://github.com/sauce-base/settings)** - Settings management
+> **Optional:** Install [mkcert](https://github.com/FiloSottile/mkcert) for HTTPS support
 
-Each module's README contains installation and configuration instructions.
+### What Gets Installed
 
-### Next Steps
+The installer sets up Docker containers (MySQL, Redis, Nginx), generates SSL certificates, runs migrations, configures modules (Auth, Settings), and builds frontend assets. Answer a few prompts and you're ready to code.
 
-- **Customize**: All code is in your repo—modify components in `resources/js/components/`
-- **Add routes**: Edit `routes/web.php` or create module routes
-- **Configure theme**: Update `resources/js/lib/utils.ts` for colors and branding
-- **Run tests**: `composer test` (PHPUnit) and `npm run test` (Playwright E2E)
-- **Learn more**: Check [CLAUDE.md](CLAUDE.md) for architecture details
-
-For manual installation or troubleshooting, see the [Manual Installation](#-manual-installation) guide below.
+For advanced options, CI/CD setup, or manual installation, see the [Manual Installation](#-manual-installation) guide below.
 
 ---
 
 ## 📋 Manual Installation
 
 For users who prefer step-by-step control over the installation process, or need to troubleshoot specific steps, follow this manual installation guide. If you prefer automation, use the [Quick Start](#️-quick-start) guide instead.
+
+### Advanced Installer Options
+
+The `php artisan saucebase:install` command supports several options:
+
+```bash
+php artisan saucebase:install --no-docker    # Skip Docker, use manual setup
+php artisan saucebase:install --no-ssl       # Skip SSL certificate generation
+php artisan saucebase:install --no-auth      # Don't install Auth module
+php artisan saucebase:install --no-settings  # Don't install Settings module
+php artisan saucebase:install --seed         # Seed database with demo data
+php artisan saucebase:install --force        # Force reinstallation
+```
+
+**For CI/CD:**
+
+```bash
+php artisan saucebase:install --no-interaction
+# Automatically detects CI environment and runs minimal setup
+```
 
 ### System Requirements
 
