@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
@@ -17,6 +18,6 @@ class LocalizationController extends Controller
         App::setLocale($locale);
         Session::put('locale', $locale);
 
-        return response(['locale' => App::getLocale()]);
+        return new JsonResponse(['locale' => App::getLocale()]);
     }
 }
