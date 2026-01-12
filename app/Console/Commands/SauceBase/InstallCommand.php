@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\SauceBase;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
