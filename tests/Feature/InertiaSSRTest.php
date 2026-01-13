@@ -1,0 +1,117 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
+use Tests\TestCase;
+
+class InertiaSSRTest extends TestCase
+{
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Ensure SSR is disabled by default for each test
+        Config::set('inertia.ssr.enabled', false);
+    }
+
+    public function test_ssr_is_disabled_by_default(): void
+    {
+        $this->assertFalse(config('inertia.ssr.enabled'));
+    }
+
+    public function test_with_ssr_macro_enables_ssr(): void
+    {
+        // Create an Inertia response and call withSSR()
+        $response = Inertia::render('Index')->withSSR();
+
+        // Verify SSR was enabled
+        $this->assertTrue(config('inertia.ssr.enabled'));
+
+        // Verify it returns the response (chainable)
+        $this->assertInstanceOf(\Inertia\Response::class, $response);
+    }
+
+    public function test_inertia_response_without_with_ssr_keeps_ssr_disabled(): void
+    {
+        // Create an Inertia response without calling withSSR()
+        Inertia::render('Dashboard');
+
+        // Verify SSR is still disabled
+        $this->assertFalse(config('inertia.ssr.enabled'));
+    }
+
+    public function test_with_ssr_is_chainable_with_other_methods(): void
+    {
+        $response = Inertia::render('Index')
+            ->with('foo', 'bar')
+            ->withSSR()
+            ->with('baz', 'qux');
+
+        // Verify SSR was enabled
+        $this->assertTrue(config('inertia.ssr.enabled'));
+
+        // Verify it's still a proper Inertia response
+        $this->assertInstanceOf(\Inertia\Response::class, $response);
+    }
+
+    public function test_home_page_uses_ssr(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk();
+
+        // After the controller runs, SSR should be enabled
+        $this->assertTrue(config('inertia.ssr.enabled'));
+    }
+
+    public function test_without_ssr_macro_disables_ssr(): void
+    {
+        // Start with SSR enabled
+        Config::set('inertia.ssr.enabled', true);
+
+        // Create an Inertia response and call withoutSSR()
+        $response = Inertia::render('Dashboard')->withoutSSR();
+
+        // Verify SSR was disabled
+        $this->assertFalse(config('inertia.ssr.enabled'));
+
+        // Verify it returns the response (chainable)
+        $this->assertInstanceOf(\Inertia\Response::class, $response);
+    }
+
+    public function test_without_ssr_is_chainable_with_other_methods(): void
+    {
+        // Start with SSR enabled
+        Config::set('inertia.ssr.enabled', true);
+
+        $response = Inertia::render('Dashboard')
+            ->with('foo', 'bar')
+            ->withoutSSR()
+            ->with('baz', 'qux');
+
+        // Verify SSR was disabled
+        $this->assertFalse(config('inertia.ssr.enabled'));
+
+        // Verify it's still a proper Inertia response
+        $this->assertInstanceOf(\Inertia\Response::class, $response);
+    }
+
+    public function test_macros_can_override_each_other(): void
+    {
+        // Start with SSR disabled
+        Config::set('inertia.ssr.enabled', false);
+
+        // Enable, then disable
+        Inertia::render('Index')->withSSR()->withoutSSR();
+        $this->assertFalse(config('inertia.ssr.enabled'));
+
+        // Disable, then enable
+        Inertia::render('Index')->withoutSSR()->withSSR();
+        $this->assertTrue(config('inertia.ssr.enabled'));
+    }
+}
