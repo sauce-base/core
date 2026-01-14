@@ -2,13 +2,32 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Inertia\Middleware;
 use Spatie\Navigation\Navigation;
+use Symfony\Component\HttpFoundation\Response;
+use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {
+    /**
+     * Handle the incoming request.
+     *
+     * Disables SSR by default for each request.
+     * Controllers can opt-in using ->withSSR() or explicitly disable using ->withoutSSR()
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        // Disable SSR by default for this request
+        // Controllers can override with ->withSSR() or ->withoutSSR()
+        Config::set('inertia.ssr.enabled', false);
+
+        return parent::handle($request, $next);
+    }
+
     /**
      * Define the props that are shared by default.
      *
@@ -22,6 +41,10 @@ class HandleInertiaRequests extends Middleware
             'navigation' => app(Navigation::class)->treeGrouped(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'toast' => fn () => $request->session()->pull('toast'),
+            'ziggy' => fn () => [
+                ...(new Ziggy)->toArray(),
+                'location' => $request->url(),
+            ],
         ]);
     }
 

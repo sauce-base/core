@@ -21,13 +21,23 @@ const user = computed(() => page.props.auth?.user);
 const mouseX = ref(0);
 const mouseY = ref(0);
 
+const isServer = typeof window === 'undefined';
+
 const handleMouseMove = (e: MouseEvent) => {
+    if (isServer) return;
     mouseX.value = (e.clientX / window.innerWidth - 0.5) * 60;
     mouseY.value = (e.clientY / window.innerHeight - 0.5) * 60;
 };
 
-onMounted(() => window.addEventListener('mousemove', handleMouseMove));
-onUnmounted(() => window.removeEventListener('mousemove', handleMouseMove));
+onMounted(() => {
+    if (isServer) return;
+    window.addEventListener('mousemove', handleMouseMove);
+});
+
+onUnmounted(() => {
+    if (isServer) return;
+    window.removeEventListener('mousemove', handleMouseMove);
+});
 </script>
 
 <template>

@@ -11,11 +11,15 @@ export async function expectSSREnabled(page: Page, expectedComponent?: string) {
     expect(htmlContent).toContain('data-page');
 
     // Verify that Inertia page data is embedded in HTML
-    const dataPageMatch = htmlContent.match(/data-page="([^"]+)"/);
-    expect(dataPageMatch).toBeTruthy();
+    // With useScriptElementForInitialPage, the format is:
+    // <script data-page="app" type="application/json">{...}</script>
+    const scriptMatch = htmlContent.match(
+        /<script data-page="[^"]+" type="application\/json">({.+?})<\/script>/,
+    );
+    expect(scriptMatch).toBeTruthy();
 
-    if (dataPageMatch && expectedComponent) {
-        const pageData = dataPageMatch[1];
+    if (scriptMatch && expectedComponent) {
+        const pageData = scriptMatch[1];
         const decodedData = pageData
             .replace(/&quot;/g, '"')
             .replace(/&amp;/g, '&');
@@ -27,7 +31,7 @@ export async function expectSSREnabled(page: Page, expectedComponent?: string) {
         expect(parsed.component).toBe(expectedComponent);
     }
 
-    return dataPageMatch;
+    return scriptMatch;
 }
 
 /**

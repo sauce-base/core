@@ -21,7 +21,7 @@ return [
 
     'ssr' => [
 
-        'enabled' => (bool) env('INERTIA_SSR_ENABLED', false), // Disabled by default, opt-in via ->withSSR()
+        'enabled' => (bool) env('INERTIA_SSR_ENABLED', true), // Server enabled, per-request control via middleware and macros
 
         'url' => env('INERTIA_SSR_URL', 'http://127.0.0.1:13714'),
 
@@ -48,7 +48,9 @@ return [
     'ensure_pages_exist' => false,
 
     'page_paths' => [
+
         resource_path('js/pages'),
+
     ],
 
     'page_extensions' => [
@@ -61,6 +63,8 @@ return [
         'vue',
 
     ],
+
+    'use_script_element_for_initial_page' => (bool) env('INERTIA_USE_SCRIPT_ELEMENT_FOR_INITIAL_PAGE', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +87,9 @@ return [
         'ensure_pages_exist' => true,
 
         'page_paths' => [
+
             resource_path('js/pages'),
+
         ],
 
         'page_extensions' => [

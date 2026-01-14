@@ -993,7 +993,25 @@ return inertia('Settings::Index');  // modules/Settings/resources/js/pages/Index
 
 ### Server-Side Rendering (SSR)
 
+**Architecture:**
+
+Saucebase uses a two-level SSR control system:
+
+1. **Boot level** (config): `'enabled' => true` ensures the SSR server starts
+2. **Request level** (middleware): Disables SSR by default for each request
+3. **Response level** (macros): Controllers opt-in with `->withSSR()` or opt-out with `->withoutSSR()`
+
+**How it works:**
+
+- SSR server runs continuously (started by `php artisan inertia:start-ssr`)
+- `HandleInertiaRequests` middleware disables SSR at request start
+- Controllers use `->withSSR()` to enable or `->withoutSSR()` to ensure disabled
+- Macros override the middleware's default for that specific response
+
 **Default**: SSR is disabled (opt-in via controller)
+
+**Technical Implementation:**
+The `HandleInertiaRequests` middleware overrides the `handle()` method to set `Config::set('inertia.ssr.enabled', false)` before processing each request. This ensures SSR is disabled by default, while the `->withSSR()` and `->withoutSSR()` macros can override this setting on a per-response basis.
 
 **To enable or disable SSR per page**, use `->withSSR()` or `->withoutSSR()` in your controller:
 
@@ -1060,6 +1078,70 @@ class ProductController extends Controller
 - Pages with real-time data that needs to be fresh
 
 **To verify SSR is working**: View page source (Ctrl+U) - you should see full HTML content, not just an empty #app div.
+
+### Ziggy Route Helper
+
+**Integration:**
+
+Saucebase uses Ziggy (v2.0) to make Laravel routes available in JavaScript/TypeScript.
+
+**Client-Side Rendering (CSR):**
+
+- Routes injected via `@routes` Blade directive in `app.blade.php`
+- ZiggyVue plugin provides global `route()` function
+- TypeScript definitions in `global.d.ts`
+
+**Server-Side Rendering (SSR):**
+
+- Routes shared via Inertia middleware props (`HandleInertiaRequests.php`)
+- SSR server receives route data from `page.props.ziggy`
+- ZiggyVue plugin initialized with explicit route data
+
+**Why middleware sharing?**
+This is the official recommended pattern for Inertia.js + Ziggy SSR integration. The `@routes` Blade directive doesn't work in SSR (no DOM), so routes must be shared via Inertia's prop system. This is the same architectural pattern used for sharing `auth`, `flash`, `locale`, and other global data.
+
+**Usage:**
+
+```typescript
+// Named routes
+route('dashboard'); // /dashboard
+route('settings.profile'); // /settings/profile
+
+// Routes with parameters
+route('user.show', { id: 1 }); // /users/1
+route('locale', { locale: 'pt_BR' }); // /locale/pt_BR
+
+// Route checking
+route().has('dashboard'); // Check if route exists
+route().current('dashboard'); // Check if current route
+route().current('settings.*'); // Wildcard matching
+```
+
+**Configuration:**
+
+Routes are filtered in `config/ziggy.php`. By default, all routes are exposed.
+Consider using the `except` option to hide admin/internal routes:
+
+```php
+return [
+    'except' => ['admin.*', 'sanctum.*'],
+];
+```
+
+**Security:**
+
+⚠️ Route exposure is NOT a security mechanism. Always implement proper:
+
+- Authentication (who can access)
+- Authorization (what they can do)
+- CSRF protection
+- Input validation
+
+Route filtering is for:
+
+- Reducing frontend bundle size
+- Hiding internal route names (obscurity, not security)
+- Improving developer experience
 
 ### Laravel Macros
 
