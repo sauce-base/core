@@ -120,7 +120,7 @@ const currentTheme = computed(
                 </slot>
             </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" class="min-w-[160px]">
+        <DropdownMenuContent align="end" class="min-w-40">
             <DropdownMenuItem
                 v-for="theme in themes"
                 :key="theme.code"

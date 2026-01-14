@@ -58,4 +58,9 @@ createInertiaApp({
                 .getPropertyValue('--primary')
                 .trim() || '#4B5563',
     },
+    defaults: {
+        future: {
+            useScriptElementForInitialPage: true,
+        },
+    },
 });

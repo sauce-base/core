@@ -16,22 +16,41 @@ defineProps<{
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
+const title = 'Sauce Base - Modern Laravel SaaS Starter Kit';
 
 // Mouse tracking for parallax effect
 const mouseX = ref(0);
 const mouseY = ref(0);
 
+const isServer = typeof window === 'undefined';
+
 const handleMouseMove = (e: MouseEvent) => {
+    if (isServer) return;
     mouseX.value = (e.clientX / window.innerWidth - 0.5) * 60;
     mouseY.value = (e.clientY / window.innerHeight - 0.5) * 60;
 };
 
-onMounted(() => window.addEventListener('mousemove', handleMouseMove));
-onUnmounted(() => window.removeEventListener('mousemove', handleMouseMove));
+onMounted(() => {
+    if (isServer) return;
+    window.addEventListener('mousemove', handleMouseMove);
+});
+
+onUnmounted(() => {
+    if (isServer) return;
+    window.removeEventListener('mousemove', handleMouseMove);
+});
 </script>
 
 <template>
-    <Head :title="$t('Sauce Base - Modern Laravel SaaS Starter Kit')" />
+    <Head>
+        <title>
+            {{ $t(title) }}
+        </title>
+        <meta
+            name="description"
+            :content="$t('Your secret sauce for success')"
+        />
+    </Head>
     <div class="relative isolate flex min-h-screen flex-col overflow-x-hidden">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />

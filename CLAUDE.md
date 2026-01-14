@@ -330,6 +330,7 @@ Uses shadcn-vue style components in `resources/js/components/ui/` with Tailwind 
 **Service Providers:**
 
 - `AppServiceProvider` - Core app configuration, HTTPS enforcement, fixes module event discovery
+- `MacroServiceProvider` - Centralized location for all application macros (e.g., Inertia `->withSSR()`)
 - `ModuleServiceProvider` (abstract) - Base class for module service providers, handles translations, config, migrations, and Inertia data sharing
 - `NavigationServiceProvider` - Spatie navigation configuration
 - `BreadcrumbServiceProvider` - Diglactic breadcrumbs setup
@@ -542,9 +543,13 @@ This project follows industry best practices for clean, maintainable code:
 
 **DRY (Don't Repeat Yourself)**
 
-- Extract common logic into reusable functions, classes, or composables
+- **CRITICAL**: Extract common logic into reusable functions, classes, or composables
 - Abstract when the same logic appears 3+ times
-- Example: Use composables for shared Vue logic, service classes for shared backend logic
+- Apply DRY to tests: Create helper functions for repeated test logic
+- Examples:
+    - Use composables for shared Vue logic
+    - Service classes for shared backend logic
+    - Test helpers for repeated assertions (e.g., `tests/e2e/helpers/ssr.ts`)
 
 **KISS (Keep It Simple, Stupid)**
 
@@ -568,6 +573,58 @@ This project follows industry best practices for clean, maintainable code:
 
 - Backend: Controllers → Services → Models
 - Frontend: Pages → Components → Composables → Utils
+
+### Planning & Implementation Philosophy
+
+When planning and implementing features, always follow these guidelines:
+
+**Minimum Viable Implementation (MVI)**
+
+- Start with the **simplest solution that solves the problem**
+- Avoid building for hypothetical future needs (see YAGNI above)
+- Deliver working functionality first, then iterate if needed
+- Ask: "What's the minimum code needed to solve this problem?"
+
+**Simplicity Over Complexity**
+
+- Prefer 5 lines of clear code over 50 lines of "clever" abstraction
+- If you can solve it with a macro, don't build a middleware + gateway + config system
+- Avoid patterns like Strategy, Factory, Builder unless truly needed
+- Example: A simple `Config::set()` beats a custom Gateway with interfaces
+
+**User Experience First**
+
+- Developer experience is user experience
+- Code should be discoverable and self-documenting
+- Explicit is better than implicit (e.g., `->withSSR()` vs hidden config)
+- IDE autocomplete and type hints matter
+- Documentation should show actual usage, not theory
+
+**When Creating Plans**
+
+- Plans must focus on **minimum viable implementation**
+- Always ask: "Can this be simpler?"
+- Prefer fewer files over more files
+- Prefer fewer abstractions over more abstractions
+- Question every new class, interface, or pattern
+- If a feature can be implemented in 5 lines vs 50 lines, choose 5 lines
+- Example: A 5-line macro is better than middleware + config + gateway
+
+**Red Flags in Plans (Avoid These)**
+
+- ❌ Multiple new files when one edit would work
+- ❌ New interfaces/abstractions for single implementations
+- ❌ "Extensibility" or "flexibility" without concrete requirements
+- ❌ Patterns (Factory, Strategy, etc.) for simple tasks
+- ❌ Over-engineered solutions that are hard to understand
+
+**Good Plan Indicators**
+
+- ✅ Minimal file changes (prefer editing over creating)
+- ✅ Clear, explicit code that's easy to understand
+- ✅ Developer-friendly API (chainable, discoverable)
+- ✅ Solves the actual problem without extra "features"
+- ✅ Can be explained in one sentence
 
 ### Code Quality Standards
 
@@ -811,6 +868,42 @@ public function it_creates_user_with_valid_data(): void
 - Service classes: 70%+ coverage
 - Controllers: Feature tests over unit tests
 
+**DRY Principle in Tests:**
+
+- **ALWAYS** extract repeated test logic into helper functions
+- Create helper files in `tests/Feature/helpers/` or `tests/e2e/helpers/`
+- Abstract when the same test logic appears 2+ times (lower threshold than production code)
+- Examples:
+    - E2E SSR helpers: `tests/e2e/helpers/ssr.ts` (expectSSREnabled, expectSSRDisabled)
+    - Authentication helpers (login, logout, register flows)
+    - Database seeding helpers (createUser, createProduct)
+
+```typescript
+// ✅ Good: Reusable test helpers
+// tests/e2e/helpers/ssr.ts
+export async function expectSSREnabled(page: Page, expectedComponent?: string) {
+    const htmlContent = await page.content();
+    expect(htmlContent).toContain('id="app"');
+    expect(htmlContent).toContain('data-page');
+    // ... more assertions
+}
+
+// tests/e2e/index.spec.ts
+test('uses SSR', async ({ page }) => {
+    await page.goto('/');
+    await expectSSREnabled(page, 'Index'); // Clean and reusable!
+});
+
+// ❌ Bad: Repeated assertion logic in every test
+test('uses SSR', async ({ page }) => {
+    await page.goto('/');
+    const htmlContent = await page.content();
+    expect(htmlContent).toContain('id="app"');
+    expect(htmlContent).toContain('data-page');
+    // ... 10 more lines of repeated code in every test
+});
+```
+
 ### Performance Guidelines
 
 **Database Optimization:**
@@ -898,6 +991,206 @@ return inertia('Auth::Login');  // modules/Auth/resources/js/pages/Login.vue
 return inertia('Settings::Index');  // modules/Settings/resources/js/pages/Index.vue
 ```
 
+### Server-Side Rendering (SSR)
+
+**Architecture:**
+
+Saucebase uses a two-level SSR control system:
+
+1. **Boot level** (config): `'enabled' => true` ensures the SSR server starts
+2. **Request level** (middleware): Disables SSR by default for each request
+3. **Response level** (macros): Controllers opt-in with `->withSSR()` or opt-out with `->withoutSSR()`
+
+**How it works:**
+
+- SSR server runs continuously (started by `php artisan inertia:start-ssr`)
+- `HandleInertiaRequests` middleware disables SSR at request start
+- Controllers use `->withSSR()` to enable or `->withoutSSR()` to ensure disabled
+- Macros override the middleware's default for that specific response
+
+**Default**: SSR is disabled (opt-in via controller)
+
+**Technical Implementation:**
+The `HandleInertiaRequests` middleware overrides the `handle()` method to set `Config::set('inertia.ssr.enabled', false)` before processing each request. This ensures SSR is disabled by default, while the `->withSSR()` and `->withoutSSR()` macros can override this setting on a per-response basis.
+
+**To enable or disable SSR per page**, use `->withSSR()` or `->withoutSSR()` in your controller:
+
+```php
+// Enable SSR (for public pages that need SEO)
+return Inertia::render('Index')->withSSR();
+
+// Disable SSR (for authenticated pages)
+return Inertia::render('Dashboard')->withoutSSR();
+
+// Default behavior (respects config setting)
+return Inertia::render('About');
+```
+
+**Configuration Flexibility:**
+
+The macros work regardless of your config default:
+
+```php
+// Scenario 1: SSR disabled by default (recommended)
+// config/inertia.php: 'enabled' => false
+return Inertia::render('Index')->withSSR();      // Enable for this page
+return Inertia::render('Dashboard');              // No SSR (uses config default)
+
+// Scenario 2: SSR enabled by default
+// config/inertia.php: 'enabled' => true
+return Inertia::render('Index');                  // SSR enabled (uses config default)
+return Inertia::render('Dashboard')->withoutSSR(); // Disable for this page
+```
+
+**Example with multiple pages**:
+
+```php
+class ProductController extends Controller
+{
+    // Public list - use SSR for SEO
+    public function index()
+    {
+        return Inertia::render('Products/Index')
+            ->with('products', Product::all())
+            ->withSSR();
+    }
+
+    // Admin edit - explicitly disable SSR
+    public function edit(Product $product)
+    {
+        return Inertia::render('Products/Edit')
+            ->with('product', $product)
+            ->withoutSSR();
+    }
+}
+```
+
+**Why enable SSR?**
+
+- Public pages that need SEO (landing pages, blog posts, products)
+- Faster first contentful paint for visitors
+- Better social media sharing previews
+
+**Why disable SSR?**
+
+- Authenticated pages (dashboards, admin panels)
+- Better performance (no server-side rendering overhead)
+- Pages with real-time data that needs to be fresh
+
+**To verify SSR is working**: View page source (Ctrl+U) - you should see full HTML content, not just an empty #app div.
+
+### Ziggy Route Helper
+
+**Integration:**
+
+Saucebase uses Ziggy (v2.0) to make Laravel routes available in JavaScript/TypeScript.
+
+**Client-Side Rendering (CSR):**
+
+- Routes injected via `@routes` Blade directive in `app.blade.php`
+- ZiggyVue plugin provides global `route()` function
+- TypeScript definitions in `global.d.ts`
+
+**Server-Side Rendering (SSR):**
+
+- Routes shared via Inertia middleware props (`HandleInertiaRequests.php`)
+- SSR server receives route data from `page.props.ziggy`
+- ZiggyVue plugin initialized with explicit route data
+
+**Why middleware sharing?**
+This is the official recommended pattern for Inertia.js + Ziggy SSR integration. The `@routes` Blade directive doesn't work in SSR (no DOM), so routes must be shared via Inertia's prop system. This is the same architectural pattern used for sharing `auth`, `flash`, `locale`, and other global data.
+
+**Usage:**
+
+```typescript
+// Named routes
+route('dashboard'); // /dashboard
+route('settings.profile'); // /settings/profile
+
+// Routes with parameters
+route('user.show', { id: 1 }); // /users/1
+route('locale', { locale: 'pt_BR' }); // /locale/pt_BR
+
+// Route checking
+route().has('dashboard'); // Check if route exists
+route().current('dashboard'); // Check if current route
+route().current('settings.*'); // Wildcard matching
+```
+
+**Configuration:**
+
+Routes are filtered in `config/ziggy.php`. By default, all routes are exposed.
+Consider using the `except` option to hide admin/internal routes:
+
+```php
+return [
+    'except' => ['admin.*', 'sanctum.*'],
+];
+```
+
+**Security:**
+
+⚠️ Route exposure is NOT a security mechanism. Always implement proper:
+
+- Authentication (who can access)
+- Authorization (what they can do)
+- CSRF protection
+- Input validation
+
+Route filtering is for:
+
+- Reducing frontend bundle size
+- Hiding internal route names (obscurity, not security)
+- Improving developer experience
+
+### Laravel Macros
+
+**Centralized Macro Management**: All application macros are defined in `app/Providers/MacroServiceProvider.php` to keep them organized and discoverable.
+
+**Current Macros:**
+
+- `Inertia\Response::withSSR()` - Enable SSR for a specific Inertia response
+- `Inertia\Response::withoutSSR()` - Disable SSR for a specific Inertia response
+
+See the [SSR section](#server-side-rendering-ssr) for detailed usage examples.
+
+**Adding New Macros:**
+
+When you need to extend framework classes (Illuminate\Http\Request, Illuminate\Support\Collection, etc.) with custom methods:
+
+1. Add the macro to `MacroServiceProvider::boot()` method
+2. Organize macros into protected methods by category (e.g., `registerInertiaMacros()`, `registerRequestMacros()`)
+3. Update this documentation with the new macro
+
+Example:
+
+```php
+// app/Providers/MacroServiceProvider.php
+protected function registerCollectionMacros(): void
+{
+    Collection::macro('toSelectOptions', function () {
+        /** @var Collection $this */
+        return $this->map(fn($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+        ]);
+    });
+}
+
+public function boot(): void
+{
+    $this->registerInertiaMacros();
+    $this->registerCollectionMacros(); // Add new macro group
+}
+```
+
+**Why use MacroServiceProvider?**
+
+- ✅ Centralized location for all macros (easy to find)
+- ✅ Better organization than scattering macros across multiple providers
+- ✅ Clear separation of concerns (AppServiceProvider for app config, MacroServiceProvider for macros)
+- ✅ Easier to maintain and document
+
 ### Translations
 
 - Core translations: `lang/` (Portuguese and English by default)
@@ -949,19 +1242,6 @@ rm -rf node_modules package-lock.json
 npm install
 npm run build
 ```
-
-### Port Conflicts
-
-Modify `.env` to change default ports:
-
-```env
-APP_PORT=8080                    # Default: 80
-APP_HTTPS_PORT=8443              # Default: 443
-FORWARD_DB_PORT=33060            # Default: 3306
-FORWARD_REDIS_PORT=63790         # Default: 6379
-```
-
-Then restart: `docker compose down && docker compose up -d`
 
 ### Database Connection Issues
 

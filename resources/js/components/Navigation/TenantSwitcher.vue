@@ -89,10 +89,9 @@ const activeTenant = ref(tenants[0]);
                                 />
                             </div>
                             {{ team.name }}
-                            <!-- TODO: Implement keyboard shortcuts functionality -->
-                            <DropdownMenuShortcut
-                                >⇧⌘{{ index + 1 }}</DropdownMenuShortcut
-                            >
+                            <DropdownMenuShortcut>
+                                ⇧⌘{{ index + 1 }}
+                            </DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem class="gap-2 p-2">
