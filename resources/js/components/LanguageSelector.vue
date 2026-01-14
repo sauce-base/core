@@ -68,7 +68,7 @@ const currentLanguage = computed(() => {
     <!-- Standalone Mode (Landing Page) -->
     <DropdownMenu v-if="mode === 'standalone'">
         <DropdownMenuTrigger as-child>
-            <button :class="props.triggerClass">
+            <button :class="props.triggerClass" aria-label="Language Selector">
                 <slot name="trigger" :current-language="currentLanguage">
                     <component :is="currentLanguage.icon" class="size-4.5" />
                 </slot>

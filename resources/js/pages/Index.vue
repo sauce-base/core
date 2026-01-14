@@ -16,6 +16,7 @@ defineProps<{
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
+const title = 'Sauce Base - Modern Laravel SaaS Starter Kit';
 
 // Mouse tracking for parallax effect
 const mouseX = ref(0);
@@ -41,7 +42,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head :title="$t('Sauce Base - Modern Laravel SaaS Starter Kit')" />
+    <Head>
+        <title>
+            {{ $t(title) }}
+        </title>
+        <meta
+            name="description"
+            :content="$t('Your secret sauce for success')"
+        />
+    </Head>
     <div class="relative isolate flex min-h-screen flex-col overflow-x-hidden">
         <!-- Header with theme toggle -->
         <Header :canLogin="canLogin" :canRegister="canRegister" />
