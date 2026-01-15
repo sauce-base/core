@@ -1019,27 +1019,30 @@ The `HandleInertiaRequests` middleware overrides the `handle()` method to set `C
 // Enable SSR (for public pages that need SEO)
 return Inertia::render('Index')->withSSR();
 
-// Disable SSR (for authenticated pages)
+// Explicitly disable SSR (for authenticated pages)
 return Inertia::render('Dashboard')->withoutSSR();
 
-// Default behavior (respects config setting)
+// Default behavior (SSR disabled by middleware, no explicit override)
 return Inertia::render('About');
 ```
 
 **Configuration Flexibility:**
 
-The macros work regardless of your config default:
+The macros work with any request-level default, as long as the SSR server is enabled in config:
 
 ```php
-// Scenario 1: SSR disabled by default (recommended)
-// config/inertia.php: 'enabled' => false
-return Inertia::render('Index')->withSSR();      // Enable for this page
-return Inertia::render('Dashboard');              // No SSR (uses config default)
+// Config level (must stay enabled so the SSR server runs)
+// config/inertia.php: 'enabled' => (bool) env('INERTIA_SSR_ENABLED', true)
 
-// Scenario 2: SSR enabled by default
-// config/inertia.php: 'enabled' => true
-return Inertia::render('Index');                  // SSR enabled (uses config default)
-return Inertia::render('Dashboard')->withoutSSR(); // Disable for this page
+// Current setup: SSR server enabled, disabled by default via middleware (recommended)
+// Middleware sets: Config::set('inertia.ssr.enabled', false)
+return Inertia::render('Index')->withSSR();        // Opt-in SSR for this page
+return Inertia::render('Dashboard');               // No SSR (middleware default)
+
+// Alternative setup: SSR server enabled, enabled by default via middleware
+// If you remove the Config::set line from HandleInertiaRequests middleware:
+return Inertia::render('Index');                    // SSR enabled (middleware default)
+return Inertia::render('Dashboard')->withoutSSR();  // Opt-out for this page
 ```
 
 **Example with multiple pages**:

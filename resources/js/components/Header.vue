@@ -92,6 +92,12 @@ defineProps<{
                     <ThemeSelector mode="standalone" />
                     <button
                         @click="mobileMenuOpen = !mobileMenuOpen"
+                        :aria-label="
+                            mobileMenuOpen
+                                ? $t('Close mobile menu')
+                                : $t('Open mobile menu')
+                        "
+                        :aria-expanded="mobileMenuOpen"
                         class="rounded-full p-2 text-gray-700 transition-colors duration-200 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                     >
                         <IconMenu v-if="!mobileMenuOpen" class="h-6 w-6" />
