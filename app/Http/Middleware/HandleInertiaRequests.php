@@ -46,9 +46,8 @@ class HandleInertiaRequests extends Middleware
             'navigation' => app(Navigation::class)->treeGrouped(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'toast' => fn () => $request->session()->pull('toast'),
-            // Ziggy data is needed on every page load and doesn't change during request
-            // Eager evaluation is more efficient than lazy evaluation via closure
-            'ziggy' => [
+            // Ziggy data is computed lazily so it can be skipped on partial reloads
+            'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
