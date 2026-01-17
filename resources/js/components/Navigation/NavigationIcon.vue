@@ -25,6 +25,7 @@ const iconMapping: Record<string, Component> = {
     logout: IconLogOut,
     github: IconGithub,
     admin: IconShieldCheck,
+    documentation: IconHelpCircle,
 };
 
 const iconComponent = computed<Component | null>(() => {

@@ -31,12 +31,10 @@ const handleMouseMove = (e: MouseEvent) => {
 };
 
 onMounted(() => {
-    if (isServer) return;
     window.addEventListener('mousemove', handleMouseMove);
 });
 
 onUnmounted(() => {
-    if (isServer) return;
     window.removeEventListener('mousemove', handleMouseMove);
 });
 </script>
@@ -77,8 +75,10 @@ onUnmounted(() => {
             ></div>
         </div>
 
-        <!-- Hero Section -->
-        <section class="flex flex-1 flex-col items-center justify-center px-6">
+        <!-- Main Content -->
+        <main
+            class="flex flex-1 flex-col items-center justify-center px-6 pt-20"
+        >
             <div class="mx-auto max-w-4xl text-center">
                 <!-- Logo -->
                 <div class="mb-12 flex justify-center">
@@ -149,7 +149,7 @@ onUnmounted(() => {
                     </Link>
                 </div>
             </div>
-        </section>
+        </main>
 
         <!-- Footer -->
         <Footer />

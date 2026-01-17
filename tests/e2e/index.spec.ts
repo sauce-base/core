@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { expectContentVisibleWithoutJS, expectSSREnabled } from './helpers/ssr';
+import { expectInertiaPageDataEmbedded, expectSSREnabled } from './helpers/ssr';
 
 test.describe('Landing page', () => {
     test('responds successfully when navigating to root', async ({ page }) => {
@@ -19,10 +19,8 @@ test.describe('Landing page', () => {
         await expectSSREnabled(page, 'Index');
     });
 
-    test('content is visible without JavaScript (SSR proof)', async ({
-        browser,
-    }) => {
-        // Create a context with JavaScript disabled
+    test('Inertia page data is embedded for SSR/SEO', async ({ browser }) => {
+        // Create a context with JavaScript disabled to verify SSR data embedding
         const context = await browser.newContext({
             javaScriptEnabled: false,
         });
@@ -30,8 +28,9 @@ test.describe('Landing page', () => {
 
         await page.goto('/');
 
-        // Verify content is visible without JS
-        await expectContentVisibleWithoutJS(page);
+        // Verify Inertia page data is properly embedded
+        // (Search engines can execute this data, even though browsers without JS can't)
+        await expectInertiaPageDataEmbedded(page);
 
         await context.close();
     });

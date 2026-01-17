@@ -18,13 +18,18 @@ class HandleInertiaRequests extends Middleware
      *
      * Disables SSR by default for each request.
      * Controllers can opt-in using ->withSSR() or explicitly disable using ->withoutSSR()
+     *
+     * For Octane compatibility, SSR preferences are stored in request attributes
+     * to avoid race conditions. The macros set both the attribute and config.
      */
     public function handle(Request $request, Closure $next): Response
     {
         // Disable SSR by default for this request
-        // Controllers can override with ->withSSR() or ->withoutSSR()
+        // Store in request attributes (thread-safe for Octane)
+        $request->attributes->set('inertia.ssr', false);
         Config::set('inertia.ssr.enabled', false);
 
+        // Process request - controller may override SSR via macros
         return parent::handle($request, $next);
     }
 
@@ -41,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'navigation' => app(Navigation::class)->treeGrouped(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'toast' => fn () => $request->session()->pull('toast'),
+            // Ziggy data is computed lazily so it can be skipped on partial reloads
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

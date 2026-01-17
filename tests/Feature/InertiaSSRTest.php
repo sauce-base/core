@@ -66,12 +66,16 @@ class InertiaSSRTest extends TestCase
 
     public function test_home_page_uses_ssr(): void
     {
+        // Verify SSR starts enabled in config (required for SSR server to run)
+        $this->assertTrue(config('inertia.ssr.enabled'), 'SSR should be enabled in config at boot');
+
         $response = $this->get('/');
 
         $response->assertOk();
 
-        // After the controller runs, SSR should be enabled
-        $this->assertTrue(config('inertia.ssr.enabled'));
+        // After middleware disables it and controller enables it with ->withSSR(),
+        // SSR should be enabled
+        $this->assertTrue(config('inertia.ssr.enabled'), 'SSR should be enabled after ->withSSR()');
     }
 
     public function test_without_ssr_macro_disables_ssr(): void
@@ -122,18 +126,22 @@ class InertiaSSRTest extends TestCase
 
     public function test_ssr_is_disabled_by_default_via_middleware(): void
     {
+        // Verify SSR starts enabled in config (required for SSR server to run)
+        $this->assertTrue(config('inertia.ssr.enabled'), 'SSR should be enabled in config at boot');
+
         // Create a user for authentication with required role
         /** @var \App\Models\User $user */
         $user = \App\Models\User::factory()->create();
         $role = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'user']);
         $user->assignRole($role);
 
-        // Make a request without calling ->withSSR()
+        // Make a request to a route that doesn't call ->withSSR()
         $response = $this->actingAs($user)->get('/dashboard');
 
         $response->assertOk();
 
-        // Middleware should have disabled SSR
-        $this->assertFalse(config('inertia.ssr.enabled'));
+        // After the middleware runs, SSR should be disabled
+        // (since the controller doesn't call ->withSSR())
+        $this->assertFalse(config('inertia.ssr.enabled'), 'Middleware should disable SSR by default');
     }
 }
