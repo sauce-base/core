@@ -3,6 +3,7 @@
 namespace App\Console\Commands\SauceBase;
 
 use Illuminate\Console\Command;
+use Nwidart\Modules\Facades\Module;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
@@ -297,11 +298,11 @@ class InstallCommand extends Command
 
         $modulesToInstall = [];
 
-        if (! isset($requireDev['saucebase/auth'])) {
+        if (! isset($requireDev['saucebase/auth']) && ! Module::has('Auth')) {
             $modulesToInstall[] = 'saucebase/auth';
         }
 
-        if (! isset($requireDev['saucebase/settings'])) {
+        if (! isset($requireDev['saucebase/settings']) && ! Module::has('Settings')) {
             $modulesToInstall[] = 'saucebase/settings';
         }
 
