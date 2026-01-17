@@ -36,6 +36,20 @@ class RegisterNavigation
             }
         );
 
+        Navigation::add(
+            'Documentation',
+            'https://sauce-base.github.io/docs/getting-started/introduction',
+            function (Section $section) {
+                $section->attributes([
+                    'group' => 'secondary',
+                    'slug' => 'documentation',
+                    'external' => true,
+                    'newPage' => true,
+                    'order' => 0,
+                ]);
+            }
+        );
+
         Navigation::addWhen(
             fn () => Auth::check() && Auth::user()->isAdmin(),
             'Admin',
