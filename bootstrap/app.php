@@ -2,7 +2,6 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\HandleLocalization;
-use App\Http\Middleware\RegisterNavigation;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,7 +22,6 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register global middleware
         $middleware->web(append: [
             HandleLocalization::class,
-            RegisterNavigation::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);

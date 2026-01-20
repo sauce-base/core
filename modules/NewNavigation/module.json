@@ -1,0 +1,13 @@
+{
+    "name": "NewNavigation",
+    "alias": "new_navigation",
+    "description": "NewNavigation module",
+    "author": "Sauce Base",
+    "version": "v1.0",
+    "keywords": ["new_navigation"],
+    "priority": 0,
+    "providers": [
+        "Modules\\NewNavigation\\Providers\\NewNavigationServiceProvider"
+    ],
+    "files": []
+}

@@ -26,7 +26,7 @@ import IconRocket from '~icons/heroicons/rocket-launch';
 import IconSparkles from '~icons/heroicons/sparkles';
 import IconUsers from '~icons/heroicons/user-group';
 
-const title = '{Module}';
+const title = 'NewNavigation';
 
 // Sample stats data
 const stats = ref([

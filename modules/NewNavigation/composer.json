@@ -1,0 +1,29 @@
+{
+    "name": "saucebase/new_navigation",
+    "description": "",
+    "type": "saucebase-module",
+    "authors": [
+        {
+            "name": "Sauce Base",
+            "email": "hello@saucebase.dev"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\NewNavigation\\": "app/",
+            "Modules\\NewNavigation\\Database\\Factories\\": "database/factories/",
+            "Modules\\NewNavigation\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\NewNavigation\\Tests\\": "tests/"
+        }
+    }
+}

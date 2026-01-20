@@ -148,7 +148,7 @@ class InstallCommand extends Command
         $this->line('  4. Configure your web server');
 
         $this->newLine();
-        $this->info('Documentation: https://github.com/sauce-base/saucebase');
+        $this->info('Documentation: https://sauce-base.github.io/docs/');
     }
 
     protected function handleCIInstallation(): int
