@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
-import LanguageSelector from '@/components/LanguageSelector.vue';
-import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Link } from '@inertiajs/vue3';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import IconMenu from '~icons/heroicons/bars-3';
 import IconX from '~icons/heroicons/x-mark';
+import AppLogo from './AppLogo.vue';
+import LanguageSelector from './LanguageSelector.vue';
+import ThemeSelector from './ThemeSelector.vue';
 
 const isScrolled = ref(false);
 const mobileMenuOpen = ref(false);
@@ -43,7 +43,7 @@ defineProps<{
                     href="/"
                     class="flex items-center transition-opacity hover:opacity-80"
                 >
-                    <ApplicationLogo size="md" :showText="true" />
+                    <AppLogo size="md" :showText="true" />
                 </Link>
 
                 <div class="hidden items-center space-x-3 lg:flex">

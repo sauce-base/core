@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,12 +18,13 @@ import { Link } from '@inertiajs/vue3';
 import { markRaw, ref } from 'vue';
 import IconChevronsUpDown from '~icons/lucide/chevrons-up-down';
 import IconPlus from '~icons/lucide/plus';
+import AppLogo from './AppLogo.vue';
 
 const { isMobile } = useSidebar();
 const tenants = [
     {
         name: 'Sauce Base',
-        logo: markRaw(ApplicationLogo),
+        logo: markRaw(AppLogo),
         plan: 'SaaS',
     },
 ];

@@ -10,13 +10,14 @@ import type { User } from '@/types';
 import type { Navigation } from '@/types/navigation';
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
-import NavGroup from './NavGroup.vue';
-import NavUser from './NavUser.vue';
 import TenantSwitcher from './TenantSwitcher.vue';
+import NavGroup from './ui/navigation/NavGroup.vue';
+import NavUser from './ui/navigation/NavUser.vue';
 
 withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
     variant: 'inset',
+    class: 'bg-transparent',
 });
 
 const page = usePage<{ navigation: Navigation; auth: { user: User } }>();
