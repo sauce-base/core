@@ -43,6 +43,11 @@ const errorTestId = computed(() => `${testIdComputed.value}-error`);
 const component = computed(() =>
     props.type === 'password' ? InputPassword : Input,
 );
+
+// Type prop handling (only pass to Input, not InputPassword)
+const typeAttribute = computed(() =>
+    props.type !== 'password' ? props.type : undefined,
+);
 </script>
 
 <template>
@@ -54,7 +59,7 @@ const component = computed(() =>
             :is="component"
             :id="id"
             :name="name"
-            :type="type"
+            :type="typeAttribute"
             :data-testid="testIdComputed"
             :placeholder="placeholder"
             :aria-invalid="isInvalid"
