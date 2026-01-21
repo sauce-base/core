@@ -54,7 +54,7 @@ const component = computed(() =>
             :is="component"
             :id="id"
             :name="name"
-            :type="type"
+            :type="type !== 'password' ? type : undefined"
             :data-testid="testIdComputed"
             :placeholder="placeholder"
             :aria-invalid="isInvalid"
