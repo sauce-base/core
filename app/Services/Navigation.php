@@ -249,7 +249,7 @@ class Navigation extends SpatieNavigation
         // Load core navigation
         $coreNavigationPath = base_path('routes/navigation.php');
         if (file_exists($coreNavigationPath)) {
-            require $coreNavigationPath;
+            require_once $coreNavigationPath;
         }
 
         // Load module navigation
@@ -261,7 +261,7 @@ class Navigation extends SpatieNavigation
                 if ($enabled) {
                     $moduleNavigationPath = base_path("modules/{$moduleName}/routes/navigation.php");
                     if (file_exists($moduleNavigationPath)) {
-                        require $moduleNavigationPath;
+                        require_once $moduleNavigationPath;
                     }
                 }
             }
