@@ -232,4 +232,41 @@ class Navigation extends SpatieNavigation
 
         return $items;
     }
+
+    /**
+     * Load the navigation items from navigation.php files.
+     *
+     * Looks for navigation.php files in:
+     * - routes/navigation.php (core navigation)
+     * - modules/{ModuleName}/routes/navigation.php (module navigation)
+     *
+     * Only loads module navigation if the module is enabled.
+     *
+     * @return $this
+     */
+    public function load(): self
+    {
+        // Load core navigation
+        $coreNavigationPath = base_path('routes/navigation.php');
+        if (file_exists($coreNavigationPath)) {
+            require_once $coreNavigationPath;
+        }
+
+        // Load module navigation
+        $modulesStatusPath = base_path('modules_statuses.json');
+        if (file_exists($modulesStatusPath)) {
+            $modulesStatus = json_decode(file_get_contents($modulesStatusPath), true);
+
+            foreach ($modulesStatus as $moduleName => $enabled) {
+                if ($enabled) {
+                    $moduleNavigationPath = base_path("modules/{$moduleName}/routes/navigation.php");
+                    if (file_exists($moduleNavigationPath)) {
+                        require_once $moduleNavigationPath;
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
 }

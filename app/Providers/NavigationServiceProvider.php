@@ -27,5 +27,9 @@ class NavigationServiceProvider extends ServiceProvider
         $this->app->scoped(\Spatie\Navigation\Navigation::class, function ($app) {
             return new Navigation($app->make(ActiveUrlChecker::class));
         });
+
+        $this->app->resolving(Navigation::class, function (Navigation $navigation): Navigation {
+            return $navigation->load();
+        });
     }
 }

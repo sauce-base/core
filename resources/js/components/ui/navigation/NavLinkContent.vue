@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import NavBadge from '@/components/Navigation/NavBadge.vue';
-import NavigationIcon from '@/components/Navigation/NavigationIcon.vue';
 import type { MenuBadge } from '@/types/navigation';
 import { computed } from 'vue';
 import IconExternalLink from '~icons/lucide/arrow-up-right';
+import NavBadge from './NavBadge.vue';
+import NavIcon from './NavIcon.vue';
 
 const props = defineProps<{
     slug?: string;
@@ -26,7 +26,7 @@ const needsSpacer = computed(() => props.showExternalIcon && !props.badge);
 </script>
 
 <template>
-    <NavigationIcon :icon="slug" />
+    <NavIcon :icon="slug" />
     <span>{{ $t(title) }}</span>
     <NavBadge :config="badge ?? null" :class="badgeClass" />
     <span v-if="needsSpacer" class="ml-auto" />

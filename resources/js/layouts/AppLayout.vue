@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppSidebar from '@/components/Navigation/AppSidebar.vue';
+import AppSidebar from '@/components/AppSidebar.vue';
 import PageTransition from '@/components/PageTransition.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import {

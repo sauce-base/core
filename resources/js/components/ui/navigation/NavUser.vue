@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LanguageSelector from '@/components/LanguageSelector.vue';
-import NavigationIcon from '@/components/Navigation/NavigationIcon.vue';
 import ThemeSelector from '@/components/ThemeSelector.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +12,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import NavigationIcon from '@/components/ui/navigation/NavIcon.vue';
 import {
     SidebarMenu,
     SidebarMenuButton,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/components/ApplicationLogo.vue';
+import AppLogo from '@/components/AppLogo.vue';
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
@@ -82,12 +82,7 @@ onUnmounted(() => {
             <div class="mx-auto max-w-4xl text-center">
                 <!-- Logo -->
                 <div class="mb-12 flex justify-center">
-                    <ApplicationLogo
-                        showText
-                        size="xxl"
-                        showSubtitle
-                        centered
-                    />
+                    <AppLogo showText size="xxl" showSubtitle centered />
                 </div>
 
                 <!-- Main Headline -->

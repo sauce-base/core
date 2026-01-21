@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavLinkContent from '@/components/Navigation/NavLinkContent.vue';
 import {
     Collapsible,
     CollapsibleContent,
@@ -19,6 +18,7 @@ import { handleAction } from '@/utils/actionHandlers';
 import { Link } from '@inertiajs/vue3';
 import { computed, inject } from 'vue';
 import IconChevronRight from '~icons/lucide/chevron-right';
+import NavLinkContent from './NavLinkContent.vue';
 
 const props = defineProps<{
     item: MenuItem;
