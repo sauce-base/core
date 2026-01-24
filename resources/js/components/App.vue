@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ImpersonationAlert from '@/components/ImpersonationAlert.vue';
 import { Toaster } from '@/components/ui/sonner';
 import { toastActionRegistry } from '@/lib/toastActions';
 import type { Toast } from '@/types';
@@ -99,6 +100,7 @@ watch(
 );
 </script>
 <template>
+    <ImpersonationAlert />
     <slot />
     <Toaster />
     <!-- Global components can be added here -->

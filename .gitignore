@@ -26,16 +26,16 @@
 /resources/js/icon-registry.ts
 
 # Module-specific ignores
-modules/*/node_modules/
-modules/*/vendor/
-modules/*/package-lock.json
-modules/*/dist/
-modules/*/coverage/
-modules/*/*-lock.json
-modules/*/.turbo/
-modules/*/.cache/
-modules/*.diff
-modules/*.patch
+/modules/*/node_modules
+/modules/*/vendor
+/modules/*/package-lock.json
+/modules/*/dist
+/modules/*/coverage
+/modules/*/*-lock.json
+/modules/*/.turbo
+/modules/*/.cache
+/modules/*.diff
+/modules/*.patch
 
 Homestead.json
 Homestead.yaml
