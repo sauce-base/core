@@ -61,7 +61,7 @@ Navigation::addWhen(
             'order' => 10,
             'external' => true,
             'newPage' => true,
-            'class' => 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-400',
+            'class' => 'bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 hover:text-yellow-700 dark:hover:text-yellow-400',
         ]);
     }
 );
