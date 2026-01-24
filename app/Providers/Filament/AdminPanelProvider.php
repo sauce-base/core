@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->spa()
             ->sidebarCollapsibleOnDesktop()
             ->userMenuItems([
                 Action::make('site')
